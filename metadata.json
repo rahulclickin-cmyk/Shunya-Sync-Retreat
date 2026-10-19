@@ -1,0 +1,6 @@
+{
+  "name": "Shunya Sync Retreat",
+  "description": "Disconnect from chaos. Reconnect with your true self. Premium wellness, yoga, sound healing and inner alignment retreats in India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
