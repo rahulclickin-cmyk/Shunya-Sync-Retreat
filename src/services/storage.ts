@@ -60,7 +60,7 @@ export async function uploadImageToSupabase(
   file: File,
   options?: {
     bucket?: string;
-    folder?: 'hero' | 'founders' | 'gallery' | 'general';
+    folder?: 'hero' | 'founders' | 'gallery' | 'general' | 'media';
     customName?: string;
   }
 ): Promise<UploadResult> {

@@ -129,7 +129,7 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
     e.preventDefault();
     const envPin = (import.meta.env.VITE_ADMIN_PIN || '').trim().toLowerCase();
     const cfgPin = (formConfig.adminPin || '7788').trim().toLowerCase();
-    const validPins = ['shunya2026', 'admin123', 'clickindma', '7788', cfgPin, envPin].filter(Boolean);
+    const validPins = ['shunya2026', 'admin123', 'clickindm', 'clickindma', '7788', cfgPin, envPin].filter(Boolean);
     
     if (validPins.includes(passcode.trim().toLowerCase())) {
       setIsAuthenticated(true);
@@ -1387,31 +1387,32 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
                   </div>
 
                   {/* 4 Days / 3 Nights */}
+                  {/* 1. 2 Nights / 3 Days */}
                   <div className="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm space-y-4">
                     <div className="flex items-center justify-between border-b pb-2">
-                      <span className="text-xs uppercase font-bold text-[#C67856]">Classic Journey</span>
-                      <h5 className="font-bold text-base text-[#1F2E23]">4 Days / 3 Nights Retreat</h5>
+                      <span className="text-xs uppercase font-bold text-[#223326]">✨ Weekend Reset</span>
+                      <h5 className="font-bold text-base text-[#1F2E23]">2 Nights / 3 Days Retreat</h5>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs uppercase font-bold text-stone-600 mb-1">
-                          Twin Sharing Price (₹)
+                          Double Sharing Price (₹)
                         </label>
                         <input
                           type="number"
-                          value={formConfig?.pricing?.pkg4d3n?.twinPrice ?? 32000}
+                          value={formConfig?.pricing?.pkg2n3d?.twinPrice ?? 22000}
                           onChange={(e) =>
                             setFormConfig({
                               ...formConfig,
                               pricing: {
                                 ...formConfig.pricing,
-                                pkg4d3n: {
-                                  ...formConfig.pricing?.pkg4d3n,
-                                  title: formConfig.pricing?.pkg4d3n?.title || DEFAULT_SITE_CONFIG.pricing.pkg4d3n.title,
-                                  badge: formConfig.pricing?.pkg4d3n?.badge || DEFAULT_SITE_CONFIG.pricing.pkg4d3n.badge,
-                                  description: formConfig.pricing?.pkg4d3n?.description || DEFAULT_SITE_CONFIG.pricing.pkg4d3n.description,
-                                  soloPrice: formConfig.pricing?.pkg4d3n?.soloPrice ?? 26000,
+                                pkg2n3d: {
+                                  ...formConfig.pricing?.pkg2n3d,
+                                  title: formConfig.pricing?.pkg2n3d?.title || '2 Nights / 3 Days Retreat',
+                                  badge: formConfig.pricing?.pkg2n3d?.badge || 'Weekend Reset',
+                                  description: formConfig.pricing?.pkg2n3d?.description || 'Weekend immersion in Rishikesh',
+                                  soloPrice: formConfig.pricing?.pkg2n3d?.soloPrice ?? 26000,
                                   twinPrice: Number(e.target.value)
                                 }
                               }
@@ -1423,22 +1424,22 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
 
                       <div>
                         <label className="block text-xs uppercase font-bold text-stone-600 mb-1">
-                          Solo Private Room Price (₹)
+                          Private Accommodation Price (₹)
                         </label>
                         <input
                           type="number"
-                          value={formConfig?.pricing?.pkg4d3n?.soloPrice ?? 26000}
+                          value={formConfig?.pricing?.pkg2n3d?.soloPrice ?? 26000}
                           onChange={(e) =>
                             setFormConfig({
                               ...formConfig,
                               pricing: {
                                 ...formConfig.pricing,
-                                pkg4d3n: {
-                                  ...formConfig.pricing?.pkg4d3n,
-                                  title: formConfig.pricing?.pkg4d3n?.title || DEFAULT_SITE_CONFIG.pricing.pkg4d3n.title,
-                                  badge: formConfig.pricing?.pkg4d3n?.badge || DEFAULT_SITE_CONFIG.pricing.pkg4d3n.badge,
-                                  description: formConfig.pricing?.pkg4d3n?.description || DEFAULT_SITE_CONFIG.pricing.pkg4d3n.description,
-                                  twinPrice: formConfig.pricing?.pkg4d3n?.twinPrice ?? 32000,
+                                pkg2n3d: {
+                                  ...formConfig.pricing?.pkg2n3d,
+                                  title: formConfig.pricing?.pkg2n3d?.title || '2 Nights / 3 Days Retreat',
+                                  badge: formConfig.pricing?.pkg2n3d?.badge || 'Weekend Reset',
+                                  description: formConfig.pricing?.pkg2n3d?.description || 'Weekend immersion in Rishikesh',
+                                  twinPrice: formConfig.pricing?.pkg2n3d?.twinPrice ?? 22000,
                                   soloPrice: Number(e.target.value)
                                 }
                               }
@@ -1450,64 +1451,136 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
                     </div>
                   </div>
 
-                  {/* 5 Days / 4 Nights */}
+                  {/* 2. 3 Nights / 4 Days */}
                   <div className="p-5 rounded-2xl bg-white border-2 border-[#C67856] shadow-sm space-y-4">
                     <div className="flex items-center justify-between border-b pb-2">
-                      <span className="text-xs uppercase font-bold text-[#C67856]">Premium Experience</span>
-                      <h5 className="font-bold text-base text-[#1F2E23]">5 Days / 4 Nights Retreat</h5>
+                      <span className="text-xs uppercase font-bold text-[#C67856]">🌿 Flagship Experience</span>
+                      <h5 className="font-bold text-base text-[#1F2E23]">3 Nights / 4 Days Retreat</h5>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs uppercase font-bold text-stone-600 mb-1">
-                          Twin Sharing Price (₹)
+                          Double Sharing Price (₹)
                         </label>
                         <input
                           type="number"
-                          value={formConfig?.pricing?.pkg5d4n?.twinPrice ?? 44000}
-                          onChange={(e) =>
+                          value={formConfig?.pricing?.pkg3n4d?.twinPrice ?? formConfig?.pricing?.pkg4d3n?.twinPrice ?? 26000}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            const updated = {
+                              title: formConfig.pricing?.pkg3n4d?.title || '3 Nights / 4 Days Retreat',
+                              badge: formConfig.pricing?.pkg3n4d?.badge || 'Most Popular',
+                              description: formConfig.pricing?.pkg3n4d?.description || 'Classic transformation journey',
+                              soloPrice: formConfig.pricing?.pkg3n4d?.soloPrice ?? 32000,
+                              twinPrice: val
+                            };
                             setFormConfig({
                               ...formConfig,
                               pricing: {
                                 ...formConfig.pricing,
-                                pkg5d4n: {
-                                  ...formConfig.pricing?.pkg5d4n,
-                                  title: formConfig.pricing?.pkg5d4n?.title || DEFAULT_SITE_CONFIG.pricing.pkg5d4n.title,
-                                  badge: formConfig.pricing?.pkg5d4n?.badge || DEFAULT_SITE_CONFIG.pricing.pkg5d4n.badge,
-                                  description: formConfig.pricing?.pkg5d4n?.description || DEFAULT_SITE_CONFIG.pricing.pkg5d4n.description,
-                                  soloPrice: formConfig.pricing?.pkg5d4n?.soloPrice ?? 38000,
-                                  twinPrice: Number(e.target.value)
-                                }
+                                pkg3n4d: updated,
+                                pkg4d3n: updated
                               }
-                            })
-                          }
+                            });
+                          }}
                           className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-semibold"
                         />
                       </div>
 
                       <div>
                         <label className="block text-xs uppercase font-bold text-stone-600 mb-1">
-                          Solo Private Room Price (₹)
+                          Private Accommodation Price (₹)
                         </label>
                         <input
                           type="number"
-                          value={formConfig?.pricing?.pkg5d4n?.soloPrice ?? 38000}
-                          onChange={(e) =>
+                          value={formConfig?.pricing?.pkg3n4d?.soloPrice ?? formConfig?.pricing?.pkg4d3n?.soloPrice ?? 32000}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            const updated = {
+                              title: formConfig.pricing?.pkg3n4d?.title || '3 Nights / 4 Days Retreat',
+                              badge: formConfig.pricing?.pkg3n4d?.badge || 'Most Popular',
+                              description: formConfig.pricing?.pkg3n4d?.description || 'Classic transformation journey',
+                              twinPrice: formConfig.pricing?.pkg3n4d?.twinPrice ?? 26000,
+                              soloPrice: val
+                            };
                             setFormConfig({
                               ...formConfig,
                               pricing: {
                                 ...formConfig.pricing,
-                                pkg5d4n: {
-                                  ...formConfig.pricing?.pkg5d4n,
-                                  title: formConfig.pricing?.pkg5d4n?.title || DEFAULT_SITE_CONFIG.pricing.pkg5d4n.title,
-                                  badge: formConfig.pricing?.pkg5d4n?.badge || DEFAULT_SITE_CONFIG.pricing.pkg5d4n.badge,
-                                  description: formConfig.pricing?.pkg5d4n?.description || DEFAULT_SITE_CONFIG.pricing.pkg5d4n.description,
-                                  twinPrice: formConfig.pricing?.pkg5d4n?.twinPrice ?? 44000,
-                                  soloPrice: Number(e.target.value)
-                                }
+                                pkg3n4d: updated,
+                                pkg4d3n: updated
                               }
-                            })
-                          }
+                            });
+                          }}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-semibold"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3. 4 Nights / 5 Days */}
+                  <div className="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm space-y-4">
+                    <div className="flex items-center justify-between border-b pb-2">
+                      <span className="text-xs uppercase font-bold text-[#223326]">🌸 Deep Immersion</span>
+                      <h5 className="font-bold text-base text-[#1F2E23]">4 Nights / 5 Days Retreat (Premium)</h5>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs uppercase font-bold text-stone-600 mb-1">
+                          Double Sharing Price (₹)
+                        </label>
+                        <input
+                          type="number"
+                          value={formConfig?.pricing?.pkg4n5d?.twinPrice ?? formConfig?.pricing?.pkg5d4n?.twinPrice ?? 44000}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            const updated = {
+                              title: formConfig.pricing?.pkg4n5d?.title || '4 Nights / 5 Days Retreat (Premium Experience)',
+                              badge: formConfig.pricing?.pkg4n5d?.badge || 'Premium Experience',
+                              description: formConfig.pricing?.pkg4n5d?.description || 'Deep transformative retreat in India',
+                              soloPrice: formConfig.pricing?.pkg4n5d?.soloPrice ?? 52000,
+                              twinPrice: val
+                            };
+                            setFormConfig({
+                              ...formConfig,
+                              pricing: {
+                                ...formConfig.pricing,
+                                pkg4n5d: updated,
+                                pkg5d4n: updated
+                              }
+                            });
+                          }}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-semibold"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs uppercase font-bold text-stone-600 mb-1">
+                          Private Accommodation Price (₹)
+                        </label>
+                        <input
+                          type="number"
+                          value={formConfig?.pricing?.pkg4n5d?.soloPrice ?? formConfig?.pricing?.pkg5d4n?.soloPrice ?? 52000}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            const updated = {
+                              title: formConfig.pricing?.pkg4n5d?.title || '4 Nights / 5 Days Retreat (Premium Experience)',
+                              badge: formConfig.pricing?.pkg4n5d?.badge || 'Premium Experience',
+                              description: formConfig.pricing?.pkg4n5d?.description || 'Deep transformative retreat in India',
+                              twinPrice: formConfig.pricing?.pkg4n5d?.twinPrice ?? 44000,
+                              soloPrice: val
+                            };
+                            setFormConfig({
+                              ...formConfig,
+                              pricing: {
+                                ...formConfig.pricing,
+                                pkg4n5d: updated,
+                                pkg5d4n: updated
+                              }
+                            });
+                          }}
                           className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-semibold"
                         />
                       </div>

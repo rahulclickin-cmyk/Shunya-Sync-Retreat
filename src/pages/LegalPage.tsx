@@ -121,7 +121,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'privacy-poli
 
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">2. Reservation &amp; Room Allocations</h3>
               <p>
-                Bookings are secured upon payment of the reservation deposit. For Twin Sharing packages (₹{(config?.pricing?.pkg4d3n?.twinPrice ?? 32000).toLocaleString()} for 4D/3N or ₹{(config?.pricing?.pkg5d4n?.twinPrice ?? 44000).toLocaleString()} for 5D/4N), guests will be paired with an attendee of the same gender or designated roommate. Solo private accommodations are allocated on a first-confirmed basis.
+                Bookings are secured upon payment of the reservation deposit. For Double Sharing packages (₹{(config?.pricing?.pkg2n3d?.twinPrice ?? 22000).toLocaleString()} for 2N/3D, ₹{(config?.pricing?.pkg3n4d?.twinPrice ?? 26000).toLocaleString()} for 3N/4D, or ₹{(config?.pricing?.pkg4n5d?.twinPrice ?? 44000).toLocaleString()} for 4N/5D), guests will be paired with an attendee of the same gender or designated roommate. Private accommodations are allocated on a first-confirmed basis.
               </p>
 
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">3. Facilitator Schedule &amp; Changes</h3>

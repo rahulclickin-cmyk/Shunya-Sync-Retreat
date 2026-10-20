@@ -194,17 +194,25 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ config, currentRoute }) => {
           makesOffer: [
             {
               '@type': 'Offer',
-              name: config.pricing.pkg4d3n.title,
-              description: config.pricing.pkg4d3n.description,
-              price: config.pricing.pkg4d3n.soloPrice,
+              name: config.pricing?.pkg2n3d?.title || '2 Nights / 3 Days Retreat',
+              description: config.pricing?.pkg2n3d?.description || 'Curated sacred weekend immersion in India',
+              price: config.pricing?.pkg2n3d?.soloPrice || 26000,
               priceCurrency: 'INR',
               availability: 'https://schema.org/InStock'
             },
             {
               '@type': 'Offer',
-              name: config.pricing.pkg5d4n.title,
-              description: config.pricing.pkg5d4n.description,
-              price: config.pricing.pkg5d4n.soloPrice,
+              name: config.pricing?.pkg3n4d?.title || config.pricing?.pkg4d3n?.title || '3 Nights / 4 Days Retreat',
+              description: config.pricing?.pkg3n4d?.description || config.pricing?.pkg4d3n?.description || 'Classic transformation retreat in India',
+              price: config.pricing?.pkg3n4d?.soloPrice || config.pricing?.pkg4d3n?.soloPrice || 32000,
+              priceCurrency: 'INR',
+              availability: 'https://schema.org/InStock'
+            },
+            {
+              '@type': 'Offer',
+              name: config.pricing?.pkg4n5d?.title || config.pricing?.pkg5d4n?.title || '4 Nights / 5 Days Retreat (Premium Experience)',
+              description: config.pricing?.pkg4n5d?.description || config.pricing?.pkg5d4n?.description || 'Deep transformative retreat in India',
+              price: config.pricing?.pkg4n5d?.soloPrice || config.pricing?.pkg5d4n?.soloPrice || 52000,
               priceCurrency: 'INR',
               availability: 'https://schema.org/InStock'
             }

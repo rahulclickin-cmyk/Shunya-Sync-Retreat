@@ -1,261 +1,732 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SiteConfig } from '../types/retreat';
-import { Check, ChevronDown, ChevronUp, Calendar, ArrowRight, ShieldCheck } from 'lucide-react';
+import {
+  Check,
+  Calendar,
+  Sparkles,
+  ShieldCheck,
+  Moon,
+  Sun,
+  Flame,
+  Music,
+  Heart,
+  Compass,
+  Coffee,
+  Leaf,
+  Users,
+  MessageCircle,
+  Clock,
+  ArrowRight
+} from 'lucide-react';
+
+export type PackageId = '2n3d' | '3n4d' | '4n5d';
 
 interface PackagesPageProps {
   config: SiteConfig;
+  initialPackage?: PackageId;
   onOpenBooking: (pkg: string, room: 'Twin Sharing' | 'Solo') => void;
 }
 
-export const PackagesPage: React.FC<PackagesPageProps> = ({ config, onOpenBooking }) => {
-  const [selectedTab, setSelectedTab] = useState<'4d3n' | '5d4n'>('4d3n');
-  const [expandedDay, setExpandedDay] = useState<number | null>(1);
+interface ItineraryDayData {
+  dayNumber: number;
+  title: string;
+  activities: string[];
+}
+
+interface PackageDetailData {
+  id: PackageId;
+  title: string;
+  shortTitle: string;
+  nightsDays: string;
+  badge: string;
+  tagline: string;
+  emoji: string;
+  popular?: boolean;
+  itinerary: ItineraryDayData[];
+}
+
+export const RETREAT_PACKAGES: Record<PackageId, PackageDetailData> = {
+  '2n3d': {
+    id: '2n3d',
+    title: '2 Nights / 3 Days Retreat',
+    shortTitle: '2N / 3D Retreat',
+    nightsDays: '2 Nights / 3 Days',
+    badge: 'Weekend Reset',
+    tagline: 'A revitalizing weekend escape to disconnect from mental noise and restore physical energy.',
+    emoji: '✨',
+    itinerary: [
+      {
+        dayNumber: 1,
+        title: 'Arrival & Grounding',
+        activities: [
+          'Arrival & Welcome Drink',
+          'Check-in to comfort & luxury accommodation',
+          'Introduction Circle & Retreat Briefing',
+          'Evening Ganga Aarti Experience',
+          'Dinner (Satvik Meal)',
+          'Lights off'
+        ]
+      },
+      {
+        dayNumber: 2,
+        title: 'Inner Alignment & Adventure',
+        activities: [
+          'Morning Yoga Session (Asanas + Pranayama)',
+          'Breakfast',
+          'Chakra Healing',
+          'Lunch (excluded)',
+          'Afternoon Excursion / Nature Walk',
+          'Fun Activity (Dance / Group Games / Ice-breaking)',
+          'Dinner'
+        ]
+      },
+      {
+        dayNumber: 3,
+        title: 'Integration & Departure',
+        activities: [
+          'Morning Meditation & Light Yoga Flow',
+          'Breakfast',
+          'Reflection Circle & Closing Ceremony',
+          'Check-out'
+        ]
+      }
+    ]
+  },
+  '3n4d': {
+    id: '3n4d',
+    title: '3 Nights / 4 Days Retreat',
+    shortTitle: '3N / 4D Retreat',
+    nightsDays: '3 Nights / 4 Days',
+    badge: 'Most Popular',
+    tagline: 'Our flagship transformation journey blending breath, sound, adventure, and deep release.',
+    emoji: '🌿',
+    popular: true,
+    itinerary: [
+      {
+        dayNumber: 1,
+        title: 'Arrival & Settling In',
+        activities: [
+          'Arrival & Welcome Ritual',
+          'Check-in & Leisure Time',
+          'Evening Ganga Aarti',
+          'Dinner',
+          'Lights off'
+        ]
+      },
+      {
+        dayNumber: 2,
+        title: 'Body & Breath Connection',
+        activities: [
+          'Morning Yoga Session (Strength + Flexibility)',
+          'Breakfast',
+          'Pranayama & Breathwork Masterclass',
+          'Lunch',
+          'Afternoon Nature Excursion / Local Exploration',
+          'Fun Activity (Dance Therapy / Group Bonding)',
+          'Dinner',
+          'Lights off'
+        ]
+      },
+      {
+        dayNumber: 3,
+        title: 'Energy Healing & Exploration',
+        activities: [
+          'Morning Meditation & Yoga Flow',
+          'Breakfast',
+          'Chakra Healing / Sound Healing',
+          'Lunch',
+          'Afternoon River Rafting / Adventure Activity',
+          'Free Time / Riverside Chill',
+          'Dinner',
+          'Lights off'
+        ]
+      },
+      {
+        dayNumber: 4,
+        title: 'Closure & Departure',
+        activities: [
+          'Morning Gentle Yoga & Gratitude Meditation',
+          'Breakfast',
+          'Sharing Circle & Closing Ritual',
+          'Check-out'
+        ]
+      }
+    ]
+  },
+  '4n5d': {
+    id: '4n5d',
+    title: '4 Nights / 5 Days Retreat (Premium Experience)',
+    shortTitle: '4N / 5D Premium',
+    nightsDays: '4 Nights / 5 Days',
+    badge: 'Premium Experience',
+    tagline: 'Deep dive into profound stillness, artistic expression, adventure, and long-term life integration.',
+    emoji: '🌸',
+    itinerary: [
+      {
+        dayNumber: 1,
+        title: 'Arrival & Welcome',
+        activities: [
+          'Arrival, Welcome Drink & Check-in',
+          'Leisure Time',
+          'Evening Ganga Aarti Experience',
+          'Dinner',
+          'Lights off'
+        ]
+      },
+      {
+        dayNumber: 2,
+        title: 'Foundation of Wellness',
+        activities: [
+          'Morning Yoga Session (Asanas + Pranayama)',
+          'Breakfast',
+          'Breathwork & Mindfulness Workshop',
+          'Lunch',
+          'Art & Craft Activity',
+          'Fun Activity (Dance / Ice-breaker Games)',
+          'Dinner',
+          'Lights off'
+        ]
+      },
+      {
+        dayNumber: 3,
+        title: 'Deep Healing & Adventure',
+        activities: [
+          'Morning Meditation & Advanced Yoga Flow',
+          'Breakfast',
+          'Chakra Healing / Sound Healing',
+          'Lunch',
+          'Afternoon River Rafting / Adventure Sports',
+          'Free Time / Self Reflection',
+          'Dinner',
+          'Night: Silent Meditation'
+        ]
+      },
+      {
+        dayNumber: 4,
+        title: 'Expansion & Joy',
+        activities: [
+          'Morning Sunrise Yoga & Breathwork',
+          'Breakfast',
+          'Inner Work Session (Journaling / Self-discovery)',
+          'Lunch',
+          'Afternoon Excursion / Café Hopping / Cultural Visit',
+          'Fun Activity (Dance Night)',
+          'Dinner',
+          'Night: Gratitude Meditation'
+        ]
+      },
+      {
+        dayNumber: 5,
+        title: 'Integration & Departure',
+        activities: [
+          'Morning Gentle Yoga & Closing Meditation',
+          'Breakfast',
+          'Closing Ceremony & Feedback',
+          'Check-out'
+        ]
+      }
+    ]
+  }
+};
+
+export const PackagesPage: React.FC<PackagesPageProps> = ({
+  config,
+  initialPackage = '3n4d',
+  onOpenBooking
+}) => {
+  const [selectedPkgId, setSelectedPkgId] = useState<PackageId>(initialPackage);
+
+  useEffect(() => {
+    if (initialPackage && (initialPackage === '2n3d' || initialPackage === '3n4d' || initialPackage === '4n5d')) {
+      setSelectedPkgId(initialPackage);
+    }
+  }, [initialPackage]);
+
+  const activePackage = RETREAT_PACKAGES[selectedPkgId];
+
+  // Pricing values from site config or defaults
+  const getPackagePrices = (id: PackageId) => {
+    if (id === '2n3d') {
+      const cfg = config?.pricing?.pkg2n3d;
+      return {
+        privatePrice: cfg?.soloPrice ?? 26000,
+        doubleSharingPrice: cfg?.twinPrice ?? 22000
+      };
+    }
+    if (id === '3n4d') {
+      const cfg = config?.pricing?.pkg3n4d || config?.pricing?.pkg4d3n;
+      return {
+        privatePrice: cfg?.soloPrice ?? 32000,
+        doubleSharingPrice: cfg?.twinPrice ?? 26000
+      };
+    }
+    // 4n5d
+    const cfg = config?.pricing?.pkg4n5d || config?.pricing?.pkg5d4n;
+    return {
+      privatePrice: cfg?.soloPrice ?? 52000,
+      doubleSharingPrice: cfg?.twinPrice ?? 44000
+    };
+  };
+
+  const prices = getPackagePrices(selectedPkgId);
+
+  // Helper for WhatsApp inquiry
+  const handleWhatsAppInquiry = (roomType: string) => {
+    const rawNumber = config?.contact?.whatsappNumber || '919259698064';
+    const cleanNumber = rawNumber.replace(/[^0-9]/g, '');
+    const text = encodeURIComponent(
+      `Hello Shunya Sync Team! I am interested in booking the "${activePackage.title}" (${roomType}). Please share details about upcoming retreat dates and availability.`
+    );
+    window.open(`https://wa.me/${cleanNumber}?text=${text}`, '_blank');
+  };
 
   return (
-    <div className="py-12 sm:py-20 px-5 sm:px-8 max-w-7xl mx-auto space-y-16 animate-fade-in">
-      <div className="text-center max-w-3xl mx-auto space-y-4">
-        <span className="text-xs font-semibold tracking-[0.24em] uppercase text-[#C67856] bg-[#F7EFE9] px-3.5 py-1.5 rounded-full border border-[#E9D9CF]">
-          Curated Immersion Journeys
-        </span>
+    <div className="py-12 sm:py-20 px-4 sm:px-8 max-w-7xl mx-auto space-y-16 animate-fade-in">
+      {/* 1. TOP HEADER & PACKAGE SELECTION TABS */}
+      <div className="text-center max-w-4xl mx-auto space-y-5">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F3EDE2] text-[#C67856] text-xs font-bold uppercase tracking-widest border border-[#E8DFC0]">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Shunya Sync Retreat Itinerary</span>
+        </div>
+
         <h1 className="font-serif-display text-4xl sm:text-5xl md:text-6xl font-normal text-[#1F2E23]">
-          Retreat Packages &amp; Itineraries
+          Choose Your Duration
         </h1>
-        <p className="text-base sm:text-lg text-[#556057] font-light">
-          Choose between our classic weekend transformation or deep multi-day sanctuary retreat in India.
+
+        <p className="text-base sm:text-lg text-[#556057] font-light max-w-2xl mx-auto">
+          Choose your duration — each package includes a full day-by-day schedule and transparent pricing.
         </p>
 
-        {/* Tab Switcher */}
-        <div className="inline-flex p-1.5 bg-[#EFEAE1] rounded-full border border-[#DFD7CA] mt-4">
-          <button
-            onClick={() => {
-              setSelectedTab('4d3n');
-              setExpandedDay(1);
-            }}
-            className={`px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition-all ${
-              selectedTab === '4d3n' ? 'bg-[#223326] text-white shadow-md' : 'text-[#5B665D] hover:text-[#1F2E23]'
-            }`}
-          >
-            4 Days / 3 Nights Retreat
-          </button>
-          <button
-            onClick={() => {
-              setSelectedTab('5d4n');
-              setExpandedDay(1);
-            }}
-            className={`px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition-all ${
-              selectedTab === '5d4n' ? 'bg-[#223326] text-white shadow-md' : 'text-[#5B665D] hover:text-[#1F2E23]'
-            }`}
-          >
-            5 Days / 4 Nights (Premium)
-          </button>
+        {/* 3 PACKAGE SELECTOR BUTTONS */}
+        <div className="pt-4 flex flex-wrap justify-center gap-3">
+          {(['2n3d', '3n4d', '4n5d'] as PackageId[]).map((pkgKey) => {
+            const pkg = RETREAT_PACKAGES[pkgKey];
+            const isSelected = selectedPkgId === pkgKey;
+            return (
+              <button
+                key={pkgKey}
+                onClick={() => {
+                  setSelectedPkgId(pkgKey);
+                  window.scrollTo({ top: 380, behavior: 'smooth' });
+                }}
+                className={`px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm ${
+                  isSelected
+                    ? 'bg-[#223326] text-white shadow-lg ring-2 ring-[#C67856] ring-offset-2 scale-105'
+                    : 'bg-[#FAF8F5] text-[#3D473F] border border-[#DFD7CA] hover:bg-[#EFEAE1] hover:text-[#1F2E23]'
+                }`}
+              >
+                <span className="text-base">{pkg.emoji}</span>
+                <span>{pkg.title}</span>
+                {pkg.popular && (
+                  <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${
+                    isSelected ? 'bg-[#C67856] text-white' : 'bg-[#FBF0EA] text-[#C67856]'
+                  }`}>
+                    Popular
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Pricing Cards Comparison */}
+      {/* 2. DEDICATED PACKAGE VIEW: ONLY THE SELECTED RETREAT IS DISPLAYED */}
+      <div className="space-y-12 animate-in fade-in zoom-in-95 duration-400">
+        {/* Banner with Active Package Title & Badge */}
+        <div className="bg-[#FAF8F5] rounded-3xl p-6 sm:p-10 border border-[#E5DFD5] shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#EFEAE1]/60 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#E5DFD5] pb-8">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBF1EB] text-[#223326] text-xs font-semibold uppercase tracking-wider">
+                <span>{activePackage.badge}</span>
+              </div>
+              <h2 className="font-serif-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#1F2E23]">
+                {activePackage.emoji} {activePackage.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5B665D] max-w-2xl font-light">
+                {activePackage.tagline}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => handleWhatsAppInquiry('General')}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#25D366] hover:bg-[#1EBE5D] text-white transition shadow cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Chat on WhatsApp</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Pricing Cards for THIS Package */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Private Accommodation Card */}
+            <div className="rounded-3xl p-6 sm:p-8 bg-white border border-[#DFD7CA] shadow-sm hover:shadow-md transition space-y-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#C67856]">
+                    Private Sanctuary
+                  </span>
+                  <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
+                    Private accommodation
+                  </h3>
+                </div>
+                <span className="p-2 rounded-full bg-[#FAF8F5] text-[#223326]">
+                  <Moon className="w-5 h-5" />
+                </span>
+              </div>
+
+              <div>
+                <p className="font-serif-display text-4xl sm:text-5xl font-bold text-[#1F2E23]">
+                  ₹{prices.privatePrice.toLocaleString()}
+                </p>
+                <p className="text-xs uppercase tracking-wider font-semibold text-[#717E73] mt-1">
+                  per person
+                </p>
+              </div>
+
+              <p className="text-xs text-[#556057] leading-relaxed">
+                Enjoy complete solitude and personal space in your own private room with attached bathroom and serene nature vistas.
+              </p>
+
+              <button
+                onClick={() => onOpenBooking(activePackage.title, 'Solo')}
+                className="w-full py-3.5 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#223326] hover:bg-[#152218] text-white transition shadow cursor-pointer active:scale-95"
+              >
+                Book Private accommodation (₹{prices.privatePrice.toLocaleString()})
+              </button>
+            </div>
+
+            {/* Double Sharing Card */}
+            <div className="rounded-3xl p-6 sm:p-8 bg-white border border-[#DFD7CA] shadow-sm hover:shadow-md transition space-y-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#3F523E]">
+                    Shared Experience
+                  </span>
+                  <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
+                    Double sharing
+                  </h3>
+                </div>
+                <span className="p-2 rounded-full bg-[#F4EFE6] text-[#C67856]">
+                  <Users className="w-5 h-5" />
+                </span>
+              </div>
+
+              <div>
+                <p className="font-serif-display text-4xl sm:text-5xl font-bold text-[#1F2E23]">
+                  ₹{prices.doubleSharingPrice.toLocaleString()}
+                </p>
+                <p className="text-xs uppercase tracking-wider font-semibold text-[#717E73] mt-1">
+                  per person
+                </p>
+              </div>
+
+              <p className="text-xs text-[#556057] leading-relaxed">
+                Come with a friend or partner, or let us pair you with a like-minded seeker of the same gender in comfortable twin beds.
+              </p>
+
+              <button
+                onClick={() => onOpenBooking(activePackage.title, 'Twin Sharing')}
+                className="w-full py-3.5 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#C67856] hover:bg-[#B36544] text-white transition shadow cursor-pointer active:scale-95"
+              >
+                Book Double sharing (₹{prices.doubleSharingPrice.toLocaleString()})
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. DAY-BY-DAY ITINERARY DETAILS FOR THIS PACKAGE */}
+        <div className="bg-[#FAF8F5] rounded-3xl p-6 sm:p-10 border border-[#DFD7CA] shadow-sm space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8E1D5] pb-6">
+            <div>
+              <span className="text-xs uppercase tracking-widest font-bold text-[#C67856]">
+                Step-by-Step Schedule
+              </span>
+              <h3 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#1F2E23] mt-1">
+                Itinerary — {activePackage.nightsDays}
+              </h3>
+            </div>
+            <div className="inline-flex items-center gap-2 text-xs text-[#556057]">
+              <Clock className="w-4 h-4 text-[#C67856]" />
+              <span>Full day-by-day curated schedule</span>
+            </div>
+          </div>
+
+          {/* List of Days */}
+          <div className="space-y-6">
+            {activePackage.itinerary.map((day) => (
+              <div
+                key={day.dayNumber}
+                className="bg-white rounded-2xl p-6 sm:p-8 border border-[#DFD7CA] shadow-sm hover:border-[#C67856]/40 transition space-y-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-10 h-10 rounded-full bg-[#223326] text-white font-serif-display font-bold flex items-center justify-center text-sm shadow">
+                    D{day.dayNumber}
+                  </span>
+                  <h4 className="font-serif-display text-xl sm:text-2xl font-bold text-[#1F2E23]">
+                    Day {day.dayNumber}: {day.title.replace(/^Day\s*\d+:\s*/i, '')}
+                  </h4>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  {day.activities.map((act, actIdx) => (
+                    <div
+                      key={actIdx}
+                      className="flex items-start gap-3 p-3 rounded-xl bg-[#FAF8F5] border border-[#F0EAE1]"
+                    >
+                      <span className="mt-1 w-2 h-2 rounded-full bg-[#C67856] shrink-0" />
+                      <span className="text-xs sm:text-sm text-[#2C332D] font-medium leading-relaxed">
+                        {act}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick CTA banner at the bottom of itinerary */}
+          <div className="p-6 rounded-2xl bg-[#F0EAE1] border border-[#DFD7CA] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-serif-display text-lg font-bold text-[#1F2E23]">
+                Ready to experience the {activePackage.title}?
+              </p>
+              <p className="text-xs text-[#556057]">
+                Seats are limited to ensure an intimate, high-vibe cohort of seekers.
+              </p>
+            </div>
+            <button
+              onClick={() => onOpenBooking(activePackage.title, 'Twin Sharing')}
+              className="px-6 py-3 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#223326] text-white hover:bg-black transition shadow cursor-pointer shrink-0"
+            >
+              Reserve Your Sanctuary Spot &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. WHAT'S INCLUDED IN ALL RETREATS */}
+      <section className="bg-white rounded-3xl p-6 sm:p-12 border border-[#DFD7CA] shadow-sm space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-3">
+          <span className="text-xs font-semibold tracking-[0.24em] uppercase text-[#3F523E] bg-[#E8ECE6] px-3.5 py-1.5 rounded-full border border-[#D5DED3]">
+            Comprehensive Care
+          </span>
+          <h2 className="font-serif-display text-3xl sm:text-4xl font-normal text-[#1F2E23]">
+            What's Included in All Retreats
+          </h2>
+          <p className="text-sm text-[#5D6B60]">
+            Everything is arranged so your only focus is resting, healing, and reconnecting.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[
+            {
+              title: 'Comfortable Accommodation',
+              desc: 'Serene rooms equipped with warm amenities and tranquil surroundings.'
+            },
+            {
+              title: '2 Satvik Meals Daily',
+              desc: 'Wholesome, freshly prepared vegetarian nourishment prepared with love.'
+            },
+            {
+              title: 'Daily Yoga & Meditation Sessions',
+              desc: 'Guided sunrise and sunset practices suitable for every experience level.'
+            },
+            {
+              title: 'Chakra Healing & Sound Healing',
+              desc: 'Vibrational Tibetan singing bowls, gong immersions, and energy balancing.'
+            },
+            {
+              title: 'Excursions & Adventure Activities',
+              desc: 'Mindful nature walks, Ganga Aarti, river experiences, and local exploration.'
+            },
+            {
+              title: 'Evening Activities & Community bonding!',
+              desc: 'Heart-opening circles, dance therapy, ice-breakers, and joyful connection.'
+            }
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="flex items-start gap-3.5 p-5 rounded-2xl bg-[#FAF8F5] border border-[#EFEAE1]"
+            >
+              <div className="w-6 h-6 rounded-full bg-[#223326] text-white flex items-center justify-center shrink-0 mt-0.5">
+                <Check className="w-3.5 h-3.5" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-serif-display text-base font-bold text-[#1F2E23]">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-[#556057] leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. RETREAT ACCOMMODATION & WHY CHOOSE US */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Card 1: 4D/3N */}
-        <div
-          className={`rounded-3xl p-8 border transition-all duration-300 card-3d-tilt ${
-            selectedTab === '4d3n'
-              ? 'bg-white border-[#C67856] ring-2 ring-[#C67856]/20 shadow-xl'
-              : 'bg-[#FAF8F5] border-[#DFD7CA]'
-          }`}
-        >
-          <div className="flex justify-between items-start">
-            <div>
-              <span className="text-xs uppercase tracking-widest font-semibold text-[#8A9687]">
-                {config.pricing.pkg4d3n.badge}
-              </span>
-              <h2 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#1F2E23] mt-1">
-                {config.pricing.pkg4d3n.title}
-              </h2>
-            </div>
-            <span className="px-3 py-1 rounded-full bg-[#F0F4EF] text-[#223326] text-xs font-semibold">
-              Weekend Reset
+        {/* Retreat Accommodation */}
+        <div className="bg-[#FAF8F5] rounded-3xl p-8 border border-[#DFD7CA] shadow-sm space-y-5">
+          <div className="w-12 h-12 rounded-2xl bg-[#EFEAE1] text-[#223326] flex items-center justify-center">
+            <Moon className="w-6 h-6" />
+          </div>
+          <div className="space-y-2">
+            <span className="text-xs uppercase font-bold tracking-wider text-[#C67856]">
+              Peaceful Rest
             </span>
-          </div>
-
-          <p className="text-sm text-[#5B665D] mt-3">
-            {config.pricing.pkg4d3n.description}
-          </p>
-
-          <div className="mt-6 grid grid-cols-2 gap-4 p-5 rounded-2xl bg-[#F7F4EE] border border-[#EBE4D8] text-center">
-            <div>
-              <p className="text-xs uppercase text-[#8A9687] font-medium">Twin Sharing</p>
-              <p className="text-3xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                ₹{(config?.pricing?.pkg4d3n?.twinPrice ?? 32000).toLocaleString()}
-              </p>
-              <p className="text-[11px] text-[#717E73]">Per person sharing</p>
-            </div>
-            <div className="border-l border-[#DFD7CA] pl-2">
-              <p className="text-xs uppercase text-[#8A9687] font-medium">Solo Room</p>
-              <p className="text-3xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                ₹{(config?.pricing?.pkg4d3n?.soloPrice ?? 26000).toLocaleString()}
-              </p>
-              <p className="text-[11px] text-[#717E73]">Per person private</p>
-            </div>
-          </div>
-
-          <div className="mt-6 space-y-2 text-xs sm:text-sm text-[#4E5950]">
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#3F523E]" />
-              <span>Full 3 days of guided itinerary</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#3F523E]" />
-              <span>Daily sound baths &amp; morning Pranayama</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#3F523E]" />
-              <span>All sattvic gourmet vegetarian meals</span>
-            </div>
-          </div>
-
-          <div className="mt-8 flex gap-3">
-            <button
-              onClick={() => onOpenBooking(config?.pricing?.pkg4d3n?.title || '4 Days / 3 Nights Retreat', 'Twin Sharing')}
-              className="flex-1 py-3 px-4 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#223326] text-white hover:bg-[#152218] transition shadow"
-            >
-              Book 4D/3N
-            </button>
+            <h3 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#1F2E23]">
+              Retreat accommodation
+            </h3>
+            <p className="text-base text-[#2C332D] font-medium pt-2">
+              Calm rooms, warm amenities, and friendly hosts.
+            </p>
+            <p className="text-xs sm:text-sm text-[#5B665D] leading-relaxed pt-1">
+              Every room is curated to offer undisturbed sleep, gentle natural light, fresh mountain breezes, and an atmosphere of pure tranquility.
+            </p>
           </div>
         </div>
 
-        {/* Card 2: 5D/4N */}
-        <div
-          className={`rounded-3xl p-8 border transition-all duration-300 card-3d-tilt ${
-            selectedTab === '5d4n'
-              ? 'bg-white border-[#C67856] ring-2 ring-[#C67856]/20 shadow-xl'
-              : 'bg-[#FAF8F5] border-[#DFD7CA]'
-          }`}
-        >
-          <div className="flex justify-between items-start">
-            <div>
-              <span className="text-xs uppercase tracking-widest font-semibold text-[#C67856]">
-                Deep Transformation
-              </span>
-              <h2 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#1F2E23] mt-1">
-                {config?.pricing?.pkg5d4n?.title || '5 Days / 4 Nights Retreat'}
-              </h2>
-            </div>
-            <span className="px-3 py-1 rounded-full bg-[#FBF0EA] text-[#C67856] text-xs font-semibold">
-              {config?.pricing?.pkg5d4n?.badge || 'Premium Experience'}
+        {/* Why Choose Us */}
+        <div className="bg-[#FAF8F5] rounded-3xl p-8 border border-[#DFD7CA] shadow-sm space-y-5">
+          <div className="w-12 h-12 rounded-2xl bg-[#EBF1EB] text-[#223326] flex items-center justify-center">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <div className="space-y-2">
+            <span className="text-xs uppercase font-bold tracking-wider text-[#223326]">
+              Our Promise
             </span>
+            <h3 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#1F2E23]">
+              Why Choose Us
+            </h3>
           </div>
 
-          <p className="text-sm text-[#5B665D] mt-3">
-            {config?.pricing?.pkg5d4n?.description || 'Deep dive into sacred silence, ecstatic movement, advanced sound baths, and permanent life integration.'}
-          </p>
-
-          <div className="mt-6 grid grid-cols-2 gap-4 p-5 rounded-2xl bg-[#F7F4EE] border border-[#EBE4D8] text-center">
-            <div>
-              <p className="text-xs uppercase text-[#8A9687] font-medium">Twin Sharing</p>
-              <p className="text-3xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                ₹{(config?.pricing?.pkg5d4n?.twinPrice ?? 44000).toLocaleString()}
-              </p>
-              <p className="text-[11px] text-[#717E73]">Per person sharing</p>
-            </div>
-            <div className="border-l border-[#DFD7CA] pl-2">
-              <p className="text-xs uppercase text-[#8A9687] font-medium">Solo Room</p>
-              <p className="text-3xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                ₹{(config?.pricing?.pkg5d4n?.soloPrice ?? 38000).toLocaleString()}
-              </p>
-              <p className="text-[11px] text-[#717E73]">Per person private</p>
-            </div>
-          </div>
-
-          <div className="mt-6 space-y-2 text-xs sm:text-sm text-[#4E5950]">
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#C67856]" />
-              <span>Extended 5-day itinerary with sacred cacao ceremony</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#C67856]" />
-              <span>Advanced somatic sound journeys &amp; ecstatic movement</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#C67856]" />
-              <span>1-on-1 energy consultation with Anmol &amp; Komal</span>
-            </div>
-          </div>
-
-          <div className="mt-8 flex gap-3">
-            <button
-              onClick={() => onOpenBooking(config.pricing.pkg5d4n.title, 'Twin Sharing')}
-              className="flex-1 py-3 px-4 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#C67856] text-white hover:bg-[#B36544] transition shadow"
-            >
-              Book 5D/4N Premium
-            </button>
+          <div className="space-y-2.5 pt-2">
+            {[
+              'Small, curated groups',
+              'Beginner-friendly',
+              'Premium yet affordable',
+              'Nature + Spiritual blend',
+              'Located near mountains and rivers'
+            ].map((pt, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full bg-[#C67856] text-white flex items-center justify-center shrink-0">
+                  <Check className="w-3 h-3" />
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-[#2C332D]">{pt}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Day by Day Schedule Details */}
-      <div className="bg-[#F4EFE6] rounded-3xl p-6 sm:p-10 border border-[#DFD7CA]">
-        <h3 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#1F2E23] mb-6">
-          {selectedTab === '4d3n' ? '4 Days / 3 Nights Full Itinerary' : '5 Days / 4 Nights Premium Full Itinerary'}
-        </h3>
+      {/* 6. WHAT WE OFFER (6 EXPERIENCES) */}
+      <section className="bg-[#FAF8F5] rounded-3xl p-6 sm:p-12 border border-[#DFD7CA] shadow-sm space-y-10">
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <span className="text-xs font-semibold tracking-[0.24em] uppercase text-[#C67856]">
+            The Journey Within
+          </span>
+          <h2 className="font-serif-display text-3xl sm:text-4xl font-normal text-[#1F2E23]">
+            What We Offer
+          </h2>
+          <p className="text-sm sm:text-base text-[#5B665D] font-light">
+            Every Shunya Sync retreat weaves these experiences into your journey — practices, nourishment, and moments that help you reset and return home renewed.
+          </p>
+        </div>
 
-        {selectedTab === '4d3n' ? (
-          <div className="space-y-4">
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-2">Day 1: Arrival &amp; Grounding</strong>
-              <ul className="space-y-1.5 text-xs sm:text-sm text-[#556057]">
-                <li>• Arrival &amp; Welcome Ritual (Botanical tea ceremony)</li>
-                <li>• Check-in &amp; Orientation through sanctuary grounds</li>
-                <li>• Opening Circle &amp; Intention Setting</li>
-                <li>• Light Dinner (Sattvic organic food)</li>
-                <li>• Evening Sound Bath (Tibetan singing bowls for restorative sleep)</li>
-              </ul>
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            {
+              title: 'Daily Yoga & Pranayama',
+              desc: 'Guided sunrise and sunset sessions for all levels, by the river and in nature.',
+              icon: Sun
+            },
+            {
+              title: 'Meditation & Mindfulness',
+              desc: 'Quiet inner work to release stress and restore clarity throughout your stay.',
+              icon: Moon
+            },
+            {
+              title: 'Sound Healing',
+              desc: 'Vibrational therapy with singing bowls and sacred sound to deepen relaxation.',
+              icon: Music
+            },
+            {
+              title: 'Sattvic Nourishment',
+              desc: 'Wholesome vegetarian meals prepared with care to support body and mind.',
+              icon: Leaf
+            },
+            {
+              title: 'Nature & Excursions',
+              desc: 'Temple visits, river walks, and curated outings across Rishikesh.',
+              icon: Compass
+            },
+            {
+              title: 'Community & Celebration',
+              desc: 'Dance, kirtan, and soulful evenings that connect you with fellow seekers.',
+              icon: Heart
+            }
+          ].map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={idx}
+                className="bg-white p-6 rounded-2xl border border-[#DFD7CA] shadow-sm space-y-3 hover:border-[#C67856]/50 transition"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#FAF8F5] text-[#223326] flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-[#C67856]" />
+                </div>
+                <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#5B665D] leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-2">Day 2: Inner Alignment &amp; Adventure</strong>
-              <ul className="space-y-1.5 text-xs sm:text-sm text-[#556057]">
-                <li>• Morning Yoga Session (Energy + Pranayama)</li>
-                <li>• Breakfast (Nutrient-dense seasonal fruits and grains)</li>
-                <li>• Nature Walk / Outdoor Meditation in forest canopy</li>
-                <li>• Lunch in silent mindfulness</li>
-                <li>• Afternoon Session (Breathwork / Sharing Circle)</li>
-                <li>• Evening Fire Ceremony / Free Time around sacred bonfire</li>
-                <li>• Dinner &amp; evening tea</li>
-              </ul>
-            </div>
+      {/* 7. OTHER RETREAT OPTIONS SWITCHER BANNER */}
+      <div className="p-8 rounded-3xl bg-[#223326] text-[#F9F7F2] text-center space-y-6 shadow-xl">
+        <div className="max-w-2xl mx-auto space-y-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#E6A07E]">
+            Explore All Durations
+          </span>
+          <h3 className="font-serif-display text-2xl sm:text-3xl font-bold">
+            Looking for a different retreat duration?
+          </h3>
+          <p className="text-xs sm:text-sm text-[#DFD7CA] font-light">
+            Click on any retreat package below to view its specific day-by-day itinerary and pricing.
+          </p>
+        </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-2">Day 3: Integration &amp; Departure</strong>
-              <ul className="space-y-1.5 text-xs sm:text-sm text-[#556057]">
-                <li>• Morning Meditation &amp; Light Yoga</li>
-                <li>• Celebration farewell breakfast feast</li>
-                <li>• Closing Circle &amp; Integration for returning home</li>
-                <li>• Check-out &amp; departure renewed</li>
-              </ul>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-1">Day 1: Arrival &amp; Welcome</strong>
-              <p className="text-xs sm:text-sm text-[#556057]">Grounding botanical welcome drink, check-in, sunset opening circle, mindfulness dinner, and deep restorative sound immersion.</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-1">Day 2: Foundation of Wellness</strong>
-              <p className="text-xs sm:text-sm text-[#556057]">Chakra alignment Hatha yoga, sattvic breakfast, guided forest bathing &amp; riverbed meditation, restorative breathwork mastery circle, twilight silent reflection.</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-1">Day 3: Deep Healing &amp; Adventure</strong>
-              <p className="text-xs sm:text-sm text-[#556057]">Pranayama sunrise practice, conscious breakfast, sacred mountain trail walk, sound healing vibrational immersion &amp; gong journey, starlight campfire ceremony.</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-1">Day 4: Expansion &amp; Joy</strong>
-              <p className="text-xs sm:text-sm text-[#556057]">Vibrant movement &amp; ecstatic dance, nourishing brunch, cacao ritual &amp; heart-opening circle, evening celebration kirtan &amp; celebratory dinner banquet.</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border border-[#DFD7CA]">
-              <strong className="text-lg font-serif-display text-[#1F2E23] block mb-1">Day 5: Integration &amp; Departure</strong>
-              <p className="text-xs sm:text-sm text-[#556057]">Gratitude sunrise meditation, gentle restorative yoga, farewell breakfast banquet, closing integration circle &amp; blessings, departure with clear purpose.</p>
-            </div>
-          </div>
-        )}
+        <div className="flex flex-wrap justify-center gap-3">
+          {(['2n3d', '3n4d', '4n5d'] as PackageId[]).map((pkgKey) => {
+            const pkg = RETREAT_PACKAGES[pkgKey];
+            if (pkgKey === selectedPkgId) return null;
+            return (
+              <button
+                key={pkgKey}
+                onClick={() => {
+                  setSelectedPkgId(pkgKey);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 hover:bg-white text-white hover:text-[#1F2E23] border border-white/20 transition cursor-pointer flex items-center gap-2"
+              >
+                <span>{pkg.emoji}</span>
+                <span>Switch to {pkg.title}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

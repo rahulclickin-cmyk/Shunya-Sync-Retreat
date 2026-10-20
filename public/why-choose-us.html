@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Choose Us — Shunya Sync Retreat</title>
+  
+  <!-- Google Fonts: Playfair Display (Serif) & DM Sans (Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Playfair+Display:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CSS RESET & BASE STYLES
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #ffffff;
+      background-color: #121a14;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================================
+       DUMMY TALL CONTENT (TO DEMONSTRATE PARALLAX SCROLL EFFECT)
+       ========================================================================== */
+    .dummy-hero,
+    .dummy-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 80vh;
+      padding: 4rem 2rem;
+      background: radial-gradient(circle at 50% 30%, #1e3025, #0f1912);
+      color: #d6ded7;
+    }
+
+    .dummy-hero h1,
+    .dummy-footer h2 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .dummy-hero p,
+    .dummy-footer p {
+      max-width: 650px;
+      font-size: 1.1rem;
+      color: #9cb0a1;
+      margin-bottom: 2rem;
+    }
+
+    .scroll-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #f1d2c1;
+      padding: 0.6rem 1.4rem;
+      border: 1px solid rgba(241, 210, 193, 0.3);
+      border-radius: 9999px;
+      background: rgba(241, 210, 193, 0.05);
+    }
+
+    /* ==========================================================================
+       WHY CHOOSE US SECTION — FIXED-BACKGROUND / PARALLAX
+       ========================================================================== */
+    .why-choose-us-section {
+      /* Structural stacking context */
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      
+      /* Dynamic padding: clamp(4.5rem, 10vw, 8rem) */
+      padding: clamp(4.5rem, 10vw, 8rem) 1.5rem;
+      color: #ffffff;
+    }
+
+    /* 
+      EFFECT (1): Full-width background photo with background-attachment: fixed
+      Only the background photo stays still while the section and cards scroll over it.
+    */
+    .why-choose-us-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: url("https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=1920&q=75") center / cover no-repeat fixed;
+      pointer-events: none;
+    }
+
+    /*
+      EFFECT (2): Dark forest-green gradient overlay so white text stays ultra readable
+    */
+    .why-choose-us-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(31, 51, 40, 0.82), rgba(31, 51, 40, 0.74));
+      pointer-events: none;
+    }
+
+    /* 
+      EFFECT (3): Mobile touch fallback (iOS Safari / touch devices do not support fixed attachments reliably)
+    */
+    @media (hover: none), (max-width: 900px) {
+      .why-choose-us-section::before {
+        background-attachment: scroll;
+      }
+    }
+
+    /* Inner centered container (max 1200px) */
+    .why-choose-us-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Header block */
+    .why-choose-us-header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 3.5rem auto;
+    }
+
+    /* Eyebrow label with short thin lines on both sides */
+    .eyebrow-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow-line {
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background-color: #f1d2c1;
+      opacity: 0.6;
+    }
+
+    .eyebrow-text {
+      font-family: "DM Sans", sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #f1d2c1;
+    }
+
+    /* Heading: "Why Choose Us" with "Choose Us" italicized in soft peach */
+    .section-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+      font-weight: 500;
+      line-height: 1.2;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+
+    .section-title em {
+      font-family: "Playfair Display", Georgia, serif;
+      font-style: italic;
+      color: #f1d2c1;
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE CSS GRID & FROSTED GLASS CARDS
+       ========================================================================== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* Frosted glass card */
+    .retreat-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 1.9rem;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      cursor: default;
+      transition: transform 0.4s ease-out, background 0.4s ease-out, border-color 0.4s ease-out, box-shadow 0.4s ease-out;
+    }
+
+    /* Hover effect */
+    .retreat-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(241, 210, 193, 0.45);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.35);
+    }
+
+    /* 48px round icon circle */
+    .card-icon-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(241, 210, 193, 0.15);
+      border: 1px solid rgba(241, 210, 193, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.35rem;
+      flex-shrink: 0;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .retreat-card:hover .card-icon-circle {
+      background: rgba(241, 210, 193, 0.25);
+      transform: scale(1.05);
+    }
+
+    /* Simple peach line-icon SVG inside */
+    .card-icon-circle svg {
+      width: 22px;
+      height: 22px;
+      stroke: #f1d2c1;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Card title: white, Playfair Display, ~1.35rem */
+    .card-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.35;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* Optional descriptive hint for clarity & balance */
+    .card-desc {
+      font-family: "DM Sans", sans-serif;
+      font-size: 0.92rem;
+      color: rgba(255, 255, 255, 0.72);
+      line-height: 1.55;
+      margin-top: auto;
+    }
+
+    /* ==========================================================================
+       ACCESSIBILITY: PREFERS-REDUCED-MOTION
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      .retreat-card,
+      .retreat-card:hover,
+      .card-icon-circle,
+      .retreat-card:hover .card-icon-circle {
+        transition: none !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       DUMMY TALL CONTENT ABOVE (Scroll down to experience the fixed parallax)
+       ========================================================================= -->
+  <section class="dummy-hero">
+    <div class="scroll-indicator">
+      <span>↓ Scroll to experience fixed background ↓</span>
+    </div>
+    <h1 style="margin-top: 1.5rem;">Shunya Sync Retreat</h1>
+    <p>
+      Disconnect the noise, find your true self and sync with the universe.
+      Scroll down to view our signature fixed-photo "Why Choose Us" section.
+    </p>
+  </section>
+
+  <!-- =========================================================================
+       "WHY CHOOSE US" SECTION — PURE HTML + CSS WITH FIXED BACKGROUND EFFECT
+       ========================================================================= -->
+  <section class="why-choose-us-section" id="why-choose-us">
+    <div class="why-choose-us-container">
+      
+      <!-- Section Header -->
+      <div class="why-choose-us-header">
+        <!-- Small eyebrow label with thin lines on both sides -->
+        <div class="eyebrow-wrapper">
+          <span class="eyebrow-line" aria-hidden="true"></span>
+          <span class="eyebrow-text">WHY SHUNYA SYNC</span>
+          <span class="eyebrow-line" aria-hidden="true"></span>
+        </div>
+
+        <!-- Heading: "Why Choose Us" with "Choose Us" italicized in soft peach -->
+        <h2 class="section-title">
+          Why <em>Choose Us</em>
+        </h2>
+      </div>
+
+      <!-- 6 Responsive Frosted Glass Cards -->
+      <div class="cards-grid">
+
+        <!-- Card 1: Small intimate groups -->
+        <article class="retreat-card">
+          <div class="card-icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h3 class="card-title">Small intimate groups</h3>
+          <p class="card-desc">
+            Curated cohorts of 10 to 14 participants to protect energy and ensure everyone is truly seen.
+          </p>
+        </article>
+
+        <!-- Card 2: Personalized attention -->
+        <article class="retreat-card">
+          <div class="card-icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+          <h3 class="card-title">Personalized attention</h3>
+          <p class="card-desc">
+            Dedicated adjustments in asana, pranayama, and healing frequencies tailored to your body.
+          </p>
+        </article>
+
+        <!-- Card 3: Certified instructors & hosts -->
+        <article class="retreat-card">
+          <div class="card-icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="6"></circle>
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+            </svg>
+          </div>
+          <h3 class="card-title">Certified instructors &amp; hosts</h3>
+          <p class="card-desc">
+            Certified sound healing alchemists and certified yoga instructors with authentic lineage.
+          </p>
+        </article>
+
+        <!-- Card 4: Beginner friendly -->
+        <article class="retreat-card">
+          <div class="card-icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+            </svg>
+          </div>
+          <h3 class="card-title">Beginner friendly</h3>
+          <p class="card-desc">
+            No past meditation or flexibility required. An open, loving container to begin as you are.
+          </p>
+        </article>
+
+        <!-- Card 5: Nature & Spiritual blend -->
+        <article class="retreat-card">
+          <div class="card-icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+            </svg>
+          </div>
+          <h3 class="card-title">Nature &amp; Spiritual blend</h3>
+          <p class="card-desc">
+            Vedic wisdom and sound alchemy paired with sacred river walks and Himalayan forest air.
+          </p>
+        </article>
+
+        <!-- Card 6: Safe & supportive space -->
+        <article class="retreat-card">
+          <div class="card-icon-circle" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+          </div>
+          <h3 class="card-title">Safe &amp; supportive space</h3>
+          <p class="card-desc">
+            Guaranteed privacy, emotional safety, clean accommodations, and non-judgmental guidance.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       DUMMY TALL CONTENT BELOW (Notice the background staying fixed as you scroll)
+       ========================================================================= -->
+  <footer class="dummy-footer">
+    <h2>Sacred Cohorts Open for 2026</h2>
+    <p>
+      Notice how the background photo remained anchored and fixed in place while you scrolled past the section.
+    </p>
+    <a href="#why-choose-us" class="scroll-indicator" style="text-decoration: none;">
+      ↑ Scroll Back Up ↑
+    </a>
+  </footer>
+
+</body>
+</html>

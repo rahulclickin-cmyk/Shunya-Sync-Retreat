@@ -1,5 +1,101 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { SiteConfig, BenefitSlide, BookingLead, SupabaseConfig, SeoConfig } from '../types/retreat';
+import { SiteConfig, BenefitSlide, BookingLead, SupabaseConfig, SeoConfig, BlogPost } from '../types/retreat';
+
+export const DEFAULT_BLOG_POSTS: BlogPost[] = [
+  {
+    id: 'post-1',
+    title: 'The Science of 432Hz: How Sacred Sound Downregulates the Nervous System',
+    slug: 'science-of-432hz-sound-healing',
+    category: 'Sound Healing',
+    author: 'Komal Makhetra',
+    date: 'October 14, 2026',
+    readTime: '6 min read',
+    summary: 'Explore the biophysical mechanisms through which Tibetan singing bowls and gong harmonics shift brainwaves from high-stress beta states down into theta and delta stillness.',
+    content: `Sound is not merely something we perceive through our auditory canal; it is a vibrational tactile force that bathes every organ, cellular membrane, and neural pathway in the human body.
+
+In our high-velocity modern existence, the human nervous system is repeatedly pushed into sympathetic overdrive—the fight-or-flight state. Cortisol levels remain chronically elevated, digestion slows, and restorative theta brainwave cycles become rare.
+
+### Why 432Hz Resonance Matters
+While commercial audio standards are calibrated to 440Hz, ancient acoustic instruments and natural harmonic geometries resonate closer to 432Hz. Known as the natural frequency of the golden ratio, 432Hz aligns with the mathematical patterns found in pine cones, unfurling ferns, and the Earth's natural resonance.
+
+When subjected to acoustic vibrations from handcrafted Himalayan singing bowls, our neural oscillations naturally entrain with these slower frequencies:
+1. **Beta Waves (14–30 Hz)**: Active problem solving, stress, vigilance.
+2. **Alpha Waves (8–13 Hz)**: Deep calm, creative contemplation.
+3. **Theta Waves (4–7 Hz)**: Somatic cellular repair, deep meditation, emotional integration.
+
+During our daily 432Hz sacred sound immersions at Shunya Sync, participants lie comfortably in our acoustically tuned sanctuary dome. As the resonance washes over, the vagus nerve signals the adrenal glands to halt adrenaline release, enabling profound rest and cellular restoration.`,
+    image: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=1200&q=80',
+    tag: 'Sound Alchemy',
+    published: true
+  },
+  {
+    id: 'post-2',
+    title: 'Pranayama in the Pines: Awakening Prana Through Himalayan Mountain Air',
+    slug: 'pranayama-in-the-pines-himalayan-breath',
+    category: 'Yoga & Breathwork',
+    author: 'Anmol Khatti',
+    date: 'October 08, 2026',
+    readTime: '5 min read',
+    summary: 'Why practicing conscious breath control at dawn surrounded by pine forest canopy elevates oxygen saturation, purifies subtle energy channels, and restores mental clarity.',
+    content: `Breath is the bridge between the conscious and unconscious mind. In yogic philosophy, *Prana* is not simply breath—it is the subtle life force that animates all living matter.
+
+When we awaken at dawn in the Himalayan foothills, the mountain atmosphere carries a uniquely high concentration of negative air ions and pine terpenes. Practicing Pranayama in this living sanctuary has an exponential healing impact on the lungs and nervous system.
+
+### The Sacred Breathwork Sequence
+At Shunya Sync, each sunrise begins with conscious breathwork:
+- **Kapalabhati (Skull Shining Breath)**: Gently stimulates the digestive fire and purifies the frontal sinuses.
+- **Nadi Shodhana (Alternate Nostril Breathing)**: Equalizes energy flow between Pingala (solar active channel) and Ida (lunar reflective channel), balancing the brain's hemispheres.
+- **Bhramari (Humming Bee Breath)**: The internal humming vibration stimulates nitric oxide production in the nasal airways and calms the vagal complex within seconds.
+
+Seekers discover that when the breath becomes slow, deep, and rhythmic, the turbulent mind automatically settles into the zero-point of peace.`,
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
+    tag: 'Breathwork',
+    published: true
+  },
+  {
+    id: 'post-3',
+    title: 'The Sattvic Kitchen: Why Pure Vegetarian Food Changes Your Meditation Depth',
+    slug: 'sattvic-kitchen-ayurvedic-meditation-nutrition',
+    category: 'Ayurvedic Nourishment',
+    author: 'Anmol Khatti',
+    date: 'September 30, 2026',
+    readTime: '7 min read',
+    summary: 'According to Ayurveda, the purity of mind (Sattva) begins on your plate. Learn why seasonal, garden-fresh ingredients open pathways for effortless stillness.',
+    content: `In the ancient texts of the Chandogya Upanishad, it is written: *"From the purity of food comes the purity of nature; from the purity of nature comes memory; and from memory, freedom from all bonds."*
+
+Most people view food merely as calories, proteins, and carbohydrates. In the Ayurvedic tradition, food is *Brahma*—sacred energy that directly influences your mental states:
+- **Tamasic Food**: Heavy, stale, processed, or overly greasy. Causes lethargy, brain fog, and depression.
+- **Rajasic Food**: Overly spicy, caffeinated, sour, or stimulating. Agitates thoughts, elevates heart rate, and sparks restlessness.
+- **Sattvic Food**: Light, organic, seasonal, prepared with reverence. Enhances mental clarity, compassion, and deep meditative absorption.
+
+At Shunya Sync, all meals are grown on terraced organic farms without chemical pesticides. Prepared fresh with digestive spices like fresh ginger, turmeric root, cumin, and coriander, each meal leaves you light, energized, and ready for silent contemplation.`,
+    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
+    tag: 'Ayurveda',
+    published: true
+  },
+  {
+    id: 'post-4',
+    title: 'Solo Travel as a Spiritual Mirror: Finding Freedom Beyond Social Conditioning',
+    slug: 'solo-travel-spiritual-mirror-retreat',
+    category: 'Inner Alignment',
+    author: 'Komal Makhetra',
+    date: 'September 20, 2026',
+    readTime: '8 min read',
+    summary: 'Over 65% of Shunya Sync guests arrive alone. Here is how entering an intimate circle of strangers allows you to shed societal masks and experience pure self-acceptance.',
+    content: `Throughout daily life, we are constantly holding up masks: the reliable employee, the attentive parent, the dutiful partner, the accomplished professional. We become so entangled in who we are supposed to be that we forget who we are underneath.
+
+When you pack a single bag and travel alone to a sacred retreat, something miraculous happens:
+Nobody in the room knows your job title, your past regrets, or your social status. You enter a circle of seekers where everyone has come to lay down their heavy armor.
+
+### Sacred Vulnerability in Small Circles
+Because our cohort is strictly limited to 10–14 participants, you are never lost in a crowd. During evening sharing circles, bonfires, and silent tea rituals, deep human connection blossoms without pretense.
+
+Seekers often tell us that the friends they met at Shunya Sync feel like family they had known for centuries. When you return home, you carry not just relaxation, but a grounded, clear knowing of your authentic self.`,
+    image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1200&q=80',
+    tag: 'Inner Growth',
+    published: true
+  }
+];
 
 export const DEFAULT_SEO_CONFIG: SeoConfig = {
   metaTitle: 'Shunya Sync Retreat — Mindful Yoga, Sound Healing & Forest Stillness in India',
@@ -57,38 +153,61 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   heroHeadline: 'Shunya Sync Retreat',
   heroSubheadline: 'Disconnect the noise, find your true self and sync with the universe.',
   heroBgImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=85',
-  heroTags: ['Yoga', 'Meditation', 'Sound Healing', 'Nature', 'Inner Alignment'],
-  aboutText: 'At Shunya Sync Retreat, we believe that true healing begins when we come together. Through mindful yoga, sound adventures, and meaningful human connections – helping you reconnect with yourself and live with greater clarity and purpose.',
+  heroTags: ['Somatic Yoga', 'Vedic Sound Bath', 'Forest Bathing', 'Digital Fasting', 'Inner Alignment'],
+  aboutText: 'At Shunya Sync Retreat, we believe that true healing begins when we come together. Through mindful yoga, sacred sound alchemy, and deep forest immersion – helping you reconnect with yourself and live with greater clarity and purpose.',
   philosophyQuote: 'Shunya is the sacred void — the zero point from which peace and creation arise.',
   adminPin: '7788',
+  logoUrl: '/logo.png',
   founder1: {
     name: 'Anmol Khatti',
     title: 'Founder & Movement Guide',
     note: 'Mindful breathwork & grounded presence',
-    bio: 'Anmol brings years of dedicated sadhana in traditional Hatha yoga, somatic movement, and nervous system regulation. His sessions guide seekers back into deep connection with their physical vessel and authentic inner stillness.',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80'
+    bio: 'Anmol brings years of dedicated sadhana in traditional Hatha yoga, somatic movement, and nervous system regulation. His grounded, compassionate presence guides seekers back into deep bodily connection and authentic inner stillness.',
+    image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=800&q=80'
   },
   founder2: {
     name: 'Komal Makhetra',
     title: 'Founder & Sound Alchemist',
     note: 'Vibrational therapy & intuitive healing',
-    bio: 'Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance. Her sacred sound baths dissolve emotional tension and transport participants into rejuvenating theta and delta brainwave states.',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+    bio: 'Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance. Her sacred sound baths dissolve emotional tension and transport participants into rejuvenating theta brainwave states.',
+    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80'
   },
   pricing: {
-    pkg4d3n: {
-      title: '4 Days / 3 Nights Retreat',
-      twinPrice: 32000,
+    pkg2n3d: {
+      title: '2 Nights / 3 Days Retreat',
+      twinPrice: 22000,
       soloPrice: 26000,
       badge: 'Weekend Reset',
-      description: 'The essential weekend reset. Arrive overwhelmed, leave deeply aligned and recharged.'
+      description: 'Choose your duration — each package includes a full day-by-day schedule and transparent pricing.'
+    },
+    pkg3n4d: {
+      title: '3 Nights / 4 Days Retreat',
+      twinPrice: 26000,
+      soloPrice: 32000,
+      badge: 'Most Popular',
+      description: 'Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure.'
+    },
+    pkg4n5d: {
+      title: '4 Nights / 5 Days Retreat (Premium Experience)',
+      twinPrice: 44000,
+      soloPrice: 52000,
+      badge: 'Premium Experience',
+      description: 'Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration.'
+    },
+    // Backward compatibility aliases
+    pkg4d3n: {
+      title: '3 Nights / 4 Days Retreat',
+      twinPrice: 26000,
+      soloPrice: 32000,
+      badge: 'Most Popular',
+      description: 'Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure.'
     },
     pkg5d4n: {
-      title: '5 Days / 4 Nights Retreat',
+      title: '4 Nights / 5 Days Retreat (Premium Experience)',
       twinPrice: 44000,
-      soloPrice: 38000,
+      soloPrice: 52000,
       badge: 'Premium Experience',
-      description: 'Deep dive into sacred silence, ecstatic movement, advanced sound baths, and permanent life integration.'
+      description: 'Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration.'
     }
   },
   contact: {
@@ -101,7 +220,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     {
       url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1200&q=80',
       title: 'Sunrise Yoga Shala',
-      caption: 'Open-air timber pavilion overlooking misty mountain ranges'
+      caption: 'Open-air timber pavilion overlooking mist-cloaked Himalayan valleys'
     },
     {
       url: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=1200&q=80',
@@ -111,25 +230,42 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     {
       url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
       title: 'Sattvic Nourishment',
-      caption: 'Organic garden-to-table vegetarian feast tables'
+      caption: 'Organic garden-to-table vegetarian feast tables and healing herbal infusions'
     },
     {
       url: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1200&q=80',
       title: 'Free Movement & Dance',
-      caption: 'Expressive freedom without inhibition or judgment'
+      caption: 'Expressive somatic liberation without inhibition or judgment'
     },
     {
       url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
       title: 'Eco-Luxury Nature Quarters',
-      caption: 'Peaceful accommodation with sustainable organic linens'
+      caption: 'Peaceful accommodation with sustainable organic linens and forest views'
     },
     {
       url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
       title: 'Forest Bathing Trail',
-      caption: 'Sacred river and tree canopy guided mindfulness walks'
+      caption: 'Sacred river and tree canopy guided mindfulness walking meditation'
     }
   ],
-  seo: DEFAULT_SEO_CONFIG
+  seo: DEFAULT_SEO_CONFIG,
+  brandSubtitle: 'Retreat Sanctuary',
+  showLogoIcon: true,
+  whyChooseUs: {
+    eyebrow: 'WHY SHUNYA SYNC',
+    headingPrefix: 'Why',
+    headingHighlight: 'Choose Us',
+    bgImage: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=1920&q=75',
+    cards: [
+      { id: 1, title: 'Small intimate groups', desc: 'Curated cohorts of 10 to 14 participants to protect energy and ensure everyone is truly seen.' },
+      { id: 2, title: 'Personalized attention', desc: 'Dedicated adjustments in asana, pranayama, and healing frequencies tailored to your body.' },
+      { id: 3, title: 'Certified instructors & hosts', desc: 'Certified sound healing alchemists and certified yoga instructors with authentic lineage.' },
+      { id: 4, title: 'Beginner friendly', desc: 'No past meditation or flexibility required. An open, loving container to begin as you are.' },
+      { id: 5, title: 'Nature & Spiritual blend', desc: 'Vedic wisdom and sound alchemy paired with sacred river walks and Himalayan forest air.' },
+      { id: 6, title: 'Safe & supportive space', desc: 'Guaranteed privacy, emotional safety, clean accommodations, and non-judgmental guidance.' }
+    ]
+  },
+  blogPosts: DEFAULT_BLOG_POSTS
 };
 
 export const DEFAULT_BENEFITS: BenefitSlide[] = [
@@ -198,24 +334,41 @@ export function normalizeSiteConfig(input: any): SiteConfig {
 
   // Safely construct pricing
   const rawPricing = input.pricing || {};
-  const pkg4 = rawPricing.pkg4d3n || {};
-  const pkg5 = rawPricing.pkg5d4n || {};
+  const rawPkg2 = rawPricing.pkg2n3d || {};
+  const rawPkg3 = rawPricing.pkg3n4d || rawPricing.pkg4d3n || {};
+  const rawPkg4 = rawPricing.pkg4n5d || rawPricing.pkg5d4n || {};
+
+  const pkg2Item = {
+    title: typeof rawPkg2.title === 'string' && rawPkg2.title ? rawPkg2.title : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.title,
+    twinPrice: typeof rawPkg2.twinPrice === 'number' && !isNaN(rawPkg2.twinPrice) ? rawPkg2.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.twinPrice,
+    soloPrice: typeof rawPkg2.soloPrice === 'number' && !isNaN(rawPkg2.soloPrice) ? rawPkg2.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.soloPrice,
+    badge: typeof rawPkg2.badge === 'string' && rawPkg2.badge ? rawPkg2.badge : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.badge,
+    description: typeof rawPkg2.description === 'string' && rawPkg2.description ? rawPkg2.description : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.description
+  };
+
+  const pkg3Item = {
+    title: typeof rawPkg3.title === 'string' && rawPkg3.title ? rawPkg3.title : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.title,
+    twinPrice: typeof rawPkg3.twinPrice === 'number' && !isNaN(rawPkg3.twinPrice) ? rawPkg3.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.twinPrice,
+    soloPrice: typeof rawPkg3.soloPrice === 'number' && !isNaN(rawPkg3.soloPrice) ? rawPkg3.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.soloPrice,
+    badge: typeof rawPkg3.badge === 'string' && rawPkg3.badge ? rawPkg3.badge : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.badge,
+    description: typeof rawPkg3.description === 'string' && rawPkg3.description ? rawPkg3.description : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.description
+  };
+
+  const pkg4Item = {
+    title: typeof rawPkg4.title === 'string' && rawPkg4.title ? rawPkg4.title : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.title,
+    twinPrice: typeof rawPkg4.twinPrice === 'number' && !isNaN(rawPkg4.twinPrice) ? rawPkg4.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.twinPrice,
+    soloPrice: typeof rawPkg4.soloPrice === 'number' && !isNaN(rawPkg4.soloPrice) ? rawPkg4.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.soloPrice,
+    badge: typeof rawPkg4.badge === 'string' && rawPkg4.badge ? rawPkg4.badge : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.badge,
+    description: typeof rawPkg4.description === 'string' && rawPkg4.description ? rawPkg4.description : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.description
+  };
 
   const safePricing = {
-    pkg4d3n: {
-      title: typeof pkg4.title === 'string' && pkg4.title ? pkg4.title : DEFAULT_SITE_CONFIG.pricing.pkg4d3n.title,
-      twinPrice: typeof pkg4.twinPrice === 'number' && !isNaN(pkg4.twinPrice) ? pkg4.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg4d3n.twinPrice,
-      soloPrice: typeof pkg4.soloPrice === 'number' && !isNaN(pkg4.soloPrice) ? pkg4.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg4d3n.soloPrice,
-      badge: typeof pkg4.badge === 'string' && pkg4.badge ? pkg4.badge : DEFAULT_SITE_CONFIG.pricing.pkg4d3n.badge,
-      description: typeof pkg4.description === 'string' && pkg4.description ? pkg4.description : DEFAULT_SITE_CONFIG.pricing.pkg4d3n.description
-    },
-    pkg5d4n: {
-      title: typeof pkg5.title === 'string' && pkg5.title ? pkg5.title : DEFAULT_SITE_CONFIG.pricing.pkg5d4n.title,
-      twinPrice: typeof pkg5.twinPrice === 'number' && !isNaN(pkg5.twinPrice) ? pkg5.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg5d4n.twinPrice,
-      soloPrice: typeof pkg5.soloPrice === 'number' && !isNaN(pkg5.soloPrice) ? pkg5.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg5d4n.soloPrice,
-      badge: typeof pkg5.badge === 'string' && pkg5.badge ? pkg5.badge : DEFAULT_SITE_CONFIG.pricing.pkg5d4n.badge,
-      description: typeof pkg5.description === 'string' && pkg5.description ? pkg5.description : DEFAULT_SITE_CONFIG.pricing.pkg5d4n.description
-    }
+    pkg2n3d: pkg2Item,
+    pkg3n4d: pkg3Item,
+    pkg4n5d: pkg4Item,
+    // Backward compatibility aliases
+    pkg4d3n: pkg3Item,
+    pkg5d4n: pkg4Item
   };
 
   // Safely construct founders
@@ -263,7 +416,26 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     contact,
     galleryImages,
     seo,
-    adminPin: input.adminPin || input.admin_pin || DEFAULT_SITE_CONFIG.adminPin || '7788'
+    adminPin: input.adminPin || input.admin_pin || DEFAULT_SITE_CONFIG.adminPin || '7788',
+    logoUrl: input.logoUrl || input.logo_url || DEFAULT_SITE_CONFIG.logoUrl || '/logo.png',
+    brandSubtitle: typeof input.brandSubtitle === 'string' ? input.brandSubtitle : (typeof input.brand_subtitle === 'string' ? input.brand_subtitle : DEFAULT_SITE_CONFIG.brandSubtitle || 'Retreat Sanctuary'),
+    showLogoIcon: input.showLogoIcon !== undefined ? Boolean(input.showLogoIcon) : (input.show_logo_icon !== undefined ? Boolean(input.show_logo_icon) : true),
+    whyChooseUs: {
+      eyebrow: input.whyChooseUs?.eyebrow || input.why_choose_us?.eyebrow || DEFAULT_SITE_CONFIG.whyChooseUs?.eyebrow || 'WHY SHUNYA SYNC',
+      headingPrefix: input.whyChooseUs?.headingPrefix || input.why_choose_us?.heading_prefix || DEFAULT_SITE_CONFIG.whyChooseUs?.headingPrefix || 'Why',
+      headingHighlight: input.whyChooseUs?.headingHighlight || input.why_choose_us?.heading_highlight || DEFAULT_SITE_CONFIG.whyChooseUs?.headingHighlight || 'Choose Us',
+      bgImage: input.whyChooseUs?.bgImage || input.why_choose_us?.bg_image || DEFAULT_SITE_CONFIG.whyChooseUs?.bgImage || 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=1920&q=75',
+      cards: Array.isArray(input.whyChooseUs?.cards) && input.whyChooseUs.cards.length > 0
+        ? input.whyChooseUs.cards
+        : (Array.isArray(input.why_choose_us?.cards) && input.why_choose_us.cards.length > 0
+            ? input.why_choose_us.cards
+            : DEFAULT_SITE_CONFIG.whyChooseUs?.cards)
+    },
+    blogPosts: Array.isArray(input.blogPosts) && input.blogPosts.length > 0
+      ? input.blogPosts
+      : (Array.isArray(input.blog_posts) && input.blog_posts.length > 0
+          ? input.blog_posts
+          : DEFAULT_SITE_CONFIG.blogPosts || DEFAULT_BLOG_POSTS)
   };
 }
 
@@ -442,7 +614,12 @@ export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
       aboutText: data.about_text,
       philosophyQuote: data.philosophy_quote,
       galleryImages: data.gallery_images,
-      adminPin: data.admin_pin
+      adminPin: data.admin_pin,
+      logoUrl: data.logo_url,
+      brandSubtitle: data.brand_subtitle,
+      showLogoIcon: data.show_logo_icon,
+      whyChooseUs: data.why_choose_us,
+      blogPosts: data.blog_posts
     });
 
     saveStoredSiteConfig(merged);
@@ -483,6 +660,11 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
       gallery_images: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
       seo: config.seo || DEFAULT_SEO_CONFIG,
       admin_pin: config.adminPin || '7788',
+      logo_url: config.logoUrl || '/logo.png',
+      brand_subtitle: config.brandSubtitle || 'Retreat Sanctuary',
+      show_logo_icon: config.showLogoIcon !== false,
+      why_choose_us: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs,
+      blog_posts: config.blogPosts || DEFAULT_BLOG_POSTS,
       updated_at: new Date().toISOString()
     };
 
@@ -529,17 +711,16 @@ CREATE TABLE IF NOT EXISTS public.shunya_site_config (
   philosophy_quote TEXT DEFAULT 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
   founder1 JSONB NOT NULL DEFAULT '{"name":"Anmol Khatti","title":"Founder & Movement Guide","note":"Mindful living & somatic alignment","bio":"Anmol has spent over a decade studying traditional Ashtanga and contemporary somatic movement. His grounded, compassionate presence guides seekers back to bodily presence.","image":"https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=400&q=80"}'::jsonb,
   founder2 JSONB NOT NULL DEFAULT '{"name":"Komal Makhetra","title":"Founder & Sound Alchemist","note":"Vibrational therapy & intuitive healing","bio":"Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance.","image":"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"}'::jsonb,
-  pricing JSONB NOT NULL DEFAULT '{"pkg4d3n":{"title":"4 Days / 3 Nights Retreat","twinPrice":32000,"soloPrice":26000,"badge":"Weekend Reset","description":"The essential weekend reset. Arrive overwhelmed, leave deeply aligned and recharged."},"pkg5d4n":{"title":"5 Days / 4 Nights Retreat","twinPrice":44000,"soloPrice":38000,"badge":"Premium Experience","description":"Deep dive into sacred silence, ecstatic movement, advanced sound baths, and permanent life integration."}}'::jsonb,
+  pricing JSONB NOT NULL DEFAULT '{"pkg2n3d":{"title":"2 Nights / 3 Days Retreat","twinPrice":22000,"soloPrice":26000,"badge":"Weekend Reset","description":"Choose your duration — each package includes a full day-by-day schedule and transparent pricing."},"pkg3n4d":{"title":"3 Nights / 4 Days Retreat","twinPrice":26000,"soloPrice":32000,"badge":"Most Popular","description":"Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure."},"pkg4n5d":{"title":"4 Nights / 5 Days Retreat (Premium Experience)","twinPrice":44000,"soloPrice":52000,"badge":"Premium Experience","description":"Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration."},"pkg4d3n":{"title":"3 Nights / 4 Days Retreat","twinPrice":26000,"soloPrice":32000,"badge":"Most Popular","description":"Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure."},"pkg5d4n":{"title":"4 Nights / 5 Days Retreat (Premium Experience)","twinPrice":44000,"soloPrice":52000,"badge":"Premium Experience","description":"Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration."}}'::jsonb,
   contact JSONB NOT NULL DEFAULT '{"phone":"+91 9259698064","whatsappNumber":"919259698064","email":"hello@shunyasync.com","location":"India – Nature Retreat Destination"}'::jsonb,
   gallery_images JSONB DEFAULT '[]'::jsonb,
   seo JSONB DEFAULT '{}'::jsonb,
   admin_pin TEXT DEFAULT '7788',
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-  contact JSONB NOT NULL,
-  gallery_images JSONB DEFAULT '[]'::jsonb,
-  seo JSONB DEFAULT '{}'::jsonb,
-  admin_pin TEXT DEFAULT '7788',
+  logo_url TEXT DEFAULT '/logo.png',
+  brand_subtitle TEXT DEFAULT 'Retreat Sanctuary',
+  show_logo_icon BOOLEAN DEFAULT true,
+  why_choose_us JSONB DEFAULT '{}'::jsonb,
+  blog_posts JSONB DEFAULT '[]'::jsonb,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -547,6 +728,11 @@ CREATE TABLE IF NOT EXISTS public.shunya_site_config (
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS gallery_images JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS seo JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS admin_pin TEXT DEFAULT '7788';
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS logo_url TEXT DEFAULT '/logo.png';
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS brand_subtitle TEXT DEFAULT 'Retreat Sanctuary';
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS show_logo_icon BOOLEAN DEFAULT true;
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS why_choose_us JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS blog_posts JSONB DEFAULT '[]'::jsonb;
 
 -- 2. Bookings & Inquiries Table (For Leads from Website)
 CREATE TABLE IF NOT EXISTS public.retreat_bookings (

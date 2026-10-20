@@ -43,6 +43,8 @@ import {
   getStoredBenefits,
   getStoredLeads,
   saveBookingLead,
+  updateLeadStatus,
+  deleteLead,
   DEFAULT_SITE_CONFIG,
   DEFAULT_BENEFITS,
   fetchConfigFromSupabase
@@ -57,16 +59,19 @@ import { SeoHead } from './components/SeoHead';
 // Dedicated Detailed Pages
 import { AboutPage } from './pages/AboutPage';
 import { ExperiencesPage } from './pages/ExperiencesPage';
-import { PackagesPage } from './pages/PackagesPage';
+import { PackagesPage, PackageId } from './pages/PackagesPage';
 import { InclusionsPage } from './pages/InclusionsPage';
 import { WhyUsPage } from './pages/WhyUsPage';
 import { SanctuaryPage } from './pages/SanctuaryPage';
 import { JournalPage } from './pages/JournalPage';
 import { ContactPage } from './pages/ContactPage';
+import { FAQPage } from './pages/FAQPage';
 import { LegalPage, LegalTab } from './pages/LegalPage';
+import { AdminPage } from './pages/AdminPage';
 import { SecretAdminModal } from './components/SecretAdminModal';
 import { Footer } from './components/Footer';
 import { Hero3DButtons } from './components/Hero3DButtons';
+import { WhyChooseUsParallax } from './components/WhyChooseUsParallax';
 
 // 432Hz harmonic singing bowl chime using Web Audio
 class AmbientChime {
@@ -150,12 +155,13 @@ export default function App() {
 
   // Booking Modal State
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
-  const [selectedPackageForModal, setSelectedPackageForModal] = useState<string>('4 Days / 3 Nights Retreat');
+  const [selectedPackageForModal, setSelectedPackageForModal] = useState<string>('3 Nights / 4 Days Retreat');
   const [selectedRoomType, setSelectedRoomType] = useState<'Twin Sharing' | 'Solo'>('Twin Sharing');
 
+  // Package Page Selection
+  const [selectedPackageId, setSelectedPackageId] = useState<PackageId>('3n4d');
+
   // Home interactive states
-  const [activePackageTab, setActivePackageTab] = useState<'4d3n' | '5d4n'>('4d3n');
-  const [expandedDay, setExpandedDay] = useState<number | null>(1);
   const [selectedGalleryImg, setSelectedGalleryImg] = useState<string | null>(null);
 
   // Booking Form
@@ -163,7 +169,7 @@ export default function App() {
     name: '',
     email: '',
     phone: '',
-    package: '4 Days / 3 Nights Retreat',
+    package: '3 Nights / 4 Days Retreat',
     roomType: 'Twin Sharing',
     datePreference: 'Upcoming Cohort (Next Month)',
     message: ''
@@ -322,6 +328,13 @@ export default function App() {
     setBookingModalOpen(true);
   };
 
+  const handleOpenPackageItinerary = (pkgId: PackageId) => {
+    setSelectedPackageId(pkgId);
+    navigateTo('packages');
+    setPackagesDropdownOpen(false);
+    setMobileMenuOpen(false);
+  };
+
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -425,14 +438,25 @@ export default function App() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between">
-          {/* Brand Logo */}
-          <button onClick={() => navigateTo('home')} className="flex flex-col group text-left cursor-pointer">
-            <span className="font-serif-display text-2xl sm:text-3xl tracking-tight text-[#1F2E23] font-semibold">
-              {siteConfig.brandName}
-            </span>
-            <span className="text-[10px] tracking-[0.28em] uppercase font-light text-[#8A9687]">
-              Retreat Sanctuary
-            </span>
+          {/* Brand Logo with Light Emblem */}
+          <button onClick={() => navigateTo('home')} className="flex items-center gap-3 group text-left cursor-pointer">
+            {siteConfig.showLogoIcon !== false && (
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-[#E5DFD5] p-1 flex items-center justify-center shadow-sm shrink-0 group-hover:scale-105 transition-transform">
+                <img
+                  src={siteConfig.logoUrl || '/logo.png'}
+                  alt={siteConfig.brandName}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            )}
+            <div className="flex flex-col">
+              <span className="font-serif-display text-2xl sm:text-3xl tracking-tight text-[#1F2E23] font-semibold leading-none">
+                {siteConfig.brandName}
+              </span>
+              <span className="text-[10px] tracking-[0.28em] uppercase font-light text-[#8A9687] mt-1">
+                {siteConfig.brandSubtitle || 'Retreat Sanctuary'}
+              </span>
+            </div>
           </button>
 
           {/* Desktop Nav Links (Streamlined & Clean) */}
@@ -477,48 +501,50 @@ export default function App() {
 
               {/* Luxury Submenu Dropdown */}
               {packagesDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#DFD7CA] p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute top-full left-0 mt-1 w-72 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#DFD7CA] p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
                   <button
-                    onClick={() => navigateTo('packages')}
-                    className="w-full text-left px-3.5 py-2 rounded-xl text-xs font-medium text-[#1F2E23] hover:bg-[#F5F0E8] hover:text-[#C67856] transition flex items-center justify-between"
+                    onClick={() => handleOpenPackageItinerary('2n3d')}
+                    className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#1F2E23] hover:bg-[#F5F0E8] hover:text-[#C67856] transition flex items-center justify-between"
                   >
                     <div>
-                      <p className="font-semibold">Packages &amp; Pricing</p>
-                      <p className="text-[10px] text-stone-500">4D/3N &amp; 5D/4N Premium</p>
+                      <p className="font-semibold">✨ 2 Nights / 3 Days Retreat</p>
+                      <p className="text-[10px] text-stone-500">Double ₹22k | Private ₹26k • Weekend Reset</p>
                     </div>
                     <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
                   </button>
 
                   <button
-                    onClick={() => navigateTo('packages')}
-                    className="w-full text-left px-3.5 py-2 rounded-xl text-xs font-medium text-[#1F2E23] hover:bg-[#F5F0E8] hover:text-[#C67856] transition flex items-center justify-between"
+                    onClick={() => handleOpenPackageItinerary('3n4d')}
+                    className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#1F2E23] hover:bg-[#F5F0E8] hover:text-[#C67856] transition flex items-center justify-between"
                   >
                     <div>
-                      <p className="font-semibold">Daily Itineraries</p>
-                      <p className="text-[10px] text-stone-500">Day 1 to Departure Schedule</p>
+                      <p className="font-semibold">🌿 3 Nights / 4 Days Retreat</p>
+                      <p className="text-[10px] text-stone-500">Double ₹26k | Private ₹32k • Most Popular</p>
                     </div>
                     <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
                   </button>
 
                   <button
-                    onClick={() => navigateTo('experiences')}
-                    className="w-full text-left px-3.5 py-2 rounded-xl text-xs font-medium text-[#1F2E23] hover:bg-[#F5F0E8] hover:text-[#C67856] transition flex items-center justify-between"
+                    onClick={() => handleOpenPackageItinerary('4n5d')}
+                    className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium text-[#1F2E23] hover:bg-[#F5F0E8] hover:text-[#C67856] transition flex items-center justify-between"
                   >
                     <div>
-                      <p className="font-semibold">The Three Pillars</p>
-                      <p className="text-[10px] text-stone-500">Yoga, Sound Healing, Dance &amp; Fun</p>
+                      <p className="font-semibold">🌸 4 Nights / 5 Days Retreat</p>
+                      <p className="text-[10px] text-stone-500">Double ₹44k | Private ₹52k • Premium</p>
                     </div>
                     <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
                   </button>
 
+                  <div className="border-t border-[#EFEAE1] my-1" />
+
                   <button
-                    onClick={() => navigateTo('inclusions')}
-                    className="w-full text-left px-3.5 py-2 rounded-xl text-xs font-medium text-[#1F2E23] hover:bg-[#F5F0E8] hover:text-[#C67856] transition flex items-center justify-between"
+                    onClick={() => {
+                      navigateTo('inclusions');
+                      setPackagesDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-3.5 py-2 rounded-xl text-xs font-medium text-[#556057] hover:bg-[#F5F0E8] hover:text-[#1F2E23] transition flex items-center justify-between"
                   >
-                    <div>
-                      <p className="font-semibold">What’s Included</p>
-                      <p className="text-[10px] text-stone-500">Sattvic Meals, Stay &amp; Sessions</p>
-                    </div>
+                    <span>What's Included in All Retreats</span>
                     <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
                   </button>
                 </div>
@@ -541,6 +567,15 @@ export default function App() {
               }`}
             >
               Journal
+            </button>
+
+            <button
+              onClick={() => navigateTo('faq')}
+              className={`transition-colors cursor-pointer ${
+                currentRoute === 'faq' ? 'text-[#C67856] font-bold' : 'text-[#3D473F] hover:text-[#C67856]'
+              }`}
+            >
+              FAQ
             </button>
 
             <button
@@ -597,28 +632,28 @@ export default function App() {
                 <p className="text-xs uppercase tracking-wider font-bold text-[#C67856]">
                   Retreat Packages &amp; Itinerary
                 </p>
-                <div className="pl-3 space-y-1.5 text-xs text-stone-700">
+                <div className="pl-3 space-y-2 text-xs text-stone-700">
                   <button
-                    onClick={() => navigateTo('packages')}
-                    className="block text-left py-1 hover:text-[#C67856]"
+                    onClick={() => handleOpenPackageItinerary('2n3d')}
+                    className="block w-full text-left py-1 hover:text-[#C67856]"
                   >
-                    • Packages &amp; Pricing (4D/3N &amp; 5D/4N)
+                    • ✨ 2 Nights / 3 Days Retreat Itinerary
                   </button>
                   <button
-                    onClick={() => navigateTo('packages')}
-                    className="block text-left py-1 hover:text-[#C67856]"
+                    onClick={() => handleOpenPackageItinerary('3n4d')}
+                    className="block w-full text-left py-1 hover:text-[#C67856]"
                   >
-                    • Daily Itineraries &amp; Timetable
+                    • 🌿 3 Nights / 4 Days Retreat Itinerary (Popular)
                   </button>
                   <button
-                    onClick={() => navigateTo('experiences')}
-                    className="block text-left py-1 hover:text-[#C67856]"
+                    onClick={() => handleOpenPackageItinerary('4n5d')}
+                    className="block w-full text-left py-1 hover:text-[#C67856]"
                   >
-                    • Experiences (Yoga, Sound, Dance)
+                    • 🌸 4 Nights / 5 Days Retreat Itinerary (Premium)
                   </button>
                   <button
                     onClick={() => navigateTo('inclusions')}
-                    className="block text-left py-1 hover:text-[#C67856]"
+                    className="block w-full text-left py-1 hover:text-[#C67856] text-stone-500"
                   >
                     • What’s Included in All Retreats
                   </button>
@@ -637,6 +672,18 @@ export default function App() {
                 className="text-left py-1.5 border-b border-[#EFEAE1]"
               >
                 Journal &amp; Wisdom
+              </button>
+
+              <button
+                onClick={() => navigateTo('faq')}
+                className="text-left py-1.5 border-b border-[#EFEAE1] flex items-center justify-between"
+              >
+                <span className={currentRoute === 'faq' ? 'text-[#C67856] font-bold' : ''}>
+                  FAQs &amp; Guest Guide
+                </span>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#F3EDE2] text-[#C67856]">
+                  Help
+                </span>
               </button>
 
               <button
@@ -690,6 +737,7 @@ export default function App() {
           <div className="animate-3d-flip-right">
             <PackagesPage
               config={siteConfig}
+              initialPackage={selectedPackageId}
               onOpenBooking={(pkg, room) => handleOpenBooking(pkg, room)}
             />
           </div>
@@ -705,7 +753,7 @@ export default function App() {
         {/* SUBPAGE 5: WHY CHOOSE US */}
         {currentRoute === 'why-us' && (
           <div className="animate-3d-flip-right">
-            <WhyUsPage onOpenBooking={() => handleOpenBooking()} />
+            <WhyUsPage onOpenBooking={() => handleOpenBooking()} config={siteConfig} />
           </div>
         )}
 
@@ -723,7 +771,17 @@ export default function App() {
           </div>
         )}
 
-        {/* SUBPAGE 8: CONTACT & FAQS */}
+        {/* SUBPAGE 8: DEDICATED ACCORDION FAQ PAGE */}
+        {currentRoute === 'faq' && (
+          <div className="animate-3d-flip-right">
+            <FAQPage
+              config={siteConfig}
+              onOpenBooking={() => handleOpenBooking()}
+            />
+          </div>
+        )}
+
+        {/* SUBPAGE 9: CONTACT */}
         {currentRoute === 'contact' && (
           <div className="animate-3d-flip-right">
             <ContactPage
@@ -1022,108 +1080,180 @@ export default function App() {
             {/* 5. PACKAGES & ITINERARY PREVIEW SECTION: 3D FLIP IN FROM RIGHT */}
             <section id="packages" className="scroll-section scroll-flip-right py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-20">
               <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 reveal-init from-top">
-                <span className="text-xs font-semibold tracking-[0.24em] uppercase text-[#C67856]">
-                  Retreat Packages
+                <span className="text-xs font-semibold tracking-[0.24em] uppercase text-[#C67856] bg-[#F7EFE9] px-3.5 py-1.5 rounded-full border border-[#E9D9CF]">
+                  Shunya Sync Retreat Itinerary
                 </span>
                 <h2 className="font-serif-display text-3xl sm:text-5xl font-normal text-[#1F2E23]">
-                  Choose Your Sanctuary Journey
+                  Choose Your Duration
                 </h2>
-                <p className="text-base text-[#556057] font-light">
-                  All packages include organic sattvic meals, comfortable nature accommodation, and all guided sessions.
+                <p className="text-base text-[#556057] font-light max-w-2xl mx-auto">
+                  Choose your duration — each package includes a full day-by-day schedule and transparent pricing.
                 </p>
-
-                {/* Tabs Switcher: From Top */}
-                <div className="inline-flex p-1.5 bg-[#EFEAE1] rounded-full border border-[#DFD7CA] mt-4">
-                  <button
-                    onClick={() => {
-                      setActivePackageTab('4d3n');
-                      setExpandedDay(1);
-                    }}
-                    className={`px-6 py-2 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition-all cursor-pointer ${
-                      activePackageTab === '4d3n' ? 'bg-[#223326] text-white shadow-md' : 'text-[#5B665D] hover:text-[#1F2E23]'
-                    }`}
-                  >
-                    4 Days / 3 Nights Retreat
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActivePackageTab('5d4n');
-                      setExpandedDay(1);
-                    }}
-                    className={`px-6 py-2 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition-all cursor-pointer ${
-                      activePackageTab === '5d4n' ? 'bg-[#223326] text-white shadow-md' : 'text-[#5B665D] hover:text-[#1F2E23]'
-                    }`}
-                  >
-                    5 Days / 4 Nights (Premium)
-                  </button>
-                </div>
               </div>
 
-              {/* Pricing Cards Comparison */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* 4D/3N: Glides in from LEFT */}
-                <div className="reveal-init from-left delay-200 bg-white rounded-3xl p-8 border border-[#DFD7CA] shadow-sm hover:shadow-xl transition space-y-6 card-3d-tilt">
-                  <div className="flex items-center justify-between border-b pb-4">
-                    <div>
-                      <span className="text-xs uppercase font-bold text-[#C67856]">Classic Experience</span>
-                      <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">4 Days / 3 Nights Retreat</h3>
+              {/* 3 Package Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* 1. 2 Nights / 3 Days */}
+                <div className="reveal-init from-left delay-100 bg-white rounded-3xl p-7 border border-[#DFD7CA] shadow-sm hover:shadow-xl transition space-y-6 card-3d-tilt flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-[#EFEAE1] pb-4">
+                      <div>
+                        <span className="text-xs uppercase font-bold text-[#223326]">
+                          ✨ Weekend Reset
+                        </span>
+                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
+                          2 Nights / 3 Days Retreat
+                        </h3>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-[#556057] leading-relaxed">
+                      Arrival &amp; Grounding, Evening Ganga Aarti, Chakra Healing, and Nature Walk.
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-3 pt-2">
+                      <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-stone-200 text-center">
+                        <p className="text-[11px] uppercase font-semibold text-stone-500">Double sharing</p>
+                        <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
+                          ₹{(siteConfig?.pricing?.pkg2n3d?.twinPrice ?? 22000).toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-stone-500">per person</p>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-stone-200 text-center">
+                        <p className="text-[11px] uppercase font-semibold text-stone-500">Private accommodation</p>
+                        <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
+                          ₹{(siteConfig?.pricing?.pkg2n3d?.soloPrice ?? 26000).toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-stone-500">per person</p>
+                      </div>
                     </div>
                   </div>
-                    <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-stone-200">
-                      <p className="text-xs uppercase font-semibold text-stone-500">Twin Sharing</p>
-                      <p className="text-2xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                        ₹{(siteConfig?.pricing?.pkg4d3n?.twinPrice ?? 32000).toLocaleString()}
-                      </p>
-                      <p className="text-[11px] text-stone-500">per person</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-stone-200">
-                      <p className="text-xs uppercase font-semibold text-stone-500">Solo Room</p>
-                      <p className="text-2xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                        ₹{(siteConfig?.pricing?.pkg4d3n?.soloPrice ?? 26000).toLocaleString()}
-                      </p>
-                      <p className="text-[11px] text-stone-500">private suite</p>
-                    </div>
+
+                  <div className="space-y-2.5 pt-2">
+                    <button
+                      onClick={() => handleOpenPackageItinerary('2n3d')}
+                      className="w-full py-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#EFEAE1] text-[#1F2E23] text-xs font-semibold tracking-wider uppercase border border-[#DFD7CA] transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <span>View 2N/3D Itinerary</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#C67856]" />
+                    </button>
+                    <button
+                      onClick={() => handleOpenBooking('2 Nights / 3 Days Retreat', 'Twin Sharing')}
+                      className="w-full py-3 rounded-full bg-[#223326] hover:bg-[#152218] text-white text-xs uppercase tracking-widest font-semibold transition cursor-pointer shadow-sm active:scale-95"
+                    >
+                      Book 2N/3D Retreat
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleOpenBooking('4 Days / 3 Nights Retreat', 'Twin Sharing')}
-                    className="w-full py-3 rounded-full bg-[#1F2E23] hover:bg-black text-white text-xs uppercase tracking-widest font-semibold transition cursor-pointer"
-                  >
-                    Reserve 4D/3N Retreat
-                  </button>
                 </div>
 
-                {/* 5D/4N: Glides in from RIGHT */}
-                <div className="reveal-init from-right delay-200 bg-white rounded-3xl p-8 border-2 border-[#C67856] shadow-xl space-y-6 card-3d-tilt relative overflow-hidden">
-                  <span className="absolute top-4 right-4 bg-[#C67856] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                {/* 2. 3 Nights / 4 Days (Highlighted Most Popular) */}
+                <div className="reveal-init from-bottom delay-200 bg-white rounded-3xl p-7 border-2 border-[#C67856] shadow-xl space-y-6 card-3d-tilt relative flex flex-col justify-between">
+                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#C67856] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow">
                     Most Popular
                   </span>
-                  <div className="border-b pb-4">
-                    <span className="text-xs uppercase font-bold text-[#C67856]">Premium Experience</span>
-                    <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">5 Days / 4 Nights Retreat</h3>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-2xl bg-[#FFF9F6] border border-[#FAD7C8]">
-                      <p className="text-xs uppercase font-semibold text-[#A4502E]">Twin Sharing</p>
-                      <p className="text-2xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                        ₹{(siteConfig?.pricing?.pkg5d4n?.twinPrice ?? 44000).toLocaleString()}
-                      </p>
-                      <p className="text-[11px] text-stone-500">per person</p>
+
+                  <div className="space-y-4 pt-1">
+                    <div className="flex items-center justify-between border-b border-[#F5E6DC] pb-4">
+                      <div>
+                        <span className="text-xs uppercase font-bold text-[#C67856]">
+                          🌿 Flagship Experience
+                        </span>
+                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
+                          3 Nights / 4 Days Retreat
+                        </h3>
+                      </div>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#FFF9F6] border border-[#FAD7C8]">
-                      <p className="text-xs uppercase font-semibold text-[#A4502E]">Solo Room</p>
-                      <p className="text-2xl font-serif-display font-bold text-[#1F2E23] mt-1">
-                        ₹{(siteConfig?.pricing?.pkg5d4n?.soloPrice ?? 38000).toLocaleString()}
-                      </p>
-                      <p className="text-[11px] text-stone-500">private suite</p>
+
+                    <p className="text-xs text-[#556057] leading-relaxed">
+                      Pranayama Masterclass, Sound &amp; Chakra Healing, River Rafting, and Aarti.
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-3 pt-2">
+                      <div className="p-3.5 rounded-2xl bg-[#FFF9F6] border border-[#FAD7C8] text-center">
+                        <p className="text-[11px] uppercase font-semibold text-[#A4502E]">Double sharing</p>
+                        <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
+                          ₹{(siteConfig?.pricing?.pkg3n4d?.twinPrice ?? 26000).toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-stone-500">per person</p>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-[#FFF9F6] border border-[#FAD7C8] text-center">
+                        <p className="text-[11px] uppercase font-semibold text-[#A4502E]">Private accommodation</p>
+                        <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
+                          ₹{(siteConfig?.pricing?.pkg3n4d?.soloPrice ?? 32000).toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-stone-500">per person</p>
+                      </div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleOpenBooking('5 Days / 4 Nights Retreat (Premium Experience)', 'Twin Sharing')}
-                    className="w-full py-3 rounded-full bg-[#C67856] hover:bg-[#B56745] text-white text-xs uppercase tracking-widest font-semibold transition cursor-pointer"
-                  >
-                    Reserve 5D/4N Premium
-                  </button>
+
+                  <div className="space-y-2.5 pt-2">
+                    <button
+                      onClick={() => handleOpenPackageItinerary('3n4d')}
+                      className="w-full py-2.5 rounded-full bg-[#FFF9F6] hover:bg-[#FBEBE2] text-[#A4502E] text-xs font-semibold tracking-wider uppercase border border-[#FAD7C8] transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <span>View 3N/4D Itinerary</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#C67856]" />
+                    </button>
+                    <button
+                      onClick={() => handleOpenBooking('3 Nights / 4 Days Retreat', 'Twin Sharing')}
+                      className="w-full py-3 rounded-full bg-[#C67856] hover:bg-[#B36544] text-white text-xs uppercase tracking-widest font-semibold transition cursor-pointer shadow-md active:scale-95"
+                    >
+                      Book 3N/4D Retreat
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. 4 Nights / 5 Days (Premium) */}
+                <div className="reveal-init from-right delay-300 bg-white rounded-3xl p-7 border border-[#DFD7CA] shadow-sm hover:shadow-xl transition space-y-6 card-3d-tilt flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-[#EFEAE1] pb-4">
+                      <div>
+                        <span className="text-xs uppercase font-bold text-[#223326]">
+                          🌸 Deep Immersion
+                        </span>
+                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
+                          4 Nights / 5 Days Retreat
+                        </h3>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-[#556057] leading-relaxed">
+                      Silent Meditation, River Rafting, Ecstatic Dance, Inner Work &amp; Integration.
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-3 pt-2">
+                      <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-stone-200 text-center">
+                        <p className="text-[11px] uppercase font-semibold text-stone-500">Double sharing</p>
+                        <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
+                          ₹{(siteConfig?.pricing?.pkg4n5d?.twinPrice ?? 44000).toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-stone-500">per person</p>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-stone-200 text-center">
+                        <p className="text-[11px] uppercase font-semibold text-stone-500">Private accommodation</p>
+                        <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
+                          ₹{(siteConfig?.pricing?.pkg4n5d?.soloPrice ?? 52000).toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-stone-500">per person</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5 pt-2">
+                    <button
+                      onClick={() => handleOpenPackageItinerary('4n5d')}
+                      className="w-full py-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#EFEAE1] text-[#1F2E23] text-xs font-semibold tracking-wider uppercase border border-[#DFD7CA] transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <span>View 4N/5D Itinerary</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#C67856]" />
+                    </button>
+                    <button
+                      onClick={() => handleOpenBooking('4 Nights / 5 Days Retreat (Premium Experience)', 'Twin Sharing')}
+                      className="w-full py-3 rounded-full bg-[#223326] hover:bg-[#152218] text-white text-xs uppercase tracking-widest font-semibold transition cursor-pointer shadow-sm active:scale-95"
+                    >
+                      Book 4N/5D Premium
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -1203,6 +1333,12 @@ export default function App() {
                 </div>
               </div>
             </section>
+
+            {/* 6.5. SIGNATURE FIXED-BACKGROUND PARALLAX: WHY CHOOSE US */}
+            <WhyChooseUsParallax
+              config={siteConfig}
+              onOpenBooking={() => handleOpenBooking()}
+            />
 
             {/* 7. SANCTUARY GALLERY SECTION: 3D FLIP IN FROM RIGHT */}
             <section id="gallery" className="scroll-section scroll-flip-right py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-20">
@@ -1379,8 +1515,9 @@ export default function App() {
                   onChange={handleFormChange}
                   className="w-full px-4 py-2.5 rounded-xl border border-[#DFD7CA] bg-[#FAF8F5] text-sm"
                 >
-                  <option value="4 Days / 3 Nights Retreat">4 Days / 3 Nights Retreat (Twin ₹{(siteConfig?.pricing?.pkg4d3n?.twinPrice ?? 32000).toLocaleString()} | Solo ₹{(siteConfig?.pricing?.pkg4d3n?.soloPrice ?? 26000).toLocaleString()})</option>
-                  <option value="5 Days / 4 Nights Retreat (Premium Experience)">5 Days / 4 Nights Premium (Twin ₹{(siteConfig?.pricing?.pkg5d4n?.twinPrice ?? 44000).toLocaleString()} | Solo ₹{(siteConfig?.pricing?.pkg5d4n?.soloPrice ?? 38000).toLocaleString()})</option>
+                  <option value="2 Nights / 3 Days Retreat">2 Nights / 3 Days Retreat (Double ₹{(siteConfig?.pricing?.pkg2n3d?.twinPrice ?? 22000).toLocaleString()} | Private ₹{(siteConfig?.pricing?.pkg2n3d?.soloPrice ?? 26000).toLocaleString()})</option>
+                  <option value="3 Nights / 4 Days Retreat">3 Nights / 4 Days Retreat (Double ₹{(siteConfig?.pricing?.pkg3n4d?.twinPrice ?? 26000).toLocaleString()} | Private ₹{(siteConfig?.pricing?.pkg3n4d?.soloPrice ?? 32000).toLocaleString()})</option>
+                  <option value="4 Nights / 5 Days Retreat (Premium Experience)">4 Nights / 5 Days Retreat (Double ₹{(siteConfig?.pricing?.pkg4n5d?.twinPrice ?? 44000).toLocaleString()} | Private ₹{(siteConfig?.pricing?.pkg4n5d?.soloPrice ?? 52000).toLocaleString()})</option>
                 </select>
               </div>
 
