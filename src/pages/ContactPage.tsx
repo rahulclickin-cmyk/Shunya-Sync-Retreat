@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, MessageCircle, Send, CheckCircle2, ChevronDown, ChevronUp, Compass, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, Send, CheckCircle2, ChevronDown, ChevronUp, Compass, Clock, ShieldCheck } from 'lucide-react';
 import { SiteConfig, BookingLead } from '../types/retreat';
 import { saveBookingLead } from '../services/supabase';
+import { TurnstileWidget } from '../components/TurnstileWidget';
 
 interface ContactPageProps {
   config: SiteConfig;
@@ -19,10 +20,16 @@ export const ContactPage: React.FC<ContactPageProps> = ({ config, onLeadSubmitte
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [captchaError, setCaptchaError] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaVerified) {
+      setCaptchaError(true);
+      return;
+    }
     const newLead = saveBookingLead({
       name: formData.name,
       email: formData.email,
@@ -280,6 +287,24 @@ export const ContactPage: React.FC<ContactPageProps> = ({ config, onLeadSubmitte
                     placeholder="Tell us what draws you to Shunya Sync, any dietary needs, or dates you prefer..."
                     className="w-full px-4 py-3 rounded-xl border border-[#DFD7CA] bg-[#FAF8F5] text-sm text-[#1F2E23] focus:outline-none focus:ring-2 focus:ring-[#C67856]"
                   />
+                </div>
+
+                {/* Cloudflare Turnstile Anti-Bot Security */}
+                <div className="pt-1">
+                  <TurnstileWidget
+                    theme="light"
+                    action="contact-inquiry"
+                    onVerify={() => {
+                      setCaptchaVerified(true);
+                      setCaptchaError(false);
+                    }}
+                  />
+                  {captchaError && (
+                    <div className="flex items-center gap-2 mt-2 px-3 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                      <ShieldCheck className="w-4 h-4 text-rose-500 shrink-0" />
+                      <span>Please verify the anti-bot security check above before submitting.</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">

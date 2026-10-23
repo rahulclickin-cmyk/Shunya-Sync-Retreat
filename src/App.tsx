@@ -55,6 +55,7 @@ import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { AudioPlayerHeader } from './components/AudioPlayerHeader';
 import { MarqueeTicker } from './components/MarqueeTicker';
 import { SeoHead } from './components/SeoHead';
+import { TurnstileWidget } from './components/TurnstileWidget';
 
 // Dedicated Detailed Pages
 import { AboutPage } from './pages/AboutPage';
@@ -162,6 +163,8 @@ export default function App() {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedPackageForModal, setSelectedPackageForModal] = useState<string>('3 Nights / 4 Days Retreat');
   const [selectedRoomType, setSelectedRoomType] = useState<'Twin Sharing' | 'Solo'>('Twin Sharing');
+  const [bookingCaptchaVerified, setBookingCaptchaVerified] = useState(false);
+  const [bookingCaptchaError, setBookingCaptchaError] = useState(false);
 
   // Package Page Selection
   const [selectedPackageId, setSelectedPackageId] = useState<PackageId>('3n4d');
@@ -1404,6 +1407,10 @@ export default function App() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                if (!bookingCaptchaVerified) {
+                  setBookingCaptchaError(true);
+                  return;
+                }
                 const saved = saveBookingLead({
                   name: formData.name,
                   email: formData.email,
@@ -1513,6 +1520,24 @@ export default function App() {
                     Solo Private Room
                   </label>
                 </div>
+              </div>
+
+              {/* Cloudflare Turnstile Anti-Bot Security */}
+              <div className="pt-1">
+                <TurnstileWidget
+                  theme="light"
+                  action="quick-booking-modal"
+                  onVerify={() => {
+                    setBookingCaptchaVerified(true);
+                    setBookingCaptchaError(false);
+                  }}
+                />
+                {bookingCaptchaError && (
+                  <div className="flex items-center gap-2 mt-2 px-3 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                    <ShieldCheck className="w-4 h-4 text-rose-500 shrink-0" />
+                    <span>Please verify the anti-bot security check above before submitting.</span>
+                  </div>
+                )}
               </div>
 
               <div className="pt-2 flex gap-3">

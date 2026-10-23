@@ -48,7 +48,8 @@ import {
   saveStoredSupabaseConfig,
   syncConfigToSupabase,
   SUPABASE_SQL_SCHEMA,
-  SUPABASE_JSONB_MIGRATION_SQL
+  SUPABASE_JSONB_MIGRATION_SQL,
+  SUPABASE_RLS_ENFORCEMENT_SQL
 } from '../services/supabase';
 import {
   uploadImageToSupabase,
@@ -57,6 +58,8 @@ import {
   SUPABASE_STORAGE_SQL_SETUP,
   fileToDataUrl
 } from '../services/storage';
+import { TurnstileWidget } from '../components/TurnstileWidget';
+import { AdminAgencyMarquee } from '../components/AdminAgencyMarquee';
 
 interface AdminPageProps {
   config: SiteConfig;
@@ -91,8 +94,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   onUpdateLeadStatus,
   onDeleteLead
 }) => {
-  // Authentication State
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Authentication State with Session Storage persistence
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('shunya_admin_session_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [passcode, setPasscode] = useState('');
   const [showPasscode, setShowPasscode] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -117,6 +127,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   const [copiedSql, setCopiedSql] = useState(false);
   const [copiedStorageSql, setCopiedStorageSql] = useState(false);
   const [copiedJsonbSql, setCopiedJsonbSql] = useState(false);
+  const [copiedRlsSql, setCopiedRlsSql] = useState(false);
 
   // Blog Editor State
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
@@ -140,19 +151,38 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     setFormConfig(normalizeSiteConfig(config));
   }, [config]);
 
-  // Handle Unlock / Login
+  // Handle Unlock / Login (Requires Cloudflare Turnstile token + Valid PIN)
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!turnstileToken) {
+      setAuthError('Please verify the Cloudflare Turnstile anti-bot challenge before continuing.');
+      return;
+    }
+
     const envPin = (import.meta.env.VITE_ADMIN_PIN || '').trim().toLowerCase();
     const cfgPin = (formConfig.adminPin || '7788').trim().toLowerCase();
     const validPins = ['shunya2026', 'admin123', 'clickindm', 'clickindma', '7788', cfgPin, envPin].filter(Boolean);
 
     if (validPins.includes(passcode.trim().toLowerCase())) {
+      try {
+        sessionStorage.setItem('shunya_admin_session_auth', 'true');
+      } catch {}
       setIsAuthenticated(true);
       setAuthError('');
     } else {
       setAuthError('Incorrect secret passcode. (Default: 7788 or shunya2026)');
     }
+  };
+
+  // Secure Logout
+  const handleLogout = () => {
+    try {
+      sessionStorage.removeItem('shunya_admin_session_auth');
+    } catch {}
+    setIsAuthenticated(false);
+    setTurnstileToken(null);
+    setPasscode('');
   };
 
   // Handle Password / PIN Update
@@ -454,6 +484,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
           {/* Passcode Entry Form */}
           <form onSubmit={handleUnlock} className="space-y-4">
+            {/* Cloudflare Turnstile Anti-Bot Verification */}
+            <div className="pt-1">
+              <TurnstileWidget
+                action="admin-login"
+                theme="dark"
+                onVerify={(token) => {
+                  setTurnstileToken(token);
+                  setAuthError('');
+                }}
+                onExpire={() => {
+                  setTurnstileToken(null);
+                }}
+              />
+            </div>
+
             <div className="relative">
               <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#D4AF37]" />
               <input
@@ -560,7 +605,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           </button>
 
           <button
-            onClick={() => setIsAuthenticated(false)}
+            onClick={handleLogout}
             className="p-2 rounded-xl bg-[#241C15] hover:bg-rose-950/60 border border-[#3E2F23] text-stone-400 hover:text-rose-400 transition cursor-pointer"
             title="Log Out of Admin"
           >
@@ -637,7 +682,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         </aside>
 
         {/* MAIN CONTENT PANE */}
-        <main className="flex-1 bg-[#100C08] p-5 sm:p-8 lg:p-10 overflow-y-auto max-w-5xl">
+        <main className="flex-1 bg-[#100C08] p-5 sm:p-8 lg:p-10 pb-24 overflow-y-auto max-w-5xl">
           {/* SECTION 1: OVERVIEW */}
           {activeSection === 'overview' && (
             <div className="space-y-8 animate-fade-in">
@@ -2385,6 +2430,36 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     {SUPABASE_JSONB_MIGRATION_SQL.trim()}
                   </pre>
                 </div>
+
+                {/* Strict Enterprise Row Level Security (RLS) Card */}
+                <div className="p-4 rounded-2xl bg-[#1A120B] border border-amber-600/40 space-y-3 mt-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                        Enterprise Row Level Security (RLS) Enforcement
+                      </h4>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(SUPABASE_RLS_ENFORCEMENT_SQL);
+                        setCopiedRlsSql(true);
+                        setTimeout(() => setCopiedRlsSql(false), 3000);
+                      }}
+                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-xs font-bold uppercase tracking-wider hover:brightness-110 flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>{copiedRlsSql ? '✓ RLS SQL Copied!' : '1-Click Copy RLS SQL'}</span>
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-stone-300 leading-relaxed">
+                    Enforces strict zero-trust database security: allows public users only <code className="text-emerald-400">SELECT</code> read access, while restricting <code className="text-rose-400">UPDATE</code>, <code className="text-rose-400">INSERT</code>, and <code className="text-rose-400">DELETE</code> exclusively to authenticated admin sessions.
+                  </p>
+                  <pre className="p-3 rounded-xl bg-[#100C08] text-[10px] text-emerald-200/80 font-mono overflow-x-auto border border-[#3E2F23]">
+                    {SUPABASE_RLS_ENFORCEMENT_SQL.trim()}
+                  </pre>
+                </div>
               </div>
             </div>
           )}
@@ -2868,6 +2943,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           )}
         </main>
       </div>
+
+      {/* Agency Branding Marquee (Fixed at bottom of Admin Workspace) */}
+      <AdminAgencyMarquee />
     </div>
   );
 };

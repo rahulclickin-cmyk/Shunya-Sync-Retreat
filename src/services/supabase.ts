@@ -782,6 +782,61 @@ ADD COLUMN IF NOT EXISTS retreat_packages JSONB DEFAULT '[]'::jsonb,
 ADD COLUMN IF NOT EXISTS seo_geo_tags JSONB DEFAULT '{}'::jsonb;
 `;
 
+/**
+ * Strict Row Level Security (RLS) enforcement SQL script.
+ * Public can only SELECT; UPDATE/INSERT/DELETE restricted exclusively to authenticated admin sessions.
+ */
+export const SUPABASE_RLS_ENFORCEMENT_SQL = `-- ==============================================================
+-- SHUNYA SYNC RETREAT - STRICT SUPABASE ROW LEVEL SECURITY (RLS)
+-- Enforces Public Read-Only + Authenticated Admin Write Policies
+-- Run this in your Supabase Dashboard -> SQL Editor
+-- ==============================================================
+
+-- 1. Enable Row Level Security on the config table
+ALTER TABLE public.shunya_site_config ENABLE ROW LEVEL SECURITY;
+
+-- 2. Clean up any existing permissive or conflicting policies
+DROP POLICY IF EXISTS "Allow public read site config" ON public.shunya_site_config;
+DROP POLICY IF EXISTS "Allow update site config" ON public.shunya_site_config;
+DROP POLICY IF EXISTS "Allow public read-only access" ON public.shunya_site_config;
+DROP POLICY IF EXISTS "Restrict write to authenticated admin" ON public.shunya_site_config;
+
+-- 3. Policy: Public / Anon users can ONLY read the configuration
+CREATE POLICY "Allow public read-only access"
+ON public.shunya_site_config
+FOR SELECT
+TO anon, authenticated
+USING (true);
+
+-- 4. Policy: Strict restriction for UPDATE, INSERT, and DELETE
+-- Only authenticated admin users (Supabase Auth session / service_role) can modify site data
+CREATE POLICY "Restrict write to authenticated admin"
+ON public.shunya_site_config
+FOR ALL
+TO authenticated
+USING (auth.role() = 'authenticated')
+WITH CHECK (auth.role() = 'authenticated');
+
+-- 5. Bookings table RLS: Public can insert inquiries, authenticated admin can manage
+ALTER TABLE public.retreat_bookings ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public insert bookings" ON public.retreat_bookings;
+DROP POLICY IF EXISTS "Allow admin manage bookings" ON public.retreat_bookings;
+
+CREATE POLICY "Allow public insert bookings"
+ON public.retreat_bookings
+FOR INSERT
+TO anon, authenticated
+WITH CHECK (true);
+
+CREATE POLICY "Allow admin manage bookings"
+ON public.retreat_bookings
+FOR ALL
+TO authenticated
+USING (auth.role() = 'authenticated')
+WITH CHECK (auth.role() = 'authenticated');
+`;
+
 export const SUPABASE_SQL_SCHEMA = `-- ==============================================================
 -- SHUNYA SYNC RETREAT - SUPABASE SQL SCHEMA & STORAGE BUCKET
 -- Paste this entire script in your Supabase Dashboard -> SQL Editor

@@ -273,3 +273,23 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #A99E8F;
 }
+
+/* Continuous Agency Branding Marquee Ticker */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 32s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
