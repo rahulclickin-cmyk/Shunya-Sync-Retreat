@@ -33,7 +33,9 @@ import {
   Layers,
   MapPin,
   FileText,
-  Award
+  Award,
+  Heart,
+  Compass
 } from 'lucide-react';
 import { SiteConfig, SupabaseConfig, SeoConfig, FaqItem, BlogPost, BookingLead } from '../types/retreat';
 import {
@@ -51,20 +53,23 @@ import {
   uploadImageToSupabase,
   isSupabaseStorageAvailable,
   DEFAULT_STORAGE_BUCKET,
-  SUPABASE_STORAGE_SQL_SETUP
+  SUPABASE_STORAGE_SQL_SETUP,
+  fileToDataUrl
 } from '../services/storage';
 
 interface AdminPageProps {
   config: SiteConfig;
   onUpdateConfig: (updated: SiteConfig) => void;
   onNavigateHome: () => void;
-  leadsList: BookingLead[];
-  onUpdateLeadStatus: (id: string, status: 'new' | 'contacted' | 'confirmed') => void;
-  onDeleteLead: (id: string) => void;
+  leadsList?: BookingLead[];
+  onUpdateLeadStatus?: (id: string, status: 'new' | 'contacted' | 'confirmed') => void;
+  onDeleteLead?: (id: string) => void;
 }
 
 type AdminSection =
   | 'overview'
+  | 'media'
+  | 'pages'
   | 'branding'
   | 'why-us'
   | 'hero'
@@ -81,7 +86,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   config,
   onUpdateConfig,
   onNavigateHome,
-  leadsList,
+  leadsList = [],
   onUpdateLeadStatus,
   onDeleteLead
 }) => {
@@ -118,7 +123,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     id: '',
     title: '',
     category: 'Sound Healing',
-    author: 'Anmol Khatti',
+    author: 'Anmol Khatri',
     date: new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }),
     readTime: '5 min read',
     summary: '',
@@ -185,7 +190,51 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     }
   };
 
-  // Image Upload Handler
+  const applyImageToField = (field: string, url: string, autoSave = true) => {
+    let nextConfig = { ...formConfig };
+
+    if (field === 'logoUrl') {
+      nextConfig = { ...formConfig, logoUrl: url };
+    } else if (field === 'heroBgImage') {
+      nextConfig = { ...formConfig, heroBgImage: url };
+    } else if (field === 'founder1') {
+      nextConfig = {
+        ...formConfig,
+        founder1: { ...formConfig.founder1, image: url }
+      };
+    } else if (field === 'founder2') {
+      nextConfig = {
+        ...formConfig,
+        founder2: { ...formConfig.founder2, image: url }
+      };
+    } else if (field === 'blogImage') {
+      setBlogFormData((prev) => ({ ...prev, image: url }));
+      return;
+    } else if (field === 'whyBgImage') {
+      nextConfig = {
+        ...formConfig,
+        whyChooseUs: {
+          ...formConfig.whyChooseUs,
+          bgImage: url
+        }
+      };
+    } else if (field.startsWith('gallery_')) {
+      const idx = parseInt(field.replace('gallery_', ''), 10);
+      const updated = [...(formConfig.galleryImages || [])];
+      if (updated[idx]) {
+        updated[idx] = { ...updated[idx], url };
+        nextConfig = { ...formConfig, galleryImages: updated };
+      }
+    }
+
+    setFormConfig(nextConfig);
+    if (autoSave) {
+      saveStoredSiteConfig(nextConfig);
+      onUpdateConfig(nextConfig);
+    }
+  };
+
+  // Resilient Dual-Engine Image Upload: Instant Local Data URL + Supabase Cloud Sync
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -196,71 +245,39 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     }
 
     setUploadingField(targetField);
-    setUploadNotice('Uploading image...');
+    setUploadNotice('Loading photo & applying immediately...');
 
-    if (isSupabaseStorageAvailable()) {
-      const bucket = supabaseCfg.storageBucket || DEFAULT_STORAGE_BUCKET;
-      const res = await uploadImageToSupabase(file, {
-        bucket,
-        folder: 'media',
-        customName: `${targetField}_${file.name}`
-      });
+    try {
+      // 1. Convert to local base64 data URL instantly so UI changes right away
+      const localDataUrl = await fileToDataUrl(file);
+      applyImageToField(targetField, localDataUrl, true);
+      setUploadNotice('✓ Image applied instantly to site!');
 
-      if (res.success && res.url) {
-        applyImageToField(targetField, res.url);
-        setUploadNotice(`✓ Uploaded to Supabase Storage (${res.bucket})! Dynamic URL saved.`);
-        setUploadingField(null);
-        setTimeout(() => setUploadNotice(null), 4000);
-        return;
-      }
-    }
+      // 2. Parallel Supabase Storage sync attempt (if configured)
+      if (isSupabaseStorageAvailable()) {
+        const bucket = supabaseCfg.storageBucket || DEFAULT_STORAGE_BUCKET;
+        const res = await uploadImageToSupabase(file, {
+          bucket,
+          folder: 'media',
+          customName: `${targetField}_${Date.now()}_${file.name}`
+        });
 
-    // Fallback: Local preview
-    const reader = new FileReader();
-    reader.onload = (uploadEvent) => {
-      const base64 = uploadEvent.target?.result as string;
-      if (base64) {
-        applyImageToField(targetField, base64);
-        setUploadNotice('✓ Image uploaded (Preview mode). Save to persist.');
-        setUploadingField(null);
-        setTimeout(() => setUploadNotice(null), 4000);
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const applyImageToField = (field: string, url: string) => {
-    if (field === 'logoUrl') {
-      setFormConfig({ ...formConfig, logoUrl: url });
-    } else if (field === 'heroBgImage') {
-      setFormConfig({ ...formConfig, heroBgImage: url });
-    } else if (field === 'founder1') {
-      setFormConfig({
-        ...formConfig,
-        founder1: { ...formConfig.founder1, image: url }
-      });
-    } else if (field === 'founder2') {
-      setFormConfig({
-        ...formConfig,
-        founder2: { ...formConfig.founder2, image: url }
-      });
-    } else if (field === 'blogImage') {
-      setBlogFormData((prev) => ({ ...prev, image: url }));
-    } else if (field === 'whyBgImage') {
-      setFormConfig({
-        ...formConfig,
-        whyChooseUs: {
-          ...formConfig.whyChooseUs,
-          bgImage: url
+        if (res.success && res.url) {
+          applyImageToField(targetField, res.url, true);
+          setUploadNotice(`✓ Photo saved to Supabase Storage (${res.bucket}) & synced!`);
+        } else if (res.error) {
+          console.warn('Supabase Storage notice:', res.error);
+          setUploadNotice(
+            `✓ Image applied locally! (Supabase note: Storage bucket requires RLS policy. Click "Copy Storage SQL" in Supabase tab to enable permanent cloud CDN).`
+          );
         }
-      });
-    } else if (field.startsWith('gallery_')) {
-      const idx = parseInt(field.replace('gallery_', ''), 10);
-      const updated = [...(formConfig.galleryImages || [])];
-      if (updated[idx]) {
-        updated[idx] = { ...updated[idx], url };
-        setFormConfig({ ...formConfig, galleryImages: updated });
       }
+    } catch (err: unknown) {
+      console.error('Error during image upload:', err);
+      setUploadNotice('Failed to process image file.');
+    } finally {
+      setUploadingField(null);
+      setTimeout(() => setUploadNotice(null), 7000);
     }
   };
 
@@ -581,11 +598,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
           {[
             { id: 'overview', label: 'Overview & Status', icon: Layers },
+            { id: 'media', label: 'Media & Photo Uploads', icon: Upload },
+            { id: 'pages', label: 'All Pages Content (A-Z)', icon: FileText },
             { id: 'branding', label: 'Logo & Brand Identity', icon: Sparkles },
-            { id: 'why-us', label: 'Why Choose Us (Parallax)', icon: Award },
             { id: 'hero', label: 'Hero & Headlines', icon: ImageIcon },
-            { id: 'pricing', label: 'Retreat Pricing', icon: DollarSign },
             { id: 'founders', label: 'Founders & Bio', icon: User },
+            { id: 'why-us', label: 'Why Choose Us (Parallax)', icon: Award },
+            { id: 'pricing', label: 'Retreat Pricing', icon: DollarSign },
             { id: 'gallery', label: 'Sanctuary Gallery', icon: ImageIcon },
             { id: 'blog', label: 'Blog & Articles CMS', icon: BookOpen },
             { id: 'seo', label: 'SEO, GEO & FAQs', icon: Globe },
@@ -1368,17 +1387,69 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           {/* SECTION 5: FOUNDERS */}
           {activeSection === 'founders' && (
             <div className="space-y-6 animate-fade-in">
-              <div>
-                <h2 className="font-serif-display text-2xl font-bold text-white">Founders &amp; Story</h2>
-                <p className="text-xs text-stone-400 mt-1">Update Anmol and Komal details, photos, and philosophy.</p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2E2319] pb-4">
+                <div>
+                  <h2 className="font-serif-display text-2xl font-bold text-white flex items-center gap-2">
+                    <User className="w-5 h-5 text-[#D4AF37]" />
+                    <span>Founders &amp; Genesis Story</span>
+                  </h2>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Control Anmol Khatri &amp; Komal Malhotra profiles, real photos, quotes, and the &ldquo;Why we started&rdquo; &amp; &ldquo;What makes us different&rdquo; highlights cards.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveAndSync}
+                  disabled={isSaving}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 shadow shrink-0"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{isSaving ? 'Saving...' : 'Save Founders Changes'}</span>
+                </button>
               </div>
 
-              {/* Founder 1 */}
+              {/* 1. SECTION INTRO & PHILOSOPHY */}
               <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
-                <span className="text-xs font-bold uppercase text-[#D4AF37]">Founder 1 (Movement Guide)</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>About Section Narrative</span>
+                </span>
+                <div>
+                  <label className="block text-xs text-stone-400 mb-1">
+                    About Shunya Sync Story Paragraph (Appears under &ldquo;About Shunya Sync&rdquo; heading)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={formConfig.aboutText}
+                    onChange={(e) => setFormConfig({ ...formConfig, aboutText: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none leading-relaxed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-400 mb-1">
+                    The Shunya Philosophy Quote
+                  </label>
+                  <input
+                    type="text"
+                    value={formConfig.philosophyQuote}
+                    onChange={(e) => setFormConfig({ ...formConfig, philosophyQuote: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* 2. FOUNDER 1 (ANMOL KHATRI) */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">
+                    Founder 1 — Movement Guide (Anmol Khatri)
+                  </span>
+                  <span className="text-[10px] text-stone-400">Card 1</span>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Name</label>
+                    <label className="block text-xs text-stone-400 mb-1">Full Name</label>
                     <input
                       type="text"
                       value={formConfig.founder1.name}
@@ -1389,7 +1460,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Title</label>
+                    <label className="block text-xs text-stone-400 mb-1">Title / Designation</label>
                     <input
                       type="text"
                       value={formConfig.founder1.title}
@@ -1402,35 +1473,88 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs text-stone-400 mb-1">Bio</label>
+                  <label className="block text-xs text-stone-400 mb-1">Short Quote / Focus Note</label>
+                  <input
+                    type="text"
+                    value={formConfig.founder1.note || ''}
+                    onChange={(e) =>
+                      setFormConfig({ ...formConfig, founder1: { ...formConfig.founder1, note: e.target.value } })
+                    }
+                    placeholder="e.g. Mindful breathwork & grounded presence"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-stone-400 mb-1">Extended Bio &amp; Sadhana Background</label>
                   <textarea
                     rows={3}
                     value={formConfig.founder1.bio}
                     onChange={(e) =>
                       setFormConfig({ ...formConfig, founder1: { ...formConfig.founder1, bio: e.target.value } })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none leading-relaxed"
                   />
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#D4AF37] shrink-0">
-                    <img src={formConfig.founder1.image} alt={formConfig.founder1.name} className="w-full h-full object-cover" />
+                {/* Photo settings & presets */}
+                <div className="space-y-2 pt-1 border-t border-[#2E2319]">
+                  <label className="block text-xs text-stone-400">Photo URL &amp; Quick Presets</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#D4AF37] shrink-0 bg-[#241C15]">
+                      <img src={formConfig.founder1.image} alt={formConfig.founder1.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 w-full space-y-2">
+                      <input
+                        type="text"
+                        value={formConfig.founder1.image}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            founder1: { ...formConfig.founder1, image: e.target.value }
+                          })
+                        }
+                        placeholder="/assets/aistudio/... or https://..."
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none font-mono"
+                      />
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => applyImageToField('founder1', '/assets/aistudio/founder_anmol_khatri.jpg')}
+                          className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] text-[11px] text-[#D4AF37] border border-[#3E2F23] transition cursor-pointer"
+                        >
+                          💧 Anmol River Photo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyImageToField('founder1', '/assets/aistudio/image_41321948.png')}
+                          className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] text-[11px] text-stone-300 border border-[#3E2F23] transition cursor-pointer"
+                        >
+                          📸 Full Founders Photo
+                        </button>
+                        <label className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[11px] font-semibold text-white transition flex items-center gap-1 cursor-pointer">
+                          <Upload className="w-3 h-3 text-[#D4AF37]" />
+                          <span>Upload File</span>
+                          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'founder1')} className="sr-only" />
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                  <label className="px-4 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs font-semibold text-white transition flex items-center gap-1.5 cursor-pointer">
-                    <Upload className="w-3.5 h-3.5 text-[#D4AF37]" />
-                    <span>Upload Anmol Photo</span>
-                    <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'founder1')} className="sr-only" />
-                  </label>
                 </div>
               </div>
 
-              {/* Founder 2 */}
+              {/* 3. FOUNDER 2 (KOMAL MALHOTRA) */}
               <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
-                <span className="text-xs font-bold uppercase text-[#D4AF37]">Founder 2 (Sound Alchemist)</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">
+                    Founder 2 — Sound Alchemist (Komal Malhotra)
+                  </span>
+                  <span className="text-[10px] text-stone-400">Card 2</span>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Name</label>
+                    <label className="block text-xs text-stone-400 mb-1">Full Name</label>
                     <input
                       type="text"
                       value={formConfig.founder2.name}
@@ -1441,7 +1565,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Title</label>
+                    <label className="block text-xs text-stone-400 mb-1">Title / Designation</label>
                     <input
                       type="text"
                       value={formConfig.founder2.title}
@@ -1454,27 +1578,183 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs text-stone-400 mb-1">Bio</label>
+                  <label className="block text-xs text-stone-400 mb-1">Short Quote / Focus Note</label>
+                  <input
+                    type="text"
+                    value={formConfig.founder2.note || ''}
+                    onChange={(e) =>
+                      setFormConfig({ ...formConfig, founder2: { ...formConfig.founder2, note: e.target.value } })
+                    }
+                    placeholder="e.g. Vibrational therapy & intuitive healing"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-stone-400 mb-1">Extended Bio &amp; Sound Therapy Background</label>
                   <textarea
                     rows={3}
                     value={formConfig.founder2.bio}
                     onChange={(e) =>
                       setFormConfig({ ...formConfig, founder2: { ...formConfig.founder2, bio: e.target.value } })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none leading-relaxed"
                   />
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#D4AF37] shrink-0">
-                    <img src={formConfig.founder2.image} alt={formConfig.founder2.name} className="w-full h-full object-cover" />
+                {/* Photo settings & presets */}
+                <div className="space-y-2 pt-1 border-t border-[#2E2319]">
+                  <label className="block text-xs text-stone-400">Photo URL &amp; Quick Presets</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#D4AF37] shrink-0 bg-[#241C15]">
+                      <img src={formConfig.founder2.image} alt={formConfig.founder2.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 w-full space-y-2">
+                      <input
+                        type="text"
+                        value={formConfig.founder2.image}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            founder2: { ...formConfig.founder2, image: e.target.value }
+                          })
+                        }
+                        placeholder="/assets/aistudio/... or https://..."
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none font-mono"
+                      />
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => applyImageToField('founder2', '/assets/aistudio/founder_komal_malhotra.jpg')}
+                          className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] text-[11px] text-[#D4AF37] border border-[#3E2F23] transition cursor-pointer"
+                        >
+                          💧 Komal River Photo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyImageToField('founder2', '/assets/aistudio/image_41321948.png')}
+                          className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] text-[11px] text-stone-300 border border-[#3E2F23] transition cursor-pointer"
+                        >
+                          📸 Full Founders Photo
+                        </button>
+                        <label className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[11px] font-semibold text-white transition flex items-center gap-1 cursor-pointer">
+                          <Upload className="w-3 h-3 text-[#D4AF37]" />
+                          <span>Upload File</span>
+                          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'founder2')} className="sr-only" />
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                  <label className="px-4 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs font-semibold text-white transition flex items-center gap-1.5 cursor-pointer">
-                    <Upload className="w-3.5 h-3.5 text-[#D4AF37]" />
-                    <span>Upload Komal Photo</span>
-                    <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'founder2')} className="sr-only" />
-                  </label>
                 </div>
+              </div>
+
+              {/* 4. THE TWO HIGHLIGHTS CARDS */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-1.5">
+                  <Heart className="w-3.5 h-3.5" />
+                  <span>The 2 Genesis Highlights Cards</span>
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-[#241C15] border border-[#3E2F23] space-y-2">
+                    <span className="text-xs uppercase font-bold text-[#E3A387] flex items-center gap-1.5">
+                      <Heart className="w-3.5 h-3.5" />
+                      <span>Card 1: Why we started</span>
+                    </span>
+                    <textarea
+                      rows={3}
+                      value={formConfig.whyWeStarted || ''}
+                      onChange={(e) => setFormConfig({ ...formConfig, whyWeStarted: e.target.value })}
+                      placeholder="To offer intimate, soulful journeys away from daily noise."
+                      className="w-full px-3 py-2 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-[#241C15] border border-[#3E2F23] space-y-2">
+                    <span className="text-xs uppercase font-bold text-emerald-400 flex items-center gap-1.5">
+                      <Compass className="w-3.5 h-3.5" />
+                      <span>Card 2: What makes us different</span>
+                    </span>
+                    <textarea
+                      rows={3}
+                      value={formConfig.whatMakesUsDifferent || ''}
+                      onChange={(e) => setFormConfig({ ...formConfig, whatMakesUsDifferent: e.target.value })}
+                      placeholder="Intimate groups, nature-based settings, soulful evenings, and expert guides."
+                      className="w-full px-3 py-2 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. LIVE PREVIEW */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Live Preview (How visitors will see this section)</span>
+                  </span>
+                  <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full">
+                    Live Reactive
+                  </span>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-[#FAF8F5] text-[#1F2E23] space-y-6 border border-[#E7DFD3]">
+                  <div>
+                    <h3 className="font-serif-display text-2xl font-bold">About Shunya Sync</h3>
+                    <p className="text-xs text-[#526355] mt-1 line-clamp-2">
+                      {formConfig.aboutText}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Anmol Khatri preview */}
+                    <div className="rounded-2xl overflow-hidden bg-white border border-[#E7DFD3] shadow-xs">
+                      <div className="aspect-[4/3] bg-stone-200 overflow-hidden">
+                        <img src={formConfig.founder1.image} alt={formConfig.founder1.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="p-3">
+                        <p className="font-serif-display font-bold text-base">{formConfig.founder1.name}</p>
+                        <p className="text-[10px] text-[#C67856] font-semibold">{formConfig.founder1.title}</p>
+                        <p className="text-[11px] text-stone-500 italic mt-0.5">&ldquo;{formConfig.founder1.note}&rdquo;</p>
+                      </div>
+                    </div>
+
+                    {/* Komal Malhotra preview */}
+                    <div className="rounded-2xl overflow-hidden bg-white border border-[#E7DFD3] shadow-xs">
+                      <div className="aspect-[4/3] bg-stone-200 overflow-hidden">
+                        <img src={formConfig.founder2.image} alt={formConfig.founder2.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="p-3">
+                        <p className="font-serif-display font-bold text-base">{formConfig.founder2.name}</p>
+                        <p className="text-[10px] text-emerald-700 font-semibold">{formConfig.founder2.title}</p>
+                        <p className="text-[11px] text-stone-500 italic mt-0.5">&ldquo;{formConfig.founder2.note}&rdquo;</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div className="p-3 rounded-xl bg-white border border-[#EAE3D6]">
+                      <p className="font-serif-display font-bold text-[#1F2E23]">Why we started</p>
+                      <p className="text-stone-600 text-[11px] mt-0.5">{formConfig.whyWeStarted}</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-white border border-[#EAE3D6]">
+                      <p className="font-serif-display font-bold text-[#1F2E23]">What makes us different</p>
+                      <p className="text-stone-600 text-[11px] mt-0.5">{formConfig.whatMakesUsDifferent}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Save Action */}
+              <div className="flex justify-end pt-2">
+                <button
+                  type="button"
+                  onClick={handleSaveAndSync}
+                  disabled={isSaving}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer hover:brightness-110 shadow"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{isSaving ? 'Saving...' : 'Save All Founders Changes'}</span>
+                </button>
               </div>
             </div>
           )}
@@ -1892,7 +2172,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                           <select
                             value={lead.status}
                             onChange={(e) =>
-                              onUpdateLeadStatus(lead.id, e.target.value as 'new' | 'contacted' | 'confirmed')
+                              onUpdateLeadStatus?.(lead.id, e.target.value as 'new' | 'contacted' | 'confirmed')
                             }
                             className={`px-3 py-1 rounded-xl text-xs font-semibold ${
                               lead.status === 'confirmed'
@@ -1907,7 +2187,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                             <option value="confirmed">Confirmed Guest</option>
                           </select>
                           <button
-                            onClick={() => onDeleteLead(lead.id)}
+                            onClick={() => onDeleteLead?.(lead.id)}
                             className="p-1.5 rounded-lg bg-[#241C15] hover:bg-rose-950 text-stone-400 hover:text-rose-400"
                             title="Delete Lead"
                           >
@@ -2072,6 +2352,484 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     <Copy className="w-3.5 h-3.5" />
                     <span>{copiedStorageSql ? '✓ Storage SQL Copied' : 'Copy Storage SQL'}</span>
                   </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SECTION: MEDIA & ORIGINAL PHOTO UPLOADS */}
+          {activeSection === 'media' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2E2319] pb-4">
+                <div>
+                  <h2 className="font-serif-display text-2xl font-bold text-white flex items-center gap-2">
+                    <Upload className="w-5 h-5 text-[#D4AF37]" />
+                    <span>Media &amp; Original Photo Uploads</span>
+                  </h2>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Upload original high-resolution photos for Hero background, founders, logo, and sanctuary features.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveAndSync}
+                  disabled={isSaving}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 shadow shrink-0"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{isSaving ? 'Saving...' : 'Save Media Changes'}</span>
+                </button>
+              </div>
+
+              {/* RLS Notice & 1-Click Solution Banner */}
+              <div className="p-5 rounded-2xl bg-[#1C150F] border border-[#D4AF37]/40 space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-xl bg-[#D4AF37]/20 text-[#D4AF37] shrink-0 mt-0.5">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                      Resilient Instant Photo Upload Engine Active
+                    </h3>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      Whenever you select an image file below, it is converted immediately into browser memory and displayed on your live website within milliseconds — uploads will never fail or leave your site blank.
+                    </p>
+                    <p className="text-[11px] text-stone-400">
+                      If Supabase Storage showed an RLS error (<code className="text-amber-300">new row violates row-level security policy</code>), copy and paste our 1-click Storage SQL into your Supabase SQL Editor to enable public cloud hosting across all devices.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-1 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(SUPABASE_STORAGE_SQL_SETUP);
+                      setCopiedStorageSql(true);
+                      setTimeout(() => setCopiedStorageSql(false), 3500);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#D4AF37]/50 text-xs font-semibold text-[#E5C158] flex items-center gap-2 cursor-pointer shadow-sm"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>{copiedStorageSql ? '✓ Storage SQL Copied to Clipboard!' : '1-Click Copy Supabase Storage SQL'}</span>
+                  </button>
+                  <span className="text-[11px] text-stone-500">Run in Supabase Dashboard → SQL Editor → New Query → Run</span>
+                </div>
+              </div>
+
+              {/* 1. HERO BACKGROUND IMAGE */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4" />
+                    <span>Hero Section Background Image</span>
+                  </span>
+                  <span className="text-[11px] text-emerald-400 font-medium">Live on Home Page</span>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={formConfig.heroBgImage}
+                      onChange={(e) => applyImageToField('heroBgImage', e.target.value)}
+                      placeholder="https://... or data:image/..."
+                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                    <label className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] text-xs font-bold uppercase tracking-wider cursor-pointer hover:brightness-110 transition flex items-center gap-1.5 shrink-0 shadow">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{uploadingField === 'heroBgImage' ? 'Applying...' : 'Upload File'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'heroBgImage')}
+                        className="sr-only"
+                      />
+                    </label>
+                  </div>
+
+                  {/* Preset quick buttons */}
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <span className="text-[10px] text-stone-400 uppercase tracking-wider">High-Res Presets:</span>
+                    {[
+                      { label: 'Himalayan Sunrise Shala', url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2000&q=85' },
+                      { label: 'Misty Sacred Ridge', url: 'https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=2000&q=85' },
+                      { label: 'Himalayan River & Forest', url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2000&q=85' },
+                      { label: 'Acoustic Sound Dome', url: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=2000&q=85' }
+                    ].map((preset) => (
+                      <button
+                        key={preset.label}
+                        type="button"
+                        onClick={() => applyImageToField('heroBgImage', preset.url)}
+                        className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[10px] text-stone-300 hover:text-white transition cursor-pointer"
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Live Preview */}
+                  <div className="relative aspect-[21/9] rounded-2xl overflow-hidden border border-[#3E2F23] shadow-md bg-stone-900">
+                    <img src={formConfig.heroBgImage} alt="Hero Background Preview" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
+                      <p className="font-serif-display text-xl sm:text-2xl font-bold text-white tracking-widest uppercase drop-shadow-md text-center px-4">
+                        {formConfig.tagline || 'FIND STILLNESS • ALIGN WITHIN • AWAKEN'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. FOUNDERS ORIGINAL PHOTOS */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-6">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    <span>Founders Original Photos</span>
+                  </h3>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Authentic facilitators Anmol Khatri and Komal Malhotra portraits.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Founder 1: Anmol Khatri */}
+                  <div className="p-4 rounded-xl bg-[#241C15] border border-[#3E2F23] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-white">Anmol Khatri (Movement Guide)</span>
+                      <button
+                        type="button"
+                        onClick={() => applyImageToField('founder1', '/assets/aistudio/founder_anmol_khatri.jpg')}
+                        className="text-[10px] text-[#D4AF37] hover:underline cursor-pointer"
+                      >
+                        Reset to Original
+                      </button>
+                    </div>
+
+                    <div className="w-full aspect-[4/5] rounded-xl overflow-hidden border border-[#3E2F23] bg-stone-900">
+                      <img
+                        src={formConfig.founder1.image || '/assets/aistudio/founder_anmol_khatri.jpg'}
+                        alt={formConfig.founder1.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={formConfig.founder1.image}
+                        onChange={(e) => applyImageToField('founder1', e.target.value)}
+                        placeholder="Image URL or Base64"
+                        className="flex-1 px-3 py-1.5 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white"
+                      />
+                      <label className="px-3 py-1.5 rounded-lg bg-[#D4AF37] text-[#120E0A] text-xs font-bold uppercase cursor-pointer hover:brightness-110 shrink-0">
+                        <span>{uploadingField === 'founder1' ? '...' : 'Upload'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, 'founder1')}
+                          className="sr-only"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Founder 2: Komal Malhotra */}
+                  <div className="p-4 rounded-xl bg-[#241C15] border border-[#3E2F23] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-white">Komal Malhotra (Sound Alchemist)</span>
+                      <button
+                        type="button"
+                        onClick={() => applyImageToField('founder2', '/assets/aistudio/founder_komal_malhotra.jpg')}
+                        className="text-[10px] text-[#D4AF37] hover:underline cursor-pointer"
+                      >
+                        Reset to Original
+                      </button>
+                    </div>
+
+                    <div className="w-full aspect-[4/5] rounded-xl overflow-hidden border border-[#3E2F23] bg-stone-900">
+                      <img
+                        src={formConfig.founder2.image || '/assets/aistudio/founder_komal_malhotra.jpg'}
+                        alt={formConfig.founder2.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={formConfig.founder2.image}
+                        onChange={(e) => applyImageToField('founder2', e.target.value)}
+                        placeholder="Image URL or Base64"
+                        className="flex-1 px-3 py-1.5 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white"
+                      />
+                      <label className="px-3 py-1.5 rounded-lg bg-[#D4AF37] text-[#120E0A] text-xs font-bold uppercase cursor-pointer hover:brightness-110 shrink-0">
+                        <span>{uploadingField === 'founder2' ? '...' : 'Upload'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, 'founder2')}
+                          className="sr-only"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. PARALLAX WHY CHOOSE US BACKGROUND */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                  <Award className="w-4 h-4" />
+                  <span>Why Choose Us Parallax Background Photo</span>
+                </span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={formConfig.whyChooseUs?.bgImage || ''}
+                    onChange={(e) => applyImageToField('whyBgImage', e.target.value)}
+                    placeholder="https://... or data:image/..."
+                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                  />
+                  <label className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] text-xs font-bold uppercase tracking-wider cursor-pointer hover:brightness-110 flex items-center gap-1.5 shrink-0">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{uploadingField === 'whyBgImage' ? '...' : 'Upload'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'whyBgImage')}
+                      className="sr-only"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SECTION: ALL PAGES CONTENT MANAGER (A TO Z) */}
+          {activeSection === 'pages' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2E2319] pb-4">
+                <div>
+                  <h2 className="font-serif-display text-2xl font-bold text-white flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-[#D4AF37]" />
+                    <span>All Pages Content Manager (A to Z)</span>
+                  </h2>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Edit headers, footers, page titles, text bodies, contact info, and policies across the entire website.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveAndSync}
+                  disabled={isSaving}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 shadow shrink-0"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{isSaving ? 'Saving...' : 'Save All Content'}</span>
+                </button>
+              </div>
+
+              {/* 1. TOP HEADER BAR & CONTACT INFO */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  <span>Top Bar Announcement &amp; Official Contact</span>
+                </span>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">Top Bar Announcement Banner</label>
+                    <input
+                      type="text"
+                      value={formConfig.headerAnnouncement}
+                      onChange={(e) => setFormConfig({ ...formConfig, headerAnnouncement: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-xs text-stone-400 mb-1">WhatsApp Number (e.g. 919259698064)</label>
+                      <input
+                        type="text"
+                        value={formConfig.contact.whatsappNumber}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            contact: { ...formConfig.contact, whatsappNumber: e.target.value }
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-stone-400 mb-1">Display Phone (e.g. +91 9259698064)</label>
+                      <input
+                        type="text"
+                        value={formConfig.contact.phone}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            contact: { ...formConfig.contact, phone: e.target.value }
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-stone-400 mb-1">Support Email</label>
+                      <input
+                        type="email"
+                        value={formConfig.contact.email}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            contact: { ...formConfig.contact, email: e.target.value }
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">Sanctuary Physical Address / Location</label>
+                    <input
+                      type="text"
+                      value={formConfig.contact.location || formConfig.contact.address || ''}
+                      onChange={(e) =>
+                        setFormConfig({
+                          ...formConfig,
+                          contact: { ...formConfig.contact, location: e.target.value, address: e.target.value }
+                        })
+                      }
+                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. HOME HERO HEADLINES & TAGLINE */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Home Page Headlines &amp; Tagline</span>
+                </span>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">
+                      Official Tagline (Appears in Hero, Header, and Metadata)
+                    </label>
+                    <input
+                      type="text"
+                      value={formConfig.tagline}
+                      onChange={(e) => setFormConfig({ ...formConfig, tagline: e.target.value })}
+                      placeholder="FIND STILLNESS • ALIGN WITHIN • AWAKEN"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-[#E5C158] font-semibold focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">Hero Main Title / Headline</label>
+                    <input
+                      type="text"
+                      value={formConfig.heroHeadline}
+                      onChange={(e) => setFormConfig({ ...formConfig, heroHeadline: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">Hero Subtitle Paragraph</label>
+                    <textarea
+                      rows={2}
+                      value={formConfig.heroSubheadline}
+                      onChange={(e) => setFormConfig({ ...formConfig, heroSubheadline: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs text-stone-400 mb-1">Cohort Badge Tag</label>
+                      <input
+                        type="text"
+                        value={formConfig.heroBadge}
+                        onChange={(e) => setFormConfig({ ...formConfig, heroBadge: e.target.value })}
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-stone-400 mb-1">Hero Bottom Philosophy Callout</label>
+                      <input
+                        type="text"
+                        value={formConfig.heroQuote}
+                        onChange={(e) => setFormConfig({ ...formConfig, heroQuote: e.target.value })}
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. ABOUT & PHILOSOPHY TEXT */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  <span>About Page Narrative &amp; Genesis Story</span>
+                </span>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">About Shunya Sync Story</label>
+                    <textarea
+                      rows={3}
+                      value={formConfig.aboutText}
+                      onChange={(e) => setFormConfig({ ...formConfig, aboutText: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">Philosophy Quote</label>
+                    <input
+                      type="text"
+                      value={formConfig.philosophyQuote}
+                      onChange={(e) => setFormConfig({ ...formConfig, philosophyQuote: e.target.value })}
+                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. FOOTER & COPYRIGHT */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                  <Globe className="w-4 h-4" />
+                  <span>Footer Description &amp; Copyright</span>
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">Footer Brand Description</label>
+                    <textarea
+                      rows={2}
+                      value={formConfig.footerDescription}
+                      onChange={(e) => setFormConfig({ ...formConfig, footerDescription: e.target.value })}
+                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">Copyright Line</label>
+                    <input
+                      type="text"
+                      value={formConfig.footerCopyright}
+                      onChange={(e) => setFormConfig({ ...formConfig, footerCopyright: e.target.value })}
+                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

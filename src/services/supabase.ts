@@ -373,28 +373,29 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     pkg5d4n: pkg4Item
   };
 
-  // Safely construct founders
   // Safely construct founders with smooth migration
   const rawFounder1 = input.founder1 || {};
   const founder1 = {
     ...DEFAULT_SITE_CONFIG.founder1,
     ...rawFounder1,
-    name: rawFounder1.name && rawFounder1.name !== 'Anmol Khatti' ? rawFounder1.name : 'Anmol Khatri',
-    image: rawFounder1.image && !rawFounder1.image.includes('unsplash.com/photo-1545205597') ? rawFounder1.image : '/assets/aistudio/founder_anmol_khatri.jpg'
+    name: rawFounder1.name && rawFounder1.name !== 'Anmol Khatti' && rawFounder1.name !== 'Aarav Sharma' ? rawFounder1.name : 'Anmol Khatri',
+    image: rawFounder1.image && !rawFounder1.image.includes('unsplash.com/photo-1545205597') && !rawFounder1.image.includes('photo-1506794778202') ? rawFounder1.image : '/assets/aistudio/founder_anmol_khatri.jpg'
   };
 
   const rawFounder2 = input.founder2 || {};
   const founder2 = {
     ...DEFAULT_SITE_CONFIG.founder2,
     ...rawFounder2,
-    name: rawFounder2.name && rawFounder2.name !== 'Komal Makhetra' ? rawFounder2.name : 'Komal Malhotra',
-    image: rawFounder2.image && !rawFounder2.image.includes('unsplash.com/photo-1508214751196') ? rawFounder2.image : '/assets/aistudio/founder_komal_malhotra.jpg'
+    name: rawFounder2.name && rawFounder2.name !== 'Komal Makhetra' && rawFounder2.name !== 'Devanshi Mehta' ? rawFounder2.name : 'Komal Malhotra',
+    image: rawFounder2.image && !rawFounder2.image.includes('unsplash.com/photo-1508214751196') && !rawFounder2.image.includes('unsplash.com/photo-1534528741775') ? rawFounder2.image : '/assets/aistudio/founder_komal_malhotra.jpg'
   };
 
   // Safely construct contact
   const contact = {
     ...DEFAULT_SITE_CONFIG.contact,
-    ...(input.contact || {})
+    ...(input.contact || {}),
+    phone: input.contact?.phone && input.contact.phone.includes('9259698064') ? input.contact.phone : DEFAULT_SITE_CONFIG.contact.phone,
+    whatsappNumber: input.contact?.whatsappNumber && input.contact.whatsappNumber.includes('9259698064') ? input.contact.whatsappNumber : DEFAULT_SITE_CONFIG.contact.whatsappNumber
   };
 
   // Safely construct gallery images
@@ -410,9 +411,13 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     ...(input.seo || {})
   };
 
+  const currentTagline = input.tagline && !input.tagline.toLowerCase().includes('disconnect from chaos')
+    ? input.tagline
+    : DEFAULT_SITE_CONFIG.tagline;
+
   return {
     brandName: input.brandName || input.brand_name || DEFAULT_SITE_CONFIG.brandName,
-    tagline: input.tagline && input.tagline !== 'Disconnect from chaos. Reconnect with your true self.' ? input.tagline : DEFAULT_SITE_CONFIG.tagline,
+    tagline: currentTagline,
     headerAnnouncement: input.headerAnnouncement ?? input.header_announcement ?? DEFAULT_SITE_CONFIG.headerAnnouncement,
     heroHeadline: input.heroHeadline || input.hero_headline || DEFAULT_SITE_CONFIG.heroHeadline,
     heroSubheadline: input.heroSubheadline || input.hero_subheadline || DEFAULT_SITE_CONFIG.heroSubheadline,

@@ -53,6 +53,18 @@ export function sanitizeFileName(name: string): string {
 }
 
 /**
+ * Converts a browser File object to a Base64 Data URL for instant resilient preview & persistence.
+ */
+export function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
  * Uploads a browser File object to Supabase Storage.
  * Generates a public CDN URL upon completion.
  */

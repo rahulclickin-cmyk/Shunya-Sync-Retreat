@@ -13,6 +13,7 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({
   speed = 'normal'
 }) => {
   const items = [
+    { text: 'FIND STILLNESS • ALIGN WITHIN • AWAKEN', icon: <Sparkles className="w-3.5 h-3.5 text-[#E3A387]" /> },
     { text: 'DISCONNECT FROM CHAOS', icon: <Leaf className="w-3.5 h-3.5 text-[#E3A387]" /> },
     { text: 'RECONNECT WITH YOUR TRUE SELF', icon: <Heart className="w-3.5 h-3.5 text-[#E3A387]" /> },
     { text: '432Hz HARMONIC SOUND BATH', icon: <Volume2 className="w-3.5 h-3.5 text-[#C67856]" /> },

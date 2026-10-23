@@ -1626,55 +1626,199 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                     {/* Founder 1 */}
                     <div className="p-4 rounded-xl bg-white border border-stone-200 space-y-2">
-                      <p className="font-bold text-sm text-[#1F2E23]">{formConfig.founder1.name}</p>
-                      <input
-                        type="text"
-                        value={formConfig.founder1.title}
-                        onChange={(e) =>
-                          setFormConfig({
-                            ...formConfig,
-                            founder1: { ...formConfig.founder1, title: e.target.value }
-                          })
-                        }
-                        className="w-full px-3 py-1.5 rounded-lg border text-xs"
-                      />
-                      <textarea
-                        rows={3}
-                        value={formConfig.founder1.bio}
-                        onChange={(e) =>
-                          setFormConfig({
-                            ...formConfig,
-                            founder1: { ...formConfig.founder1, bio: e.target.value }
-                          })
-                        }
-                        className="w-full px-3 py-1.5 rounded-lg border text-xs"
-                      />
+                      <p className="font-bold text-xs uppercase text-[#C67856]">Founder 1 (Anmol Khatri)</p>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Name</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder1.name}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder1: { ...formConfig.founder1, name: e.target.value }
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Title</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder1.title}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder1: { ...formConfig.founder1, title: e.target.value }
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Short Note</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder1.note || ''}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder1: { ...formConfig.founder1, note: e.target.value }
+                            })
+                          }
+                          placeholder="Mindful breathwork & grounded presence"
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Bio</label>
+                        <textarea
+                          rows={2}
+                          value={formConfig.founder1.bio}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder1: { ...formConfig.founder1, bio: e.target.value }
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div className="flex gap-1.5 pt-1">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder1: { ...formConfig.founder1, image: '/assets/aistudio/founder_anmol_khatri.jpg' }
+                            })
+                          }
+                          className="text-[10px] bg-stone-100 hover:bg-stone-200 px-2 py-1 rounded text-stone-700"
+                        >
+                          Use River Photo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder1: { ...formConfig.founder1, image: '/assets/aistudio/image_41321948.png' }
+                            })
+                          }
+                          className="text-[10px] bg-stone-100 hover:bg-stone-200 px-2 py-1 rounded text-stone-700"
+                        >
+                          Use Group Photo
+                        </button>
+                      </div>
                     </div>
 
                     {/* Founder 2 */}
                     <div className="p-4 rounded-xl bg-white border border-stone-200 space-y-2">
-                      <p className="font-bold text-sm text-[#1F2E23]">{formConfig.founder2.name}</p>
-                      <input
-                        type="text"
-                        value={formConfig.founder2.title}
-                        onChange={(e) =>
-                          setFormConfig({
-                            ...formConfig,
-                            founder2: { ...formConfig.founder2, title: e.target.value }
-                          })
-                        }
-                        className="w-full px-3 py-1.5 rounded-lg border text-xs"
-                      />
+                      <p className="font-bold text-xs uppercase text-[#3D5B46]">Founder 2 (Komal Malhotra)</p>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Name</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder2.name}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder2: { ...formConfig.founder2, name: e.target.value }
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Title</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder2.title}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder2: { ...formConfig.founder2, title: e.target.value }
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Short Note</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder2.note || ''}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder2: { ...formConfig.founder2, note: e.target.value }
+                            })
+                          }
+                          placeholder="Vibrational therapy & intuitive healing"
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-stone-500 uppercase font-semibold">Bio</label>
+                        <textarea
+                          rows={2}
+                          value={formConfig.founder2.bio}
+                          onChange={(e) =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder2: { ...formConfig.founder2, bio: e.target.value }
+                            })
+                          }
+                          className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        />
+                      </div>
+                      <div className="flex gap-1.5 pt-1">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder2: { ...formConfig.founder2, image: '/assets/aistudio/founder_komal_malhotra.jpg' }
+                            })
+                          }
+                          className="text-[10px] bg-stone-100 hover:bg-stone-200 px-2 py-1 rounded text-stone-700"
+                        >
+                          Use River Photo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormConfig({
+                              ...formConfig,
+                              founder2: { ...formConfig.founder2, image: '/assets/aistudio/image_41321948.png' }
+                            })
+                          }
+                          className="text-[10px] bg-stone-100 hover:bg-stone-200 px-2 py-1 rounded text-stone-700"
+                        >
+                          Use Group Photo
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Highlights Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                      <label className="block text-[10px] font-bold uppercase text-stone-600">Why We Started</label>
                       <textarea
-                        rows={3}
-                        value={formConfig.founder2.bio}
-                        onChange={(e) =>
-                          setFormConfig({
-                            ...formConfig,
-                            founder2: { ...formConfig.founder2, bio: e.target.value }
-                          })
-                        }
-                        className="w-full px-3 py-1.5 rounded-lg border text-xs"
+                        rows={2}
+                        value={formConfig.whyWeStarted || ''}
+                        onChange={(e) => setFormConfig({ ...formConfig, whyWeStarted: e.target.value })}
+                        className="w-full px-3 py-1.5 rounded-lg border bg-white text-xs"
+                      />
+                    </div>
+                    <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                      <label className="block text-[10px] font-bold uppercase text-stone-600">What Makes Us Different</label>
+                      <textarea
+                        rows={2}
+                        value={formConfig.whatMakesUsDifferent || ''}
+                        onChange={(e) => setFormConfig({ ...formConfig, whatMakesUsDifferent: e.target.value })}
+                        className="w-full px-3 py-1.5 rounded-lg border bg-white text-xs"
                       />
                     </div>
                   </div>

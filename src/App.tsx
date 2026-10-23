@@ -141,7 +141,11 @@ const chimePlayer = new AmbientChime();
 export default function App() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig>(getStoredSiteConfig());
   const [benefitsList] = useState<BenefitSlide[]>(getStoredBenefits());
-  const [, setLeadsList] = useState<BookingLead[]>(getStoredLeads());
+  const [leadsList, setLeadsList] = useState<BookingLead[]>(getStoredLeads());
+
+  const handleConfigUpdate = (updated: SiteConfig) => {
+    setSiteConfig(updated);
+  };
 
   // URL Hash Routing & Active Page State
   const [currentRoute, setCurrentRoute] = useState<PageRoute>('home');
@@ -205,10 +209,10 @@ export default function App() {
       // 2. Check hash (e.g. #admin, #about)
       const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
 
-      // Direct /admin check requested by user
+      // Direct /admin check
       if (pathname === 'admin' || hash === 'admin' || hash === 'secret-admin') {
-        setSecretAdminOpen(true);
-        setCurrentRoute('home');
+        setCurrentRoute('admin');
+        window.history.pushState(null, '', '/admin');
         return;
       }
 
@@ -234,12 +238,7 @@ export default function App() {
       if (active === 'sanctuary' || active === 'gallery') {
         setCurrentRoute('gallery');
       } else if (validRoutes.includes(active as PageRoute)) {
-        if (active === 'admin') {
-          setSecretAdminOpen(true);
-          setCurrentRoute('home');
-        } else {
-          setCurrentRoute(active as PageRoute);
-        }
+        setCurrentRoute(active as PageRoute);
       } else if (!active) {
         setCurrentRoute('home');
       }
@@ -303,8 +302,9 @@ export default function App() {
     setPackagesDropdownOpen(false);
 
     if (route === 'admin') {
-      setSecretAdminOpen(true);
+      setCurrentRoute('admin');
       window.history.pushState(null, '', '/admin');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -392,12 +392,26 @@ export default function App() {
     ? siteConfig.galleryImages
     : fallbackGalleryImages;
 
+  // Dedicated Full-Screen Standalone Admin Dashboard
+  if (currentRoute === 'admin') {
+    return (
+      <div className="min-h-screen bg-[#0F0B08] text-white selection:bg-[#D4AF37]/30">
+        <SeoHead config={siteConfig} currentRoute="admin" />
+        <AdminPage
+          config={siteConfig}
+          onUpdateConfig={handleConfigUpdate}
+          onNavigateHome={() => navigateTo('home')}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#2C332D] font-sans relative selection:bg-[#E2DDD3] overflow-x-hidden">
       {/* DYNAMIC SEO, GEO & AEO HEAD ENGINE */}
       <SeoHead config={siteConfig} currentRoute={currentRoute} />
 
-      {/* 1. TOP UTILITY HEADER: Clean, No Admin links, Sound Player gracefully positioned */}
+      {/* 1. TOP UTILITY HEADER: Clean, No Sound Player, No Location Pin, Official WhatsApp Button */}
       <div className="bg-[#19241B] text-[#E0DACF] text-[11px] py-2 px-4 border-b border-[#293A2C] relative z-40">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
           {/* Announcement Text */}
@@ -408,23 +422,21 @@ export default function App() {
             </p>
           </div>
 
-          {/* Header Controls: Sound Player & WhatsApp direct */}
-          <div className="flex items-center gap-4 text-xs shrink-0">
-            <AudioPlayerHeader active={audioActive} onToggle={toggleAudio} />
-
-            <span className="hidden md:inline-flex items-center gap-1.5 text-stone-300">
-              <MapPin className="w-3.5 h-3.5 text-[#C67856]" />
-              <span>{siteConfig.contact.location}</span>
-            </span>
-
+          {/* Official WhatsApp Button */}
+          <div className="flex items-center gap-3 text-xs shrink-0">
             <a
-              href={`https://wa.me/${siteConfig.contact.whatsappNumber}`}
+              href={`https://wa.me/${siteConfig.contact.whatsappNumber || '919259698064'}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#25D366] hover:underline font-medium"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/50 text-[#25D366] font-medium text-xs transition shadow-xs group"
+              title={`Direct WhatsApp: ${siteConfig.contact.phone}`}
             >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>WhatsApp: {siteConfig.contact.phone}</span>
+              {/* Official WhatsApp SVG Icon */}
+              <svg className="w-3.5 h-3.5 fill-[#25D366] group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+              <span className="font-semibold text-white">WhatsApp:</span>
+              <span className="text-stone-200">{siteConfig.contact.phone}</span>
             </a>
           </div>
         </div>
@@ -906,67 +918,14 @@ export default function App() {
               <BenefitsSlider benefits={benefitsList} onOpenBooking={() => handleOpenBooking()} />
             </div>
 
-            {/* 3. ABOUT US & FOUNDERS SECTION (3D FLIP IN FROM RIGHT ON SCROLL) */}
-            <section id="about" className="scroll-section scroll-flip-right py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-20">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center">
-                {/* Visual Column: Glides in from LEFT */}
-                <div className="lg:col-span-5 relative card-3d-tilt reveal-init from-left delay-100">
-                  <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/5]">
-                    <img
-                      src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1200&q=80"
-                      alt="Mindful yoga and stillness at Shunya Sync"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <span className="text-[11px] uppercase tracking-widest text-[#E3A387] font-medium">The Shunya Philosophy</span>
-                      <p className="font-serif-display text-lg italic mt-1 text-stone-100">
-                        &ldquo;{siteConfig.philosophyQuote}&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content Column: Glides in from RIGHT */}
-                <div className="lg:col-span-7 space-y-6 reveal-init from-right delay-200">
-                  <div className="inline-block px-3.5 py-1 rounded-full bg-[#EFEAE1] text-[#2C332D] text-xs font-semibold tracking-widest uppercase">
-                    Our Sacred Genesis
-                  </div>
-                  <h2 className="font-serif-display text-3xl sm:text-5xl font-normal text-[#1F2E23] leading-tight">
-                    About Shunya Sync
-                  </h2>
-                  <p className="text-base sm:text-lg text-[#556057] leading-relaxed font-light">
-                    {siteConfig.aboutText}
-                  </p>
-
-                  {/* Founders Cards: Staggered from Left & Right */}
-                  <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="reveal-init from-left delay-300 p-5 rounded-2xl bg-white border border-[#DFD7CA] shadow-sm space-y-2 card-3d-tilt">
-                      <p className="text-xs uppercase tracking-wider text-[#C67856] font-semibold">{siteConfig.founder1.title}</p>
-                      <h4 className="font-serif-display text-xl font-bold text-[#1F2E23]">{siteConfig.founder1.name}</h4>
-                      <p className="text-xs text-[#556057] italic">&ldquo;{siteConfig.founder1.note}&rdquo;</p>
-                      <p className="text-xs text-[#7A877B] leading-relaxed pt-1">{siteConfig.founder1.bio}</p>
-                    </div>
-
-                    <div className="reveal-init from-right delay-400 p-5 rounded-2xl bg-white border border-[#DFD7CA] shadow-sm space-y-2 card-3d-tilt">
-                      <p className="text-xs uppercase tracking-wider text-[#C67856] font-semibold">{siteConfig.founder2.title}</p>
-                      <h4 className="font-serif-display text-xl font-bold text-[#1F2E23]">{siteConfig.founder2.name}</h4>
-                      <p className="text-xs text-[#556057] italic">&ldquo;{siteConfig.founder2.note}&rdquo;</p>
-                      <p className="text-xs text-[#7A877B] leading-relaxed pt-1">{siteConfig.founder2.bio}</p>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <button
-                      onClick={() => navigateTo('about')}
-                      className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-bold text-[#C67856] hover:underline cursor-pointer"
-                    >
-                      <span>Read Deep Founder Story &rarr;</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
+            {/* 3. AUTHENTIC ABOUT US & FOUNDERS SECTION (Matching Real Photos & Story) */}
+            <div id="about" className="scroll-section scroll-flip-right scroll-mt-20">
+              <AboutFoundersSection
+                config={siteConfig}
+                onOpenBooking={() => handleOpenBooking()}
+                showExtendedBios={true}
+              />
+            </div>
 
             {/* 4. THE THREE PILLARS (Experiences): 3D FLIP IN FROM LEFT */}
             <section id="pillars" className="scroll-section scroll-flip-left py-24 px-5 sm:px-8 bg-[#F5F0E8] border-y border-[#E8E1D5] scroll-mt-20">

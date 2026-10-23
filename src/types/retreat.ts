@@ -45,6 +45,7 @@ export interface SiteConfig {
     whatsappNumber: string;
     email: string;
     location: string;
+    address?: string;
   };
   galleryImages?: Array<{
     url: string;
@@ -56,6 +57,10 @@ export interface SiteConfig {
   logoUrl?: string;
   brandSubtitle?: string;
   showLogoIcon?: boolean;
+  heroBadge?: string;
+  heroQuote?: string;
+  footerDescription?: string;
+  footerCopyright?: string;
   whyChooseUs?: {
     eyebrow?: string;
     headingPrefix?: string;

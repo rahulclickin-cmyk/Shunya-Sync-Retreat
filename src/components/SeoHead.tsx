@@ -17,8 +17,8 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ config, currentRoute }) => {
 
     switch (currentRoute) {
       case 'about':
-        pageTitle = `About Founders Anmol & Komal | Lineage & Philosophy • ${config.brandName}`;
-        pageDesc = `Meet our founders Anmol Khatti (Movement Guide) and Komal Makhetra (Sound Alchemist). Explore our philosophy of Shunya (sacred stillness) and holistic healing in India.`;
+        pageTitle = `About Founders ${config.founder1?.name || 'Anmol Khatri'} & ${config.founder2?.name || 'Komal Malhotra'} | Lineage & Philosophy • ${config.brandName}`;
+        pageDesc = `Meet our founders ${config.founder1?.name || 'Anmol Khatri'} (${config.founder1?.title || 'Movement Guide'}) and ${config.founder2?.name || 'Komal Malhotra'} (${config.founder2?.title || 'Sound Alchemist'}). Explore our philosophy of Shunya (sacred stillness) and holistic healing in Rishikesh, Himalayas, India.`;
         break;
       case 'experiences':
         pageTitle = `Sacred Experiences • 432Hz Sound Healing & Hatha Yoga | ${config.brandName}`;
