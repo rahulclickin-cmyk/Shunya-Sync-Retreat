@@ -148,29 +148,31 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
 
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
   brandName: 'Shunya Sync',
-  tagline: 'Disconnect from chaos. Reconnect with your true self.',
+  tagline: 'FIND STILLNESS • ALIGN WITHIN • AWAKEN',
   headerAnnouncement: '🌿 Next Sacred Cohort: Nov 14–17 & Dec 12–16, 2026 • Limited to 12 Seekers • Direct WhatsApp: +91 9259698064',
   heroHeadline: 'Shunya Sync Retreat',
-  heroSubheadline: 'Disconnect the noise, find your true self and sync with the universe.',
+  heroSubheadline: 'FIND STILLNESS • ALIGN WITHIN • AWAKEN — Disconnect the noise, find your true self and sync with the universe.',
   heroBgImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=85',
   heroTags: ['Somatic Yoga', 'Vedic Sound Bath', 'Forest Bathing', 'Digital Fasting', 'Inner Alignment'],
-  aboutText: 'At Shunya Sync Retreat, we believe that true healing begins when we come together. Through mindful yoga, sacred sound alchemy, and deep forest immersion – helping you reconnect with yourself and live with greater clarity and purpose.',
-  philosophyQuote: 'Shunya is the sacred void — the zero point from which peace and creation arise.',
+  aboutText: 'At Shunya Sync Retreat, At Shunya Sync, we curate soulful retreats that bring together yoga, mindfulness, nature, adventure, and meaningful human connections—helping you reconnect with yourself and live with greater clarity and purpose.',
+  philosophyQuote: 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
+  whyWeStarted: 'To offer intimate, soulful journeys away from daily noise.',
+  whatMakesUsDifferent: 'Intimate groups, nature-based settings, soulful evenings, and expert guides.',
   adminPin: '7788',
   logoUrl: '/logo.png',
   founder1: {
-    name: 'Anmol Khatti',
+    name: 'Anmol Khatri',
     title: 'Founder & Movement Guide',
     note: 'Mindful breathwork & grounded presence',
     bio: 'Anmol brings years of dedicated sadhana in traditional Hatha yoga, somatic movement, and nervous system regulation. His grounded, compassionate presence guides seekers back into deep bodily connection and authentic inner stillness.',
-    image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=800&q=80'
+    image: '/assets/aistudio/founder_anmol_khatri.jpg'
   },
   founder2: {
-    name: 'Komal Makhetra',
+    name: 'Komal Malhotra',
     title: 'Founder & Sound Alchemist',
     note: 'Vibrational therapy & intuitive healing',
     bio: 'Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance. Her sacred sound baths dissolve emotional tension and transport participants into rejuvenating theta brainwave states.',
-    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80'
+    image: '/assets/aistudio/founder_komal_malhotra.jpg'
   },
   pricing: {
     pkg2n3d: {
@@ -372,13 +374,21 @@ export function normalizeSiteConfig(input: any): SiteConfig {
   };
 
   // Safely construct founders
+  // Safely construct founders with smooth migration
+  const rawFounder1 = input.founder1 || {};
   const founder1 = {
     ...DEFAULT_SITE_CONFIG.founder1,
-    ...(input.founder1 || {})
+    ...rawFounder1,
+    name: rawFounder1.name && rawFounder1.name !== 'Anmol Khatti' ? rawFounder1.name : 'Anmol Khatri',
+    image: rawFounder1.image && !rawFounder1.image.includes('unsplash.com/photo-1545205597') ? rawFounder1.image : '/assets/aistudio/founder_anmol_khatri.jpg'
   };
+
+  const rawFounder2 = input.founder2 || {};
   const founder2 = {
     ...DEFAULT_SITE_CONFIG.founder2,
-    ...(input.founder2 || {})
+    ...rawFounder2,
+    name: rawFounder2.name && rawFounder2.name !== 'Komal Makhetra' ? rawFounder2.name : 'Komal Malhotra',
+    image: rawFounder2.image && !rawFounder2.image.includes('unsplash.com/photo-1508214751196') ? rawFounder2.image : '/assets/aistudio/founder_komal_malhotra.jpg'
   };
 
   // Safely construct contact
@@ -402,7 +412,7 @@ export function normalizeSiteConfig(input: any): SiteConfig {
 
   return {
     brandName: input.brandName || input.brand_name || DEFAULT_SITE_CONFIG.brandName,
-    tagline: input.tagline || DEFAULT_SITE_CONFIG.tagline,
+    tagline: input.tagline && input.tagline !== 'Disconnect from chaos. Reconnect with your true self.' ? input.tagline : DEFAULT_SITE_CONFIG.tagline,
     headerAnnouncement: input.headerAnnouncement ?? input.header_announcement ?? DEFAULT_SITE_CONFIG.headerAnnouncement,
     heroHeadline: input.heroHeadline || input.hero_headline || DEFAULT_SITE_CONFIG.heroHeadline,
     heroSubheadline: input.heroSubheadline || input.hero_subheadline || DEFAULT_SITE_CONFIG.heroSubheadline,
@@ -410,6 +420,8 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     heroTags: Array.isArray(input.heroTags) ? input.heroTags : (Array.isArray(input.hero_tags) ? input.hero_tags : DEFAULT_SITE_CONFIG.heroTags),
     aboutText: input.aboutText || input.about_text || DEFAULT_SITE_CONFIG.aboutText,
     philosophyQuote: input.philosophyQuote ?? input.philosophy_quote ?? DEFAULT_SITE_CONFIG.philosophyQuote,
+    whyWeStarted: input.whyWeStarted || input.why_we_started || DEFAULT_SITE_CONFIG.whyWeStarted || 'To offer intimate, soulful journeys away from daily noise.',
+    whatMakesUsDifferent: input.whatMakesUsDifferent || input.what_makes_us_different || DEFAULT_SITE_CONFIG.whatMakesUsDifferent || 'Intimate groups, nature-based settings, soulful evenings, and expert guides.',
     founder1,
     founder2,
     pricing: safePricing,
@@ -613,6 +625,8 @@ export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
       heroTags: data.hero_tags,
       aboutText: data.about_text,
       philosophyQuote: data.philosophy_quote,
+      whyWeStarted: data.why_we_started,
+      whatMakesUsDifferent: data.what_makes_us_different,
       galleryImages: data.gallery_images,
       adminPin: data.admin_pin,
       logoUrl: data.logo_url,
@@ -653,6 +667,8 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
       hero_tags: config.heroTags,
       about_text: config.aboutText,
       philosophy_quote: config.philosophyQuote,
+      why_we_started: config.whyWeStarted,
+      what_makes_us_different: config.whatMakesUsDifferent,
       founder1: config.founder1,
       founder2: config.founder2,
       pricing: config.pricing,

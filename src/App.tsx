@@ -72,6 +72,7 @@ import { SecretAdminModal } from './components/SecretAdminModal';
 import { Footer } from './components/Footer';
 import { Hero3DButtons } from './components/Hero3DButtons';
 import { WhyChooseUsParallax } from './components/WhyChooseUsParallax';
+import { AboutFoundersSection } from './components/AboutFoundersSection';
 
 // 432Hz harmonic singing bowl chime using Web Audio
 class AmbientChime {

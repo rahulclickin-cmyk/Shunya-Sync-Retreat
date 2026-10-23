@@ -16,6 +16,8 @@ export interface SiteConfig {
   heroTags: string[];
   aboutText: string;
   philosophyQuote: string;
+  whyWeStarted?: string;
+  whatMakesUsDifferent?: string;
   founder1: {
     name: string;
     title: string;
