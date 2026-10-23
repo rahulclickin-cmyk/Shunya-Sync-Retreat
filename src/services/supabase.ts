@@ -7,7 +7,7 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
     title: 'The Science of 432Hz: How Sacred Sound Downregulates the Nervous System',
     slug: 'science-of-432hz-sound-healing',
     category: 'Sound Healing',
-    author: 'Komal Makhetra',
+    author: 'Komal Malhotra',
     date: 'October 14, 2026',
     readTime: '6 min read',
     summary: 'Explore the biophysical mechanisms through which Tibetan singing bowls and gong harmonics shift brainwaves from high-stress beta states down into theta and delta stillness.',
@@ -33,7 +33,7 @@ During our daily 432Hz sacred sound immersions at Shunya Sync, participants lie 
     title: 'Pranayama in the Pines: Awakening Prana Through Himalayan Mountain Air',
     slug: 'pranayama-in-the-pines-himalayan-breath',
     category: 'Yoga & Breathwork',
-    author: 'Anmol Khatti',
+    author: 'Anmol Khatri',
     date: 'October 08, 2026',
     readTime: '5 min read',
     summary: 'Why practicing conscious breath control at dawn surrounded by pine forest canopy elevates oxygen saturation, purifies subtle energy channels, and restores mental clarity.',
@@ -57,7 +57,7 @@ Seekers discover that when the breath becomes slow, deep, and rhythmic, the turb
     title: 'The Sattvic Kitchen: Why Pure Vegetarian Food Changes Your Meditation Depth',
     slug: 'sattvic-kitchen-ayurvedic-meditation-nutrition',
     category: 'Ayurvedic Nourishment',
-    author: 'Anmol Khatti',
+    author: 'Anmol Khatri',
     date: 'September 30, 2026',
     readTime: '7 min read',
     summary: 'According to Ayurveda, the purity of mind (Sattva) begins on your plate. Learn why seasonal, garden-fresh ingredients open pathways for effortless stillness.',
@@ -78,7 +78,7 @@ At Shunya Sync, all meals are grown on terraced organic farms without chemical p
     title: 'Solo Travel as a Spiritual Mirror: Finding Freedom Beyond Social Conditioning',
     slug: 'solo-travel-spiritual-mirror-retreat',
     category: 'Inner Alignment',
-    author: 'Komal Makhetra',
+    author: 'Komal Malhotra',
     date: 'September 20, 2026',
     readTime: '8 min read',
     summary: 'Over 65% of Shunya Sync guests arrive alone. Here is how entering an intimate circle of strangers allows you to shed societal masks and experience pure self-acceptance.',
@@ -106,7 +106,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
   geoRegion: 'IN-UT',
   geoPlacename: 'Rishikesh, Uttarakhand, India',
   geoPosition: '30.0869;78.2676',
-  aeoSummary: 'Shunya Sync Retreat is an intimate transformative wellness and sound healing sanctuary in India, hosted by Anmol Khatti & Komal Makhetra, featuring 432Hz acoustic therapy, authentic Hatha yoga, and 100% farm-to-table sattvic cuisine.',
+  aeoSummary: 'Shunya Sync Retreat is an intimate transformative wellness and sound healing sanctuary in India, hosted by Anmol Khatri & Komal Malhotra, featuring 432Hz acoustic therapy, authentic Hatha yoga, and 100% farm-to-table sattvic cuisine.',
   faqs: [
     {
       question: 'What is Shunya Sync Retreat?',
@@ -135,7 +135,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
     },
     {
       question: 'What is 432Hz sound healing and how does it work?',
-      answer: '432Hz is a natural harmonic frequency known to induce deep theta and delta brainwave states. Certified sound therapist Komal Makhetra utilizes handcrafted Himalayan singing bowls, planetary gongs, and chime frequencies to physically soothe stress hormones.',
+      answer: '432Hz is a natural harmonic frequency known to induce deep theta and delta brainwave states. Certified sound therapist Komal Malhotra utilizes handcrafted Himalayan singing bowls, planetary gongs, and chime frequencies to physically soothe stress hormones.',
       category: 'Practices'
     },
     {
@@ -619,26 +619,36 @@ export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
 
     if (error || !data) return null;
 
+    // Merge both flat columns and dynamic headless JSONB structures
+    const pages = data.pages_content || {};
+    const settings = data.site_settings || {};
+    const packages = data.retreat_packages || data.pricing;
+    const seoTags = data.seo_geo_tags || data.seo;
+
     const merged = normalizeSiteConfig({
       ...data,
-      brandName: data.brand_name,
-      tagline: data.tagline,
-      headerAnnouncement: data.header_announcement,
-      heroHeadline: data.hero_headline,
-      heroSubheadline: data.hero_subheadline,
+      brandName: settings.brandName || data.brand_name,
+      tagline: pages.tagline || data.tagline,
+      headerAnnouncement: settings.headerAnnouncement || data.header_announcement,
+      heroHeadline: pages.heroHeadline || data.hero_headline,
+      heroSubheadline: pages.heroSubheadline || data.hero_subheadline,
       heroBgImage: data.hero_bg_image,
       heroTags: data.hero_tags,
-      aboutText: data.about_text,
-      philosophyQuote: data.philosophy_quote,
+      aboutText: pages.aboutText || data.about_text,
+      philosophyQuote: pages.philosophyQuote || data.philosophy_quote,
       whyWeStarted: data.why_we_started,
       whatMakesUsDifferent: data.what_makes_us_different,
+      pricing: packages,
+      seo: seoTags,
       galleryImages: data.gallery_images,
-      adminPin: data.admin_pin,
-      logoUrl: data.logo_url,
-      brandSubtitle: data.brand_subtitle,
-      showLogoIcon: data.show_logo_icon,
+      adminPin: settings.adminPin || data.admin_pin,
+      logoUrl: settings.logoUrl || data.logo_url,
+      brandSubtitle: settings.brandSubtitle || data.brand_subtitle,
+      showLogoIcon: settings.showLogoIcon ?? data.show_logo_icon,
       whyChooseUs: data.why_choose_us,
-      blogPosts: data.blog_posts
+      blogPosts: data.blog_posts,
+      footerDescription: pages.footerDescription,
+      footerCopyright: pages.footerCopyright
     });
 
     saveStoredSiteConfig(merged);
@@ -659,43 +669,86 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
     };
   }
 
-  try {
-    const tableName = cfg.tableName || 'shunya_site_config';
-    const payload = {
-      id: 'current_config',
-      brand_name: config.brandName,
-      tagline: config.tagline,
-      header_announcement: config.headerAnnouncement,
-      hero_headline: config.heroHeadline,
-      hero_subheadline: config.heroSubheadline,
-      hero_bg_image: config.heroBgImage,
-      hero_tags: config.heroTags,
-      about_text: config.aboutText,
-      philosophy_quote: config.philosophyQuote,
-      why_we_started: config.whyWeStarted,
-      what_makes_us_different: config.whatMakesUsDifferent,
-      founder1: config.founder1,
-      founder2: config.founder2,
-      pricing: config.pricing,
-      contact: config.contact,
-      gallery_images: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
-      seo: config.seo || DEFAULT_SEO_CONFIG,
-      admin_pin: config.adminPin || '7788',
-      logo_url: config.logoUrl || '/logo.png',
-      brand_subtitle: config.brandSubtitle || 'Retreat Sanctuary',
-      show_logo_icon: config.showLogoIcon !== false,
-      why_choose_us: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs,
-      blog_posts: config.blogPosts || DEFAULT_BLOG_POSTS,
-      updated_at: new Date().toISOString()
-    };
+  const tableName = cfg.tableName || 'shunya_site_config';
 
-    const { error } = await client.from(tableName).upsert(payload);
-    if (error) {
-      console.error('Supabase upsert error:', error);
-      return { success: false, message: `Supabase Error: ${error.message}` };
+  // Base payload (compatible with standard flat columns)
+  const basePayload: Record<string, unknown> = {
+    id: 'current_config',
+    brand_name: config.brandName,
+    tagline: config.tagline,
+    header_announcement: config.headerAnnouncement,
+    hero_headline: config.heroHeadline,
+    hero_subheadline: config.heroSubheadline,
+    hero_bg_image: config.heroBgImage,
+    hero_tags: config.heroTags,
+    about_text: config.aboutText,
+    philosophy_quote: config.philosophyQuote,
+    why_we_started: config.whyWeStarted,
+    what_makes_us_different: config.whatMakesUsDifferent,
+    founder1: config.founder1,
+    founder2: config.founder2,
+    pricing: config.pricing,
+    contact: config.contact,
+    gallery_images: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
+    seo: config.seo || DEFAULT_SEO_CONFIG,
+    admin_pin: config.adminPin || '7788',
+    logo_url: config.logoUrl || '/logo.png',
+    brand_subtitle: config.brandSubtitle || 'Retreat Sanctuary',
+    show_logo_icon: config.showLogoIcon !== false,
+    why_choose_us: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs,
+    blog_posts: config.blogPosts || DEFAULT_BLOG_POSTS,
+    updated_at: new Date().toISOString()
+  };
+
+  // Extended payload including dynamic JSONB headless CMS columns
+  const fullPayload: Record<string, unknown> = {
+    ...basePayload,
+    pages_content: {
+      aboutText: config.aboutText,
+      philosophyQuote: config.philosophyQuote,
+      tagline: config.tagline,
+      heroHeadline: config.heroHeadline,
+      heroSubheadline: config.heroSubheadline,
+      contact: config.contact,
+      footerDescription: config.footerDescription,
+      footerCopyright: config.footerCopyright
+    },
+    dynamic_sections: [
+      { id: 'why-us', data: config.whyChooseUs },
+      { id: 'gallery', data: config.galleryImages },
+      { id: 'founders', data: { founder1: config.founder1, founder2: config.founder2 } }
+    ],
+    site_settings: {
+      brandName: config.brandName,
+      brandSubtitle: config.brandSubtitle,
+      logoUrl: config.logoUrl,
+      showLogoIcon: config.showLogoIcon,
+      headerAnnouncement: config.headerAnnouncement,
+      adminPin: config.adminPin
+    },
+    retreat_packages: config.pricing,
+    seo_geo_tags: config.seo || DEFAULT_SEO_CONFIG
+  };
+
+  try {
+    // 1. Try upserting full dynamic JSONB payload first
+    const { error: fullError } = await client.from(tableName).upsert(fullPayload);
+    if (!fullError) {
+      return { success: true, message: '✓ All settings & dynamic JSONB content synced to Supabase!' };
     }
 
-    return { success: true, message: 'Successfully synced siteConfig and SEO to Supabase database!' };
+    // 2. If table doesn't have the new JSONB columns yet, fall back gracefully to base payload
+    console.warn('Full JSONB payload failed, retrying with base schema:', fullError.message);
+    const { error: baseError } = await client.from(tableName).upsert(basePayload);
+    if (baseError) {
+      console.error('Supabase base upsert error:', baseError);
+      return { success: false, message: `Supabase Error: ${baseError.message}` };
+    }
+
+    return {
+      success: true,
+      message: '✓ Synced to Supabase! (Tip: Run the JSONB migration in Supabase tab for extended schema).'
+    };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('Failed to sync to Supabase', msg);
@@ -713,6 +766,22 @@ async function syncLeadToSupabase(lead: BookingLead) {
   }
 }
 
+/**
+ * SQL Migration snippet specifically for initializing dynamic headless JSONB columns
+ */
+export const SUPABASE_JSONB_MIGRATION_SQL = `-- ==============================================================
+-- SHUNYA SYNC RETREAT - DYNAMIC HEADLESS JSONB CMS MIGRATION
+-- Run this in your Supabase SQL Editor to initialize dynamic columns
+-- ==============================================================
+ALTER TABLE public.shunya_site_config
+ADD COLUMN IF NOT EXISTS blog_posts JSONB DEFAULT '[]'::jsonb,
+ADD COLUMN IF NOT EXISTS pages_content JSONB DEFAULT '{}'::jsonb,
+ADD COLUMN IF NOT EXISTS dynamic_sections JSONB DEFAULT '[]'::jsonb,
+ADD COLUMN IF NOT EXISTS site_settings JSONB DEFAULT '{}'::jsonb,
+ADD COLUMN IF NOT EXISTS retreat_packages JSONB DEFAULT '[]'::jsonb,
+ADD COLUMN IF NOT EXISTS seo_geo_tags JSONB DEFAULT '{}'::jsonb;
+`;
+
 export const SUPABASE_SQL_SCHEMA = `-- ==============================================================
 -- SHUNYA SYNC RETREAT - SUPABASE SQL SCHEMA & STORAGE BUCKET
 -- Paste this entire script in your Supabase Dashboard -> SQL Editor
@@ -722,16 +791,16 @@ export const SUPABASE_SQL_SCHEMA = `-- =========================================
 CREATE TABLE IF NOT EXISTS public.shunya_site_config (
   id TEXT PRIMARY KEY DEFAULT 'current_config',
   brand_name TEXT NOT NULL DEFAULT 'Shunya Sync',
-  tagline TEXT NOT NULL DEFAULT 'Disconnect from chaos. Reconnect with your true self.',
-  header_announcement TEXT DEFAULT '🌿 Next Sacred Immersive Retreat: March 15 - 20, 2026 • Limited to 18 Seekers',
+  tagline TEXT NOT NULL DEFAULT 'FIND STILLNESS • ALIGN WITHIN • AWAKEN',
+  header_announcement TEXT DEFAULT '🌿 Next Sacred Immersive Retreat • Limited to 12 Seekers • Direct WhatsApp: +91 9259698064',
   hero_headline TEXT NOT NULL DEFAULT 'Shunya Sync Retreat',
-  hero_subheadline TEXT NOT NULL DEFAULT 'A transformative sanctuary for nervous system regulation, somatic breathwork, sound healing, and deep digital detox in Rishikesh.',
+  hero_subheadline TEXT NOT NULL DEFAULT 'FIND STILLNESS • ALIGN WITHIN • AWAKEN — Disconnect the noise, find your true self and sync with the universe.',
   hero_bg_image TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2000&q=85',
   hero_tags JSONB NOT NULL DEFAULT '["Somatic Yoga","Vedic Sound Bath","Forest Bathing","Digital Fasting","Ayurvedic Feasts"]'::jsonb,
-  about_text TEXT NOT NULL DEFAULT 'Shunya Sync was conceived in the high tranquility of the Himalayan foothills as a sacred answer to modern sensory overload.',
+  about_text TEXT NOT NULL DEFAULT 'At Shunya Sync Retreat, we curate soulful retreats that bring together yoga, mindfulness, nature, adventure, and meaningful human connections.',
   philosophy_quote TEXT DEFAULT 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
-  founder1 JSONB NOT NULL DEFAULT '{"name":"Anmol Khatti","title":"Founder & Movement Guide","note":"Mindful living & somatic alignment","bio":"Anmol has spent over a decade studying traditional Ashtanga and contemporary somatic movement. His grounded, compassionate presence guides seekers back to bodily presence.","image":"https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=400&q=80"}'::jsonb,
-  founder2 JSONB NOT NULL DEFAULT '{"name":"Komal Makhetra","title":"Founder & Sound Alchemist","note":"Vibrational therapy & intuitive healing","bio":"Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance.","image":"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"}'::jsonb,
+  founder1 JSONB NOT NULL DEFAULT '{"name":"Anmol Khatri","title":"Founder & Movement Guide","note":"Mindful living & somatic alignment","bio":"Anmol has spent over a decade studying traditional Hatha yoga and contemporary somatic movement.","image":"/assets/aistudio/founder_anmol_khatri.jpg"}'::jsonb,
+  founder2 JSONB NOT NULL DEFAULT '{"name":"Komal Malhotra","title":"Founder & Sound Alchemist","note":"Vibrational therapy & intuitive healing","bio":"Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance.","image":"/assets/aistudio/founder_komal_malhotra.jpg"}'::jsonb,
   pricing JSONB NOT NULL DEFAULT '{"pkg2n3d":{"title":"2 Nights / 3 Days Retreat","twinPrice":22000,"soloPrice":26000,"badge":"Weekend Reset","description":"Choose your duration — each package includes a full day-by-day schedule and transparent pricing."},"pkg3n4d":{"title":"3 Nights / 4 Days Retreat","twinPrice":26000,"soloPrice":32000,"badge":"Most Popular","description":"Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure."},"pkg4n5d":{"title":"4 Nights / 5 Days Retreat (Premium Experience)","twinPrice":44000,"soloPrice":52000,"badge":"Premium Experience","description":"Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration."},"pkg4d3n":{"title":"3 Nights / 4 Days Retreat","twinPrice":26000,"soloPrice":32000,"badge":"Most Popular","description":"Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure."},"pkg5d4n":{"title":"4 Nights / 5 Days Retreat (Premium Experience)","twinPrice":44000,"soloPrice":52000,"badge":"Premium Experience","description":"Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration."}}'::jsonb,
   contact JSONB NOT NULL DEFAULT '{"phone":"+91 9259698064","whatsappNumber":"919259698064","email":"hello@shunyasync.com","location":"India – Nature Retreat Destination"}'::jsonb,
   gallery_images JSONB DEFAULT '[]'::jsonb,
@@ -742,10 +811,15 @@ CREATE TABLE IF NOT EXISTS public.shunya_site_config (
   show_logo_icon BOOLEAN DEFAULT true,
   why_choose_us JSONB DEFAULT '{}'::jsonb,
   blog_posts JSONB DEFAULT '[]'::jsonb,
+  pages_content JSONB DEFAULT '{}'::jsonb,
+  dynamic_sections JSONB DEFAULT '[]'::jsonb,
+  site_settings JSONB DEFAULT '{}'::jsonb,
+  retreat_packages JSONB DEFAULT '[]'::jsonb,
+  seo_geo_tags JSONB DEFAULT '{}'::jsonb,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Ensure columns exist if table was already created
+-- Ensure dynamic JSONB columns exist if table was already created
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS gallery_images JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS seo JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS admin_pin TEXT DEFAULT '7788';
@@ -754,6 +828,11 @@ ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS brand_subtitle TE
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS show_logo_icon BOOLEAN DEFAULT true;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS why_choose_us JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS blog_posts JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS pages_content JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS dynamic_sections JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS site_settings JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS retreat_packages JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS seo_geo_tags JSONB DEFAULT '{}'::jsonb;
 
 -- 2. Bookings & Inquiries Table (For Leads from Website)
 CREATE TABLE IF NOT EXISTS public.retreat_bookings (

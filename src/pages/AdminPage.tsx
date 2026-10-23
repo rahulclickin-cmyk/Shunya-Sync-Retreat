@@ -47,7 +47,8 @@ import {
   getStoredSupabaseConfig,
   saveStoredSupabaseConfig,
   syncConfigToSupabase,
-  SUPABASE_SQL_SCHEMA
+  SUPABASE_SQL_SCHEMA,
+  SUPABASE_JSONB_MIGRATION_SQL
 } from '../services/supabase';
 import {
   uploadImageToSupabase,
@@ -115,6 +116,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [copiedSql, setCopiedSql] = useState(false);
   const [copiedStorageSql, setCopiedStorageSql] = useState(false);
+  const [copiedJsonbSql, setCopiedJsonbSql] = useState(false);
 
   // Blog Editor State
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
@@ -2352,6 +2354,36 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     <Copy className="w-3.5 h-3.5" />
                     <span>{copiedStorageSql ? '✓ Storage SQL Copied' : 'Copy Storage SQL'}</span>
                   </button>
+                </div>
+
+                {/* Dynamic Headless JSONB Schema Migration Card */}
+                <div className="p-4 rounded-2xl bg-[#1F1710] border border-[#D4AF37]/30 space-y-3 mt-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#E5C158]" />
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                        Headless JSONB Schema Migration (No Schema Cache Errors)
+                      </h4>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(SUPABASE_JSONB_MIGRATION_SQL);
+                        setCopiedJsonbSql(true);
+                        setTimeout(() => setCopiedJsonbSql(false), 3000);
+                      }}
+                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] text-xs font-bold uppercase tracking-wider hover:brightness-110 flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>{copiedJsonbSql ? '✓ Migration SQL Copied!' : '1-Click Copy Migration SQL'}</span>
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-stone-300 leading-relaxed">
+                    Adds dynamic JSONB columns (<code className="text-[#D4AF37]">pages_content</code>, <code className="text-[#D4AF37]">site_settings</code>, <code className="text-[#D4AF37]">dynamic_sections</code>, <code className="text-[#D4AF37]">retreat_packages</code>, and <code className="text-[#D4AF37]">seo_geo_tags</code>) to your <code className="text-white font-mono">shunya_site_config</code> table.
+                  </p>
+                  <pre className="p-3 rounded-xl bg-[#120E0A] text-[10px] text-stone-300 font-mono overflow-x-auto border border-[#3E2F23]">
+                    {SUPABASE_JSONB_MIGRATION_SQL.trim()}
+                  </pre>
                 </div>
               </div>
             </div>
