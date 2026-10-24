@@ -466,19 +466,19 @@ export default function App() {
         </div>
       </div>
 
-      {/* 2. STREAMLINED STICKY NAVBAR (No Admin, Why Choose Us removed from menu, Packages has sub-items) */}
+      {/* 2. STREAMLINED STICKY NAVBAR: Compact height, centered logo and text, zero extra vertical space */}
       <header
-        className={`sticky top-0 left-0 right-0 z-30 transition-all duration-500 ${
+        className={`sticky top-0 left-0 right-0 z-30 transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#FAF8F5]/95 backdrop-blur-md shadow-sm border-b border-[#EBE5DA] py-3'
-            : 'bg-[#FAF8F5]/90 backdrop-blur-sm border-b border-[#EBE5DA]/40 py-4'
+            ? 'bg-[#FAF8F5]/95 backdrop-blur-md shadow-xs border-b border-[#EBE5DA] py-1.5 sm:py-2'
+            : 'bg-[#FAF8F5]/92 backdrop-blur-sm border-b border-[#EBE5DA]/50 py-2 sm:py-2.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between">
-          {/* Brand Logo with Light Emblem */}
-          <button onClick={() => navigateTo('home')} className="flex items-center gap-3.5 sm:gap-4 group text-left cursor-pointer">
+          {/* Brand Logo with Light Emblem: Perfectly aligned with brand text */}
+          <button onClick={() => navigateTo('home')} className="flex items-center gap-2.5 sm:gap-3.5 group text-left cursor-pointer">
             {siteConfig.showLogoIcon !== false && (
-              <div className="w-18 h-18 sm:w-22 sm:h-22 md:w-26 md:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-13 md:h-13 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <img
                   src={siteConfig.logoUrl || '/logo_original.png'}
                   alt={siteConfig.brandName}
@@ -486,16 +486,16 @@ export default function App() {
                 />
               </div>
             )}
-            <div className="flex flex-col items-start justify-center">
-              <span className="font-brand-logo text-2xl sm:text-3xl md:text-4xl tracking-tight text-[#1F2E23] font-normal leading-none">
+            <div className="flex flex-col justify-center">
+              <span className="font-brand-logo text-xl sm:text-2xl md:text-[27px] tracking-tight text-[#1F2E23] font-normal leading-tight">
                 {siteConfig.brandName || 'Shunya Sync'}
               </span>
-              <div className="flex items-center gap-1.5 sm:gap-2 mt-1 sm:mt-1.5 w-full">
-                <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
-                <span className="text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
-                  {siteConfig.brandSubtitle || 'RETREAT'}
+              <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 w-full">
+                <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
+                <span className="text-[8px] sm:text-[9px] md:text-[9.5px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
+                  {siteConfig.brandSubtitle || 'RETREAT SANCTUARY'}
                 </span>
-                <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
+                <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
               </div>
             </div>
           </button>

@@ -148,6 +148,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
 
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
   brandName: 'Shunya Sync',
+  brandSubtitle: 'RETREAT SANCTUARY',
   tagline: 'FIND STILLNESS • ALIGN WITHIN • AWAKEN',
   headerAnnouncement: '🌿 Next Sacred Cohort: Nov 14–17 & Dec 12–16, 2026 • Limited to 12 Seekers • Direct WhatsApp: +91 9259698064',
   heroHeadline: 'Shunya Sync Retreat',
@@ -256,7 +257,6 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     }
   ],
   seo: DEFAULT_SEO_CONFIG,
-  brandSubtitle: 'RETREAT',
   showLogoIcon: true,
   heroBadge: 'COHORT 2026',
   heroQuote: 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',

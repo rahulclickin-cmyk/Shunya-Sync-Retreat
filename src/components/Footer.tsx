@@ -126,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="space-y-3">
               <div className="flex items-center gap-3.5 sm:gap-4">
                 {config.showLogoIcon !== false && (
-                  <div className="w-18 h-18 sm:w-22 sm:h-22 md:w-26 md:h-26 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center shrink-0">
                     <img
                       src={config.logoUrl || '/logo_original.png'}
                       alt={config.brandName}
@@ -134,16 +134,16 @@ export const Footer: React.FC<FooterProps> = ({
                     />
                   </div>
                 )}
-                <div className="flex flex-col items-start justify-center">
-                  <span className="font-brand-logo text-2xl sm:text-3xl md:text-4xl text-[#1F2E23] font-normal tracking-tight leading-none">
+                <div className="flex flex-col justify-center">
+                  <span className="font-brand-logo text-2xl sm:text-3xl text-[#1F2E23] font-normal tracking-tight leading-tight">
                     {config.brandName || 'Shunya Sync'}
                   </span>
-                  <div className="flex items-center gap-1.5 sm:gap-2 mt-1 sm:mt-1.5 w-full">
-                    <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
-                    <span className="text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
-                      {config.brandSubtitle || 'RETREAT'}
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 w-full">
+                    <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
+                    <span className="text-[8.5px] sm:text-[9.5px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
+                      {config.brandSubtitle || 'RETREAT SANCTUARY'}
                     </span>
-                    <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
+                    <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
                   </div>
                 </div>
               </div>
