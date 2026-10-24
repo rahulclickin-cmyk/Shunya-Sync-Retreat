@@ -24,8 +24,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ config, onOpenBooking }) =
           <div className="lg:col-span-5 relative">
             <div className="rounded-2xl overflow-hidden shadow-xl border-4 border-white aspect-[4/3]">
               <img
-                src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1200&q=80"
-                alt="Shunya Sync Sacred Meditation"
+                src="https://www.shunyasync.com/images/IMG_3021.JPG"
+                alt="Shunya Sync Sacred Circle & Presence"
                 className="w-full h-full object-cover"
               />
             </div>

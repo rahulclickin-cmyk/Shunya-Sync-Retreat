@@ -45,6 +45,24 @@ interface PackageDetailData {
   itinerary: ItineraryDayData[];
 }
 
+export const PACKAGE_PHOTOS: Record<PackageId, Array<{ url: string; caption: string }>> = {
+  '2n3d': [
+    { url: 'https://www.shunyasync.com/images/DSC05576.JPG', caption: 'Sunrise River Yoga Session' },
+    { url: 'https://www.shunyasync.com/images/DSC05974.JPG', caption: 'Nature Excursions & Walks' },
+    { url: 'https://www.shunyasync.com/images/DSC06017.JPG', caption: 'Evening Ganga Aarti Experience' }
+  ],
+  '3n4d': [
+    { url: 'https://www.shunyasync.com/images/DSC05503.JPG', caption: 'Ghat Asana & Breathwork' },
+    { url: 'https://www.shunyasync.com/images/DSC05860.JPG', caption: 'Sacred Waterfalls & Rafting' },
+    { url: 'https://www.shunyasync.com/images/C9738T01.JPG', caption: 'Vibrational Sound Bath Sanctuary' }
+  ],
+  '4n5d': [
+    { url: 'https://www.shunyasync.com/images/IMG_3222.JPG', caption: 'River Rafting & Adventure' },
+    { url: 'https://www.shunyasync.com/images/IMG_3221.JPG', caption: 'Forest Sanctuary Grounds' },
+    { url: 'https://www.shunyasync.com/images/IMG_3218.JPG', caption: 'Ecstatic Dance & Kirtan' }
+  ]
+};
+
 export const RETREAT_PACKAGES: Record<PackageId, PackageDetailData> = {
   '2n3d': {
     id: '2n3d',
@@ -359,6 +377,32 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               </button>
             </div>
           </div>
+
+          {/* Authentic Live Package Visual Preview Strip */}
+          {PACKAGE_PHOTOS[selectedPkgId] && (
+            <div className="mt-8 pt-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-[#556057] mb-3">
+                Atmosphere &amp; Experiences Included:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {PACKAGE_PHOTOS[selectedPkgId].map((photo, i) => (
+                  <div key={i} className="group relative rounded-2xl overflow-hidden aspect-[16/10] bg-stone-900 border border-[#DFD7CA] shadow-sm">
+                    <img
+                      src={photo.url}
+                      alt={photo.caption}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-3">
+                      <span className="text-white text-xs font-medium tracking-wide">
+                        {photo.caption}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Pricing Cards for THIS Package */}
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">

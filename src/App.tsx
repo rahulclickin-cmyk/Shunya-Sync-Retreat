@@ -74,6 +74,7 @@ import { Footer } from './components/Footer';
 import { Hero3DButtons } from './components/Hero3DButtons';
 import { WhyChooseUsParallax } from './components/WhyChooseUsParallax';
 import { AboutFoundersSection } from './components/AboutFoundersSection';
+import { InstagramReel } from './components/InstagramReel';
 
 // 432Hz harmonic singing bowl chime using Web Audio
 class AmbientChime {
@@ -916,6 +917,9 @@ export default function App() {
               <MarqueeTicker direction="ltr" variant="dark" speed="slow" />
             </div>
 
+            {/* DYNAMIC INSTAGRAM REEL EMBED: (Position: Below Hero) */}
+            <InstagramReel config={siteConfig} positionTarget="below-hero" />
+
             {/* 2. BENEFITS SLIDER SECTION (3D FLIP IN FROM LEFT ON SCROLL) */}
             <div id="benefits-slider" className="scroll-section scroll-flip-left pt-14 pb-8 sm:pt-20 sm:pb-12">
               <BenefitsSlider benefits={benefitsList} onOpenBooking={() => handleOpenBooking()} />
@@ -951,7 +955,7 @@ export default function App() {
                   <div className="reveal-init from-left delay-200 bg-white rounded-3xl overflow-hidden shadow-sm border border-[#DFD7CA] hover:shadow-xl transition-all duration-300 flex flex-col card-3d-tilt">
                     <div className="aspect-[4/3] overflow-hidden relative">
                       <img
-                        src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80"
+                        src="https://www.shunyasync.com/images/DSC05503.JPG"
                         alt="Yoga Guided Sessions"
                         className="w-full h-full object-cover"
                       />
@@ -978,7 +982,7 @@ export default function App() {
                   <div className="reveal-init from-bottom delay-300 bg-white rounded-3xl overflow-hidden shadow-sm border border-[#DFD7CA] hover:shadow-xl transition-all duration-300 flex flex-col card-3d-tilt">
                     <div className="aspect-[4/3] overflow-hidden relative">
                       <img
-                        src="https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=800&q=80"
+                        src="https://www.shunyasync.com/images/C9738T01.JPG"
                         alt="Sound Healing Therapy"
                         className="w-full h-full object-cover"
                       />
@@ -1005,7 +1009,7 @@ export default function App() {
                   <div className="reveal-init from-right delay-400 bg-white rounded-3xl overflow-hidden shadow-sm border border-[#DFD7CA] hover:shadow-xl transition-all duration-300 flex flex-col card-3d-tilt">
                     <div className="aspect-[4/3] overflow-hidden relative">
                       <img
-                        src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=800&q=80"
+                        src="https://www.shunyasync.com/images/DSC05719.JPG"
                         alt="Dance and Fun"
                         className="w-full h-full object-cover"
                       />
@@ -1230,6 +1234,9 @@ export default function App() {
               </div>
             </section>
 
+            {/* DYNAMIC INSTAGRAM REEL EMBED: (Position: Below Packages) */}
+            <InstagramReel config={siteConfig} positionTarget="below-packages" />
+
             {/* 6. WHAT'S INCLUDED IN ALL RETREATS: 3D FLIP IN FROM LEFT */}
             <section id="included" className="scroll-section scroll-flip-left py-24 px-5 sm:px-8 bg-[#F5F0E8] border-y border-[#E8E1D5] scroll-mt-20">
               <div className="max-w-7xl mx-auto space-y-16">
@@ -1362,6 +1369,9 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* DYNAMIC INSTAGRAM REEL EMBED: (Position: Above Footer) */}
+      <InstagramReel config={siteConfig} positionTarget="above-footer" />
 
       {/* INFINITE TEXT TICKER SLIDER (DIRECTLY ABOVE FOOTER: LEFT TO RIGHT, CALM LUXURY SPEED) */}
       <div className="relative z-20 w-full bg-[#121B14] shadow-md border-y border-[#263728]">

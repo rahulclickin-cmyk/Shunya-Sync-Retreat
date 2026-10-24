@@ -6,6 +6,149 @@ export interface PackagePricingItem {
   description: string;
 }
 
+/**
+ * Dynamic JSONB Site Settings Structure
+ * Stores all global website settings, branding, logos, announcements, and contact information.
+ * Supports unlimited dynamic fields without altering the database schema.
+ */
+export interface SiteSettings {
+  brandName?: string;
+  brandSubtitle?: string;
+  tagline?: string;
+  headerAnnouncement?: string;
+  logoUrl?: string;
+  showLogoIcon?: boolean;
+  adminPin?: string;
+  contact?: {
+    phone: string;
+    whatsappNumber: string;
+    email: string;
+    location: string;
+    address?: string;
+  };
+  seo_geo_tags?: SeoConfig;
+
+  // Dynamic Instagram Reel Embed Settings
+  instagramReelUrl?: string;
+  instagramReelPosition?: ReelDisplayPosition;
+  instagramReelTitle?: string;
+  instagramReelCaption?: string;
+  instagramReel?: InstagramReelSettings;
+
+  // Unlimited dynamic settings without schema migrations
+  [key: string]: unknown;
+}
+
+export type ReelDisplayPosition = 'below-hero' | 'below-packages' | 'above-footer' | 'hide';
+
+export interface InstagramReelSettings {
+  url?: string;
+  position?: ReelDisplayPosition;
+  title?: string;
+  caption?: string;
+}
+
+/**
+ * Dynamic JSONB Pages Content Structure
+ * Stores all page content, typography, hero details, storytelling narratives, and section data.
+ * Supports unlimited dynamic content without altering the database schema.
+ */
+export interface PagesContent {
+  // Hero Section
+  heroHeadline?: string;
+  heroSubheadline?: string;
+  heroBgImage?: string;
+  heroTags?: string[];
+  heroBadge?: string;
+  heroQuote?: string;
+
+  // Narratives & Philosophy
+  aboutText?: string;
+  philosophyQuote?: string;
+  whyWeStarted?: string;
+  whatMakesUsDifferent?: string;
+  tagline?: string;
+
+  // Why Choose Us Section
+  whyChooseUs?: {
+    eyebrow?: string;
+    headingPrefix?: string;
+    headingHighlight?: string;
+    bgImage?: string;
+    cards?: Array<{
+      id: number;
+      title: string;
+      desc?: string;
+    }>;
+  };
+
+  // Founders & Gallery
+  founder1?: {
+    name: string;
+    title: string;
+    note: string;
+    bio: string;
+    image: string;
+  };
+  founder2?: {
+    name: string;
+    title: string;
+    note: string;
+    bio: string;
+    image: string;
+  };
+  galleryImages?: Array<{
+    url: string;
+    title: string;
+    caption?: string;
+  }>;
+
+  // Packages & Blog
+  retreat_packages?: Record<string, PackagePricingItem>;
+  blog_posts?: BlogPost[];
+  dynamic_sections?: Array<{ id: string; data: unknown }>;
+
+  // Footer & Legal
+  footerDescription?: string;
+  footerCopyright?: string;
+
+  // Unlimited dynamic page fields without schema migrations
+  [key: string]: unknown;
+}
+
+/**
+ * Supabase Row Representation for shunya_site_config
+ */
+export interface SupabaseSiteConfigRow {
+  id: string;
+  site_settings?: SiteSettings;
+  pages_content?: PagesContent;
+  blog_posts?: BlogPost[];
+  retreat_packages?: Record<string, PackagePricingItem>;
+  seo_geo_tags?: SeoConfig;
+  dynamic_sections?: Array<{ id: string; data: unknown }>;
+  updated_at?: string;
+
+  // Optional legacy flat columns for backward compatibility reading
+  brand_name?: string;
+  tagline?: string;
+  header_announcement?: string;
+  hero_headline?: string;
+  hero_subheadline?: string;
+  hero_bg_image?: string;
+  hero_tags?: string[];
+  about_text?: string;
+  philosophy_quote?: string;
+  founder1?: unknown;
+  founder2?: unknown;
+  pricing?: unknown;
+  contact?: unknown;
+  gallery_images?: unknown;
+  seo?: unknown;
+
+  [key: string]: unknown;
+}
+
 export interface SiteConfig {
   brandName: string;
   tagline: string;
@@ -73,6 +216,23 @@ export interface SiteConfig {
     }>;
   };
   blogPosts?: BlogPost[];
+
+  // Dynamic Instagram Reel Embed
+  instagramReelUrl?: string;
+  instagramReelPosition?: ReelDisplayPosition;
+  instagramReelTitle?: string;
+  instagramReelCaption?: string;
+  instagramReel?: InstagramReelSettings;
+
+  // Headless JSONB bundles
+  site_settings?: SiteSettings;
+  pages_content?: PagesContent;
+  dynamic_sections?: Array<{ id: string; data: unknown }>;
+  retreat_packages?: Record<string, PackagePricingItem>;
+  seo_geo_tags?: SeoConfig;
+
+  // Dynamic index signature for unlimited future fields without schema changes
+  [key: string]: unknown;
 }
 
 export interface BlogPost {

@@ -26,8 +26,8 @@ export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking 
         <div className="lg:col-span-6 relative">
           <div className="rounded-3xl overflow-hidden shadow-xl aspect-[4/3] card-3d-tilt">
             <img
-              src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80"
-              alt="Yoga Guided Sessions"
+              src="https://www.shunyasync.com/images/DSC05503.JPG"
+              alt="Yoga Guided Sessions beside the Ganges"
               className="w-full h-full object-cover"
             />
           </div>
@@ -56,6 +56,16 @@ export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking 
               <span>Evening restorative yin and chakra balancing</span>
             </li>
           </ul>
+          <div>
+            <a
+              href="https://www.instagram.com/reel/DXtQI5Fko0_/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF8F5] border border-[#DFD7CA] text-xs font-semibold text-[#1F2E23] hover:text-[#C67856] hover:border-[#C67856] transition"
+            >
+              <span>▶ Watch Yoga Session Glimpse on Instagram</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -69,7 +79,7 @@ export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking 
             2. Sound Healing — Vibrational therapy for deep relaxation and inner peace
           </h2>
           <p className="text-base text-[#5B665D] leading-relaxed font-light">
-            Everything in existence vibrates at specific frequencies. During our immersive sound baths, master alchemist Komal Makhetra utilizes handcrafted 7-metal Tibetan bowls, resonant symphonic gongs, Koshi chimes, and 432Hz tuning instruments to facilitate spontaneous delta-wave trance states.
+            Everything in existence vibrates at specific frequencies. During our immersive sound baths, master alchemist Komal Malhotra utilizes handcrafted 7-metal Tibetan bowls, resonant symphonic gongs, Koshi chimes, and 432Hz tuning instruments to facilitate spontaneous delta-wave trance states.
           </p>
           <ul className="space-y-3 text-sm text-[#3E4A40]">
             <li className="flex items-center gap-3">
@@ -85,11 +95,21 @@ export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking 
               <span>Profound sleep enhancement and neurological recalibration</span>
             </li>
           </ul>
+          <div>
+            <a
+              href="https://www.instagram.com/reel/DXycIlIS6jH/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF8F5] border border-[#DFD7CA] text-xs font-semibold text-[#1F2E23] hover:text-[#C67856] hover:border-[#C67856] transition"
+            >
+              <span>▶ Watch Waterfall Sound Healing on Instagram</span>
+            </a>
+          </div>
         </div>
         <div className="lg:col-span-6 order-1 lg:order-2 relative">
           <div className="rounded-3xl overflow-hidden shadow-xl aspect-[4/3] card-3d-tilt">
             <img
-              src="https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=1200&q=80"
+              src="https://www.shunyasync.com/images/C9738T01.JPG"
               alt="Sound Healing Tibetan Singing Bowls"
               className="w-full h-full object-cover"
             />
@@ -102,7 +122,7 @@ export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking 
         <div className="lg:col-span-6 relative">
           <div className="rounded-3xl overflow-hidden shadow-xl aspect-[4/3] card-3d-tilt">
             <img
-              src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1200&q=80"
+              src="https://www.shunyasync.com/images/DSC05719.JPG"
               alt="Free Movement & Joyful Ecstatic Dance"
               className="w-full h-full object-cover"
             />

@@ -18,7 +18,7 @@ export const AboutFoundersSection: React.FC<AboutFoundersSectionProps> = ({
     title: 'Founder & Movement Guide',
     note: 'Mindful breathwork & grounded presence',
     bio: 'Anmol brings years of dedicated sadhana in traditional Hatha yoga, somatic movement, and nervous system regulation.',
-    image: '/assets/aistudio/founder_anmol_khatri.jpg'
+    image: 'https://www.shunyasync.com/images/founder-1.jpg'
   };
 
   const founder2 = config.founder2 || {
@@ -26,11 +26,11 @@ export const AboutFoundersSection: React.FC<AboutFoundersSectionProps> = ({
     title: 'Founder & Sound Alchemist',
     note: 'Vibrational therapy & intuitive healing',
     bio: 'Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance.',
-    image: '/assets/aistudio/founder_komal_malhotra.jpg'
+    image: 'https://www.shunyasync.com/images/cofounder.JPG'
   };
 
-  const anmolImage = founder1.image || '/assets/aistudio/founder_anmol_khatri.jpg';
-  const komalImage = founder2.image || '/assets/aistudio/founder_komal_malhotra.jpg';
+  const anmolImage = founder1.image || 'https://www.shunyasync.com/images/founder-1.jpg';
+  const komalImage = founder2.image || 'https://www.shunyasync.com/images/cofounder.JPG';
 
   const whyWeStartedText =
     config.whyWeStarted || 'To offer intimate, soulful journeys away from daily noise.';
@@ -73,27 +73,10 @@ export const AboutFoundersSection: React.FC<AboutFoundersSectionProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
             </div>
-            <div className="p-6 sm:p-7 bg-white space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="font-serif-display text-2xl sm:text-3xl font-medium text-[#1F2E23]">
-                  {founder1.name}
-                </h3>
-                {founder1.title && (
-                  <span className="text-[11px] uppercase tracking-wider text-[#C67856] font-semibold bg-[#FAF4EE] px-3 py-1 rounded-full border border-[#EFE2D6]">
-                    {founder1.title}
-                  </span>
-                )}
-              </div>
-              {founder1.note && (
-                <p className="text-xs sm:text-sm text-[#67776B] italic font-light">
-                  &ldquo;{founder1.note}&rdquo;
-                </p>
-              )}
-              {showExtendedBios && founder1.bio && (
-                <p className="text-xs sm:text-sm text-[#506053] leading-relaxed pt-2 border-t border-stone-100">
-                  {founder1.bio}
-                </p>
-              )}
+            <div className="p-5 sm:p-6 bg-white">
+              <h3 className="font-serif-display text-2xl sm:text-3xl font-medium text-[#1F2E23]">
+                {founder1.name}
+              </h3>
             </div>
           </div>
 
@@ -107,27 +90,10 @@ export const AboutFoundersSection: React.FC<AboutFoundersSectionProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
             </div>
-            <div className="p-6 sm:p-7 bg-white space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="font-serif-display text-2xl sm:text-3xl font-medium text-[#1F2E23]">
-                  {founder2.name}
-                </h3>
-                {founder2.title && (
-                  <span className="text-[11px] uppercase tracking-wider text-[#3D5B46] font-semibold bg-[#EEF5F0] px-3 py-1 rounded-full border border-[#D8E6DC]">
-                    {founder2.title}
-                  </span>
-                )}
-              </div>
-              {founder2.note && (
-                <p className="text-xs sm:text-sm text-[#67776B] italic font-light">
-                  &ldquo;{founder2.note}&rdquo;
-                </p>
-              )}
-              {showExtendedBios && founder2.bio && (
-                <p className="text-xs sm:text-sm text-[#506053] leading-relaxed pt-2 border-t border-stone-100">
-                  {founder2.bio}
-                </p>
-              )}
+            <div className="p-5 sm:p-6 bg-white">
+              <h3 className="font-serif-display text-2xl sm:text-3xl font-medium text-[#1F2E23]">
+                {founder2.name}
+              </h3>
             </div>
           </div>
         </div>

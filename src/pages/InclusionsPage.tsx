@@ -95,7 +95,7 @@ export const InclusionsPage: React.FC<InclusionsPageProps> = ({ onOpenBooking })
           Experienced Facilitators Present Throughout
         </h3>
         <p className="text-sm text-stone-300 leading-relaxed max-w-2xl mx-auto font-light">
-          Unlike large resorts with shifting staff, founders Anmol Khatti and Komal Makhetra hold space alongside you throughout the entire retreat journey.
+          Unlike large resorts with shifting staff, founders Anmol Khatri and Komal Malhotra hold space alongside you throughout the entire retreat journey.
         </p>
         <button
           onClick={onOpenBooking}

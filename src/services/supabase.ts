@@ -24,7 +24,7 @@ When subjected to acoustic vibrations from handcrafted Himalayan singing bowls, 
 3. **Theta Waves (4–7 Hz)**: Somatic cellular repair, deep meditation, emotional integration.
 
 During our daily 432Hz sacred sound immersions at Shunya Sync, participants lie comfortably in our acoustically tuned sanctuary dome. As the resonance washes over, the vagus nerve signals the adrenal glands to halt adrenaline release, enabling profound rest and cellular restoration.`,
-    image: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://www.shunyasync.com/images/C9738T01.JPG',
     tag: 'Sound Alchemy',
     published: true
   },
@@ -48,7 +48,7 @@ At Shunya Sync, each sunrise begins with conscious breathwork:
 - **Bhramari (Humming Bee Breath)**: The internal humming vibration stimulates nitric oxide production in the nasal airways and calms the vagal complex within seconds.
 
 Seekers discover that when the breath becomes slow, deep, and rhythmic, the turbulent mind automatically settles into the zero-point of peace.`,
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://www.shunyasync.com/images/DSC05503.JPG',
     tag: 'Breathwork',
     published: true
   },
@@ -69,7 +69,7 @@ Most people view food merely as calories, proteins, and carbohydrates. In the Ay
 - **Sattvic Food**: Light, organic, seasonal, prepared with reverence. Enhances mental clarity, compassion, and deep meditative absorption.
 
 At Shunya Sync, all meals are grown on terraced organic farms without chemical pesticides. Prepared fresh with digestive spices like fresh ginger, turmeric root, cumin, and coriander, each meal leaves you light, energized, and ready for silent contemplation.`,
-    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://www.shunyasync.com/images/satvik.JPG',
     tag: 'Ayurveda',
     published: true
   },
@@ -91,7 +91,7 @@ Nobody in the room knows your job title, your past regrets, or your social statu
 Because our cohort is strictly limited to 10–14 participants, you are never lost in a crowd. During evening sharing circles, bonfires, and silent tea rituals, deep human connection blossoms without pretense.
 
 Seekers often tell us that the friends they met at Shunya Sync feel like family they had known for centuries. When you return home, you carry not just relaxation, but a grounded, clear knowing of your authentic self.`,
-    image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://www.shunyasync.com/images/DSC05738.JPG',
     tag: 'Inner Growth',
     published: true
   }
@@ -101,7 +101,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
   metaTitle: 'Shunya Sync Retreat — Mindful Yoga, Sound Healing & Forest Stillness in India',
   metaDescription: 'Disconnect from chaos, discover your true self, and sync with the universe. Luxury 4D/3N & 5D/4N sacred wellness retreats in India with 432Hz sound therapy, Hatha yoga, and organic sattvic nourishment.',
   keywords: 'wellness retreat India, sound healing retreat, yoga retreat India, Rishikesh yoga retreat, 432Hz sound bath, mindful meditation, sattvic food retreat, digital detox India, Shunya Sync',
-  ogImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=85',
+  ogImage: 'https://www.shunyasync.com/images/DSC05470.JPG',
   canonicalUrl: 'https://shunyasync.com',
   geoRegion: 'IN-UT',
   geoPlacename: 'Rishikesh, Uttarakhand, India',
@@ -152,7 +152,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   headerAnnouncement: '🌿 Next Sacred Cohort: Nov 14–17 & Dec 12–16, 2026 • Limited to 12 Seekers • Direct WhatsApp: +91 9259698064',
   heroHeadline: 'Shunya Sync Retreat',
   heroSubheadline: 'FIND STILLNESS • ALIGN WITHIN • AWAKEN — Disconnect the noise, find your true self and sync with the universe.',
-  heroBgImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=85',
+  heroBgImage: 'https://www.shunyasync.com/images/DSC05470.JPG',
   heroTags: ['Somatic Yoga', 'Vedic Sound Bath', 'Forest Bathing', 'Digital Fasting', 'Inner Alignment'],
   aboutText: 'At Shunya Sync Retreat, At Shunya Sync, we curate soulful retreats that bring together yoga, mindfulness, nature, adventure, and meaningful human connections—helping you reconnect with yourself and live with greater clarity and purpose.',
   philosophyQuote: 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
@@ -165,14 +165,14 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     title: 'Founder & Movement Guide',
     note: 'Mindful breathwork & grounded presence',
     bio: 'Anmol brings years of dedicated sadhana in traditional Hatha yoga, somatic movement, and nervous system regulation. His grounded, compassionate presence guides seekers back into deep bodily connection and authentic inner stillness.',
-    image: '/assets/aistudio/founder_anmol_khatri.jpg'
+    image: 'https://www.shunyasync.com/images/founder-1.jpg'
   },
   founder2: {
     name: 'Komal Malhotra',
     title: 'Founder & Sound Alchemist',
     note: 'Vibrational therapy & intuitive healing',
     bio: 'Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance. Her sacred sound baths dissolve emotional tension and transport participants into rejuvenating theta brainwave states.',
-    image: '/assets/aistudio/founder_komal_malhotra.jpg'
+    image: 'https://www.shunyasync.com/images/cofounder.JPG'
   },
   pricing: {
     pkg2n3d: {
@@ -220,44 +220,48 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   },
   galleryImages: [
     {
-      url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1200&q=80',
-      title: 'Sunrise Yoga Shala',
-      caption: 'Open-air timber pavilion overlooking mist-cloaked Himalayan valleys'
+      url: 'https://www.shunyasync.com/images/DSC05503.JPG',
+      title: 'Sunrise Yoga & Pranayama',
+      caption: 'Guided sunrise asana practice and conscious breathwork beside the sacred river'
     },
     {
-      url: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=1200&q=80',
-      title: 'Sound Healing Dome',
-      caption: 'Acoustically tuned circular sanctuary for Tibetan singing bowls and gongs'
+      url: 'https://www.shunyasync.com/images/C9738T01.JPG',
+      title: 'Sacred Sound Healing Immersion',
+      caption: 'Handcrafted Tibetan singing bowls and vibrational frequency therapy in nature'
     },
     {
-      url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
-      title: 'Sattvic Nourishment',
-      caption: 'Organic garden-to-table vegetarian feast tables and healing herbal infusions'
+      url: 'https://www.shunyasync.com/images/satvik.JPG',
+      title: 'Organic Sattvic Nourishment',
+      caption: 'Farm-to-table Ayurvedic vegetarian feast tables and healing herbal infusions'
     },
     {
-      url: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1200&q=80',
-      title: 'Free Movement & Dance',
-      caption: 'Expressive somatic liberation without inhibition or judgment'
+      url: 'https://www.shunyasync.com/images/DSC05719.JPG',
+      title: 'Ecstatic Dance & Somatic Liberation',
+      caption: 'Joyful movement sessions, conscious dance, and emotional release in safe space'
     },
     {
-      url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-      title: 'Eco-Luxury Nature Quarters',
-      caption: 'Peaceful accommodation with sustainable organic linens and forest views'
+      url: 'https://www.shunyasync.com/images/DSC06017.JPG',
+      title: 'Himalayan Nature Excursions',
+      caption: 'Sacred temple visits, Ganga beach meditation, and guided forest trail bathing'
     },
     {
-      url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
-      title: 'Forest Bathing Trail',
-      caption: 'Sacred river and tree canopy guided mindfulness walking meditation'
+      url: 'https://www.shunyasync.com/images/IMG_3021.JPG',
+      title: 'Community Celebration & Kirtan',
+      caption: 'Soulful evening sharing circles, bonfire rituals, and lifelong heart connections'
     }
   ],
   seo: DEFAULT_SEO_CONFIG,
   brandSubtitle: 'Retreat Sanctuary',
   showLogoIcon: true,
+  heroBadge: 'COHORT 2026',
+  heroQuote: 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
+  footerDescription: 'At Shunya Sync Retreat, we curate soulful retreats that bring together yoga, mindfulness, nature, adventure, and meaningful human connections.',
+  footerCopyright: '© 2026 Shunya Sync Retreat. All sacred rights reserved.',
   whyChooseUs: {
     eyebrow: 'WHY SHUNYA SYNC',
     headingPrefix: 'Why',
     headingHighlight: 'Choose Us',
-    bgImage: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=1920&q=75',
+    bgImage: 'https://www.shunyasync.com/images/DSC05962.JPG',
     cards: [
       { id: 1, title: 'Small intimate groups', desc: 'Curated cohorts of 10 to 14 participants to protect energy and ensure everyone is truly seen.' },
       { id: 2, title: 'Personalized attention', desc: 'Dedicated adjustments in asana, pranayama, and healing frequencies tailored to your body.' },
@@ -267,7 +271,11 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       { id: 6, title: 'Safe & supportive space', desc: 'Guaranteed privacy, emotional safety, clean accommodations, and non-judgmental guidance.' }
     ]
   },
-  blogPosts: DEFAULT_BLOG_POSTS
+  blogPosts: DEFAULT_BLOG_POSTS,
+  instagramReelUrl: 'https://www.instagram.com/reel/DXtQI5Fko0_/',
+  instagramReelPosition: 'below-packages',
+  instagramReelTitle: 'Living Atmosphere & Sacred Flow',
+  instagramReelCaption: 'Experience the living frequency of breathwork, sound alchemy, and peaceful forest stillness captured at Shunya Sync Retreat.'
 };
 
 export const DEFAULT_BENEFITS: BenefitSlide[] = [
@@ -326,7 +334,7 @@ const SUPABASE_STORAGE_KEY = 'shunya_sync_supabase_config_v3';
 /**
  * Normalizes and deep-validates any incoming configuration object
  * ensuring that nested structures like pricing, founders, contact, and SEO
- * never cause undefined property crashes even if legacy or partial data is retrieved.
+ * never cause undefined property crashes even if legacy, partial, or headless JSONB data is retrieved.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeSiteConfig(input: any): SiteConfig {
@@ -334,8 +342,12 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     return DEFAULT_SITE_CONFIG;
   }
 
+  // 1. Extract JSONB structures if present
+  const settings = (input.site_settings && typeof input.site_settings === 'object') ? input.site_settings : {};
+  const pages = (input.pages_content && typeof input.pages_content === 'object') ? input.pages_content : {};
+
   // Safely construct pricing
-  const rawPricing = input.pricing || {};
+  const rawPricing = input.retreat_packages || pages.retreat_packages || input.pricing || {};
   const rawPkg2 = rawPricing.pkg2n3d || {};
   const rawPkg3 = rawPricing.pkg3n4d || rawPricing.pkg4d3n || {};
   const rawPkg4 = rawPricing.pkg4n5d || rawPricing.pkg5d4n || {};
@@ -374,85 +386,116 @@ export function normalizeSiteConfig(input: any): SiteConfig {
   };
 
   // Safely construct founders with smooth migration
-  const rawFounder1 = input.founder1 || {};
+  const rawFounder1 = pages.founder1 || input.founder1 || {};
   const founder1 = {
     ...DEFAULT_SITE_CONFIG.founder1,
     ...rawFounder1,
     name: rawFounder1.name && rawFounder1.name !== 'Anmol Khatti' && rawFounder1.name !== 'Aarav Sharma' ? rawFounder1.name : 'Anmol Khatri',
-    image: rawFounder1.image && !rawFounder1.image.includes('unsplash.com/photo-1545205597') && !rawFounder1.image.includes('photo-1506794778202') ? rawFounder1.image : '/assets/aistudio/founder_anmol_khatri.jpg'
+    image: rawFounder1.image && !rawFounder1.image.includes('unsplash.com') ? rawFounder1.image : 'https://www.shunyasync.com/images/founder-1.jpg'
   };
 
-  const rawFounder2 = input.founder2 || {};
+  const rawFounder2 = pages.founder2 || input.founder2 || {};
   const founder2 = {
     ...DEFAULT_SITE_CONFIG.founder2,
     ...rawFounder2,
     name: rawFounder2.name && rawFounder2.name !== 'Komal Makhetra' && rawFounder2.name !== 'Devanshi Mehta' ? rawFounder2.name : 'Komal Malhotra',
-    image: rawFounder2.image && !rawFounder2.image.includes('unsplash.com/photo-1508214751196') && !rawFounder2.image.includes('unsplash.com/photo-1534528741775') ? rawFounder2.image : '/assets/aistudio/founder_komal_malhotra.jpg'
+    image: rawFounder2.image && !rawFounder2.image.includes('unsplash.com') ? rawFounder2.image : 'https://www.shunyasync.com/images/cofounder.JPG'
   };
 
   // Safely construct contact
+  const rawContact = settings.contact || input.contact || {};
   const contact = {
     ...DEFAULT_SITE_CONFIG.contact,
-    ...(input.contact || {}),
-    phone: input.contact?.phone && input.contact.phone.includes('9259698064') ? input.contact.phone : DEFAULT_SITE_CONFIG.contact.phone,
-    whatsappNumber: input.contact?.whatsappNumber && input.contact.whatsappNumber.includes('9259698064') ? input.contact.whatsappNumber : DEFAULT_SITE_CONFIG.contact.whatsappNumber
+    ...rawContact,
+    phone: rawContact.phone && rawContact.phone.includes('9259698064') ? rawContact.phone : DEFAULT_SITE_CONFIG.contact.phone,
+    whatsappNumber: rawContact.whatsappNumber && rawContact.whatsappNumber.includes('9259698064') ? rawContact.whatsappNumber : DEFAULT_SITE_CONFIG.contact.whatsappNumber
   };
 
-  // Safely construct gallery images
-  const galleryImages = Array.isArray(input.galleryImages) && input.galleryImages.length > 0
-    ? input.galleryImages
-    : (Array.isArray(input.gallery_images) && input.gallery_images.length > 0
-        ? input.gallery_images
-        : DEFAULT_SITE_CONFIG.galleryImages);
+  // Safely construct gallery images with automatic migration from stock placeholders
+  const rawGallery = pages.galleryImages || input.galleryImages || input.gallery_images;
+  const isGenericUnsplashGallery = Array.isArray(rawGallery) && rawGallery.some((item: any) => item?.url && item.url.includes('images.unsplash.com/photo-1545205597'));
+  const galleryImages = Array.isArray(rawGallery) && rawGallery.length > 0 && !isGenericUnsplashGallery
+    ? rawGallery
+    : DEFAULT_SITE_CONFIG.galleryImages;
 
   // Safely construct SEO
+  const rawSeo = input.seo_geo_tags || settings.seo_geo_tags || input.seo;
   const seo = {
     ...DEFAULT_SEO_CONFIG,
-    ...(input.seo || {})
+    ...(rawSeo || {})
   };
 
-  const currentTagline = input.tagline && !input.tagline.toLowerCase().includes('disconnect from chaos')
-    ? input.tagline
-    : DEFAULT_SITE_CONFIG.tagline;
+  const currentTagline = settings.tagline || pages.tagline || input.tagline || DEFAULT_SITE_CONFIG.tagline;
+
+  // Why Choose Us
+  const rawWhy = pages.whyChooseUs || input.whyChooseUs || input.why_choose_us;
+  const whyBgImage = rawWhy?.bgImage && !rawWhy.bgImage.includes('images.unsplash.com/photo-1508672019048')
+    ? rawWhy.bgImage
+    : (DEFAULT_SITE_CONFIG.whyChooseUs?.bgImage || 'https://www.shunyasync.com/images/DSC05962.JPG');
+
+  // Hero Background Image migration
+  const rawHeroBg = pages.heroBgImage || input.heroBgImage || input.hero_bg_image;
+  const heroBgImage = rawHeroBg && !rawHeroBg.includes('images.unsplash.com/photo-1506126613408-eca07ce68773')
+    ? rawHeroBg
+    : DEFAULT_SITE_CONFIG.heroBgImage;
+
+  // Blog Posts
+  const rawBlogs = input.blog_posts || pages.blog_posts || input.blogPosts;
+  const blogPosts = Array.isArray(rawBlogs) && rawBlogs.length > 0
+    ? rawBlogs
+    : DEFAULT_SITE_CONFIG.blogPosts || DEFAULT_BLOG_POSTS;
 
   return {
-    brandName: input.brandName || input.brand_name || DEFAULT_SITE_CONFIG.brandName,
+    // Preserve any arbitrary dynamic keys added in the future
+    ...input,
+    ...pages,
+    ...settings,
+
+    brandName: settings.brandName || input.brandName || input.brand_name || DEFAULT_SITE_CONFIG.brandName,
     tagline: currentTagline,
-    headerAnnouncement: input.headerAnnouncement ?? input.header_announcement ?? DEFAULT_SITE_CONFIG.headerAnnouncement,
-    heroHeadline: input.heroHeadline || input.hero_headline || DEFAULT_SITE_CONFIG.heroHeadline,
-    heroSubheadline: input.heroSubheadline || input.hero_subheadline || DEFAULT_SITE_CONFIG.heroSubheadline,
-    heroBgImage: input.heroBgImage || input.hero_bg_image || DEFAULT_SITE_CONFIG.heroBgImage,
-    heroTags: Array.isArray(input.heroTags) ? input.heroTags : (Array.isArray(input.hero_tags) ? input.hero_tags : DEFAULT_SITE_CONFIG.heroTags),
-    aboutText: input.aboutText || input.about_text || DEFAULT_SITE_CONFIG.aboutText,
-    philosophyQuote: input.philosophyQuote ?? input.philosophy_quote ?? DEFAULT_SITE_CONFIG.philosophyQuote,
-    whyWeStarted: input.whyWeStarted || input.why_we_started || DEFAULT_SITE_CONFIG.whyWeStarted || 'To offer intimate, soulful journeys away from daily noise.',
-    whatMakesUsDifferent: input.whatMakesUsDifferent || input.what_makes_us_different || DEFAULT_SITE_CONFIG.whatMakesUsDifferent || 'Intimate groups, nature-based settings, soulful evenings, and expert guides.',
+    headerAnnouncement: settings.headerAnnouncement ?? input.headerAnnouncement ?? input.header_announcement ?? DEFAULT_SITE_CONFIG.headerAnnouncement,
+    heroHeadline: pages.heroHeadline || input.heroHeadline || input.hero_headline || DEFAULT_SITE_CONFIG.heroHeadline,
+    heroSubheadline: pages.heroSubheadline || input.heroSubheadline || input.hero_subheadline || DEFAULT_SITE_CONFIG.heroSubheadline,
+    heroBgImage: pages.heroBgImage || input.heroBgImage || input.hero_bg_image || DEFAULT_SITE_CONFIG.heroBgImage,
+    heroTags: Array.isArray(pages.heroTags) ? pages.heroTags : (Array.isArray(input.heroTags) ? input.heroTags : (Array.isArray(input.hero_tags) ? input.hero_tags : DEFAULT_SITE_CONFIG.heroTags)),
+    heroBadge: pages.heroBadge || input.heroBadge || input.hero_badge || DEFAULT_SITE_CONFIG.heroBadge || 'COHORT 2026',
+    heroQuote: pages.heroQuote || input.heroQuote || input.hero_quote || DEFAULT_SITE_CONFIG.heroQuote,
+    aboutText: pages.aboutText || input.aboutText || input.about_text || DEFAULT_SITE_CONFIG.aboutText,
+    philosophyQuote: pages.philosophyQuote ?? input.philosophyQuote ?? input.philosophy_quote ?? DEFAULT_SITE_CONFIG.philosophyQuote,
+    whyWeStarted: pages.whyWeStarted || input.whyWeStarted || input.why_we_started || DEFAULT_SITE_CONFIG.whyWeStarted || 'To offer intimate, soulful journeys away from daily noise.',
+    whatMakesUsDifferent: pages.whatMakesUsDifferent || input.whatMakesUsDifferent || input.what_makes_us_different || DEFAULT_SITE_CONFIG.whatMakesUsDifferent || 'Intimate groups, nature-based settings, soulful evenings, and expert guides.',
     founder1,
     founder2,
     pricing: safePricing,
     contact,
     galleryImages,
     seo,
-    adminPin: input.adminPin || input.admin_pin || DEFAULT_SITE_CONFIG.adminPin || '7788',
-    logoUrl: input.logoUrl || input.logo_url || DEFAULT_SITE_CONFIG.logoUrl || '/logo.png',
-    brandSubtitle: typeof input.brandSubtitle === 'string' ? input.brandSubtitle : (typeof input.brand_subtitle === 'string' ? input.brand_subtitle : DEFAULT_SITE_CONFIG.brandSubtitle || 'Retreat Sanctuary'),
-    showLogoIcon: input.showLogoIcon !== undefined ? Boolean(input.showLogoIcon) : (input.show_logo_icon !== undefined ? Boolean(input.show_logo_icon) : true),
+    adminPin: settings.adminPin || input.adminPin || input.admin_pin || DEFAULT_SITE_CONFIG.adminPin || '7788',
+    logoUrl: settings.logoUrl || input.logoUrl || input.logo_url || DEFAULT_SITE_CONFIG.logoUrl || '/logo.png',
+    brandSubtitle: typeof settings.brandSubtitle === 'string' ? settings.brandSubtitle : (typeof input.brandSubtitle === 'string' ? input.brandSubtitle : (typeof input.brand_subtitle === 'string' ? input.brand_subtitle : DEFAULT_SITE_CONFIG.brandSubtitle || 'Retreat Sanctuary')),
+    showLogoIcon: settings.showLogoIcon !== undefined ? Boolean(settings.showLogoIcon) : (input.showLogoIcon !== undefined ? Boolean(input.showLogoIcon) : (input.show_logo_icon !== undefined ? Boolean(input.show_logo_icon) : true)),
+    footerDescription: pages.footerDescription || input.footerDescription || input.footer_description || DEFAULT_SITE_CONFIG.footerDescription,
+    footerCopyright: pages.footerCopyright || input.footerCopyright || input.footer_copyright || DEFAULT_SITE_CONFIG.footerCopyright,
     whyChooseUs: {
-      eyebrow: input.whyChooseUs?.eyebrow || input.why_choose_us?.eyebrow || DEFAULT_SITE_CONFIG.whyChooseUs?.eyebrow || 'WHY SHUNYA SYNC',
-      headingPrefix: input.whyChooseUs?.headingPrefix || input.why_choose_us?.heading_prefix || DEFAULT_SITE_CONFIG.whyChooseUs?.headingPrefix || 'Why',
-      headingHighlight: input.whyChooseUs?.headingHighlight || input.why_choose_us?.heading_highlight || DEFAULT_SITE_CONFIG.whyChooseUs?.headingHighlight || 'Choose Us',
-      bgImage: input.whyChooseUs?.bgImage || input.why_choose_us?.bg_image || DEFAULT_SITE_CONFIG.whyChooseUs?.bgImage || 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=1920&q=75',
-      cards: Array.isArray(input.whyChooseUs?.cards) && input.whyChooseUs.cards.length > 0
-        ? input.whyChooseUs.cards
-        : (Array.isArray(input.why_choose_us?.cards) && input.why_choose_us.cards.length > 0
-            ? input.why_choose_us.cards
-            : DEFAULT_SITE_CONFIG.whyChooseUs?.cards)
+      eyebrow: rawWhy?.eyebrow || DEFAULT_SITE_CONFIG.whyChooseUs?.eyebrow || 'WHY SHUNYA SYNC',
+      headingPrefix: rawWhy?.headingPrefix || DEFAULT_SITE_CONFIG.whyChooseUs?.headingPrefix || 'Why',
+      headingHighlight: rawWhy?.headingHighlight || DEFAULT_SITE_CONFIG.whyChooseUs?.headingHighlight || 'Choose Us',
+      bgImage: whyBgImage,
+      cards: Array.isArray(rawWhy?.cards) && rawWhy.cards.length > 0
+        ? rawWhy.cards
+        : (DEFAULT_SITE_CONFIG.whyChooseUs?.cards || [])
     },
-    blogPosts: Array.isArray(input.blogPosts) && input.blogPosts.length > 0
-      ? input.blogPosts
-      : (Array.isArray(input.blog_posts) && input.blog_posts.length > 0
-          ? input.blog_posts
-          : DEFAULT_SITE_CONFIG.blogPosts || DEFAULT_BLOG_POSTS)
+    blogPosts,
+
+    // Dynamic Instagram Reel Embed
+    instagramReelUrl: settings.instagramReelUrl || pages.instagramReelUrl || input.instagramReelUrl || (input.instagramReel as any)?.url || DEFAULT_SITE_CONFIG.instagramReelUrl,
+    instagramReelPosition: (settings.instagramReelPosition || pages.instagramReelPosition || input.instagramReelPosition || (input.instagramReel as any)?.position || DEFAULT_SITE_CONFIG.instagramReelPosition) as any,
+    instagramReelTitle: settings.instagramReelTitle || pages.instagramReelTitle || input.instagramReelTitle || (input.instagramReel as any)?.title || DEFAULT_SITE_CONFIG.instagramReelTitle,
+    instagramReelCaption: settings.instagramReelCaption || pages.instagramReelCaption || input.instagramReelCaption || (input.instagramReel as any)?.caption || DEFAULT_SITE_CONFIG.instagramReelCaption,
+
+    // Reference to original JSONB bundles
+    site_settings: settings,
+    pages_content: pages
   };
 }
 
@@ -602,7 +645,9 @@ export function getSupabaseClient(): SupabaseClient | null {
 }
 
 /**
- * Fetches latest site config from Supabase cloud database if connected
+ * Fetches latest site config from Supabase cloud database if connected.
+ * Extracts all content, narratives, branding, and dynamic fields from JSONB structures
+ * with graceful fallback to legacy relational columns if present.
  */
 export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
   const client = getSupabaseClient();
@@ -619,36 +664,65 @@ export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
 
     if (error || !data) return null;
 
-    // Merge both flat columns and dynamic headless JSONB structures
-    const pages = data.pages_content || {};
-    const settings = data.site_settings || {};
-    const packages = data.retreat_packages || data.pricing;
-    const seoTags = data.seo_geo_tags || data.seo;
+    // 1. Extract JSONB structures
+    const pages = (data.pages_content && typeof data.pages_content === 'object') ? data.pages_content : {};
+    const settings = (data.site_settings && typeof data.site_settings === 'object') ? data.site_settings : {};
+    const dynamicSections = Array.isArray(data.dynamic_sections)
+      ? data.dynamic_sections
+      : (Array.isArray(pages.dynamic_sections) ? pages.dynamic_sections : []);
+    const blogPosts = Array.isArray(data.blog_posts)
+      ? data.blog_posts
+      : (Array.isArray(pages.blog_posts) ? pages.blog_posts : undefined);
+    const packages = data.retreat_packages || pages.retreat_packages || data.pricing;
+    const seoTags = data.seo_geo_tags || settings.seo_geo_tags || data.seo;
 
+    // 2. Normalize and extract with priority: JSONB > legacy flat column > defaults
     const merged = normalizeSiteConfig({
+      // Start with raw table data
       ...data,
+      // Layer JSONB pages_content
+      ...pages,
+      // Layer JSONB site_settings
+      ...settings,
+
+      // Explicit field mappings ensuring JSONB takes precedence
       brandName: settings.brandName || data.brand_name,
-      tagline: pages.tagline || data.tagline,
+      brandSubtitle: settings.brandSubtitle || data.brand_subtitle,
+      tagline: settings.tagline || pages.tagline || data.tagline,
       headerAnnouncement: settings.headerAnnouncement || data.header_announcement,
+      logoUrl: settings.logoUrl || data.logo_url,
+      showLogoIcon: settings.showLogoIcon ?? data.show_logo_icon,
+      adminPin: settings.adminPin || data.admin_pin,
+      contact: settings.contact || data.contact,
+
       heroHeadline: pages.heroHeadline || data.hero_headline,
       heroSubheadline: pages.heroSubheadline || data.hero_subheadline,
-      heroBgImage: data.hero_bg_image,
-      heroTags: data.hero_tags,
+      heroBgImage: pages.heroBgImage || data.hero_bg_image,
+      heroTags: pages.heroTags || data.hero_tags,
+      heroBadge: pages.heroBadge || data.hero_badge,
+      heroQuote: pages.heroQuote || data.hero_quote,
+
       aboutText: pages.aboutText || data.about_text,
       philosophyQuote: pages.philosophyQuote || data.philosophy_quote,
-      whyWeStarted: data.why_we_started,
-      whatMakesUsDifferent: data.what_makes_us_different,
+      whyWeStarted: pages.whyWeStarted || data.why_we_started,
+      whatMakesUsDifferent: pages.whatMakesUsDifferent || data.what_makes_us_different,
+
+      whyChooseUs: pages.whyChooseUs || data.why_choose_us,
+      founder1: pages.founder1 || data.founder1,
+      founder2: pages.founder2 || data.founder2,
+      galleryImages: pages.galleryImages || data.gallery_images,
       pricing: packages,
       seo: seoTags,
-      galleryImages: data.gallery_images,
-      adminPin: settings.adminPin || data.admin_pin,
-      logoUrl: settings.logoUrl || data.logo_url,
-      brandSubtitle: settings.brandSubtitle || data.brand_subtitle,
-      showLogoIcon: settings.showLogoIcon ?? data.show_logo_icon,
-      whyChooseUs: data.why_choose_us,
-      blogPosts: data.blog_posts,
-      footerDescription: pages.footerDescription,
-      footerCopyright: pages.footerCopyright
+      blogPosts,
+
+      footerDescription: pages.footerDescription || data.footer_description,
+      footerCopyright: pages.footerCopyright || data.footer_copyright,
+
+      site_settings: settings,
+      pages_content: pages,
+      dynamic_sections: dynamicSections,
+      retreat_packages: packages,
+      seo_geo_tags: seoTags
     });
 
     saveStoredSiteConfig(merged);
@@ -659,6 +733,13 @@ export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
   }
 }
 
+/**
+ * 100% Dynamic & Schema-Independent Supabase Sync Engine
+ * Bundles all site configuration text, hero details, and miscellaneous flat fields
+ * into JSONB documents (site_settings and pages_content) so NO new standalone flat columns
+ * are ever sent to Supabase. This guarantees that new input fields can be added to the
+ * React Admin Panel indefinitely without ever needing ALTER TABLE schema modifications in Supabase.
+ */
 export async function syncConfigToSupabase(config: SiteConfig): Promise<{ success: boolean; message: string }> {
   const client = getSupabaseClient();
   const cfg = getStoredSupabaseConfig();
@@ -671,84 +752,170 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
 
   const tableName = cfg.tableName || 'shunya_site_config';
 
-  // Base payload (compatible with standard flat columns)
-  const basePayload: Record<string, unknown> = {
-    id: 'current_config',
-    brand_name: config.brandName,
+  // 1. Bundle all global settings, branding, logos, and pins into site_settings (JSONB)
+  const bundledSiteSettings: Record<string, unknown> = {
+    brandName: config.brandName,
+    brandSubtitle: config.brandSubtitle || 'Retreat Sanctuary',
     tagline: config.tagline,
-    header_announcement: config.headerAnnouncement,
-    hero_headline: config.heroHeadline,
-    hero_subheadline: config.heroSubheadline,
-    hero_bg_image: config.heroBgImage,
-    hero_tags: config.heroTags,
-    about_text: config.aboutText,
-    philosophy_quote: config.philosophyQuote,
-    why_we_started: config.whyWeStarted,
-    what_makes_us_different: config.whatMakesUsDifferent,
+    headerAnnouncement: config.headerAnnouncement,
+    logoUrl: config.logoUrl || '/logo.png',
+    showLogoIcon: config.showLogoIcon !== false,
+    adminPin: config.adminPin || '7788',
+    contact: config.contact,
+    seo_geo_tags: config.seo || DEFAULT_SEO_CONFIG,
+    instagramReelUrl: config.instagramReelUrl,
+    instagramReelPosition: config.instagramReelPosition || 'below-packages',
+    instagramReelTitle: config.instagramReelTitle,
+    instagramReelCaption: config.instagramReelCaption,
+    ...(config.site_settings || {})
+  };
+
+  // 2. Bundle all page narratives, hero typography, quotes, and sections into pages_content (JSONB)
+  const bundledPagesContent: Record<string, unknown> = {
+    heroHeadline: config.heroHeadline,
+    heroSubheadline: config.heroSubheadline,
+    heroBgImage: config.heroBgImage,
+    heroTags: config.heroTags,
+    heroBadge: config.heroBadge || 'COHORT 2026',
+    heroQuote: config.heroQuote,
+    aboutText: config.aboutText,
+    philosophyQuote: config.philosophyQuote,
+    whyWeStarted: config.whyWeStarted,
+    whatMakesUsDifferent: config.whatMakesUsDifferent,
+    tagline: config.tagline,
+    whyChooseUs: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs,
     founder1: config.founder1,
     founder2: config.founder2,
-    pricing: config.pricing,
-    contact: config.contact,
-    gallery_images: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
-    seo: config.seo || DEFAULT_SEO_CONFIG,
-    admin_pin: config.adminPin || '7788',
-    logo_url: config.logoUrl || '/logo.png',
-    brand_subtitle: config.brandSubtitle || 'Retreat Sanctuary',
-    show_logo_icon: config.showLogoIcon !== false,
-    why_choose_us: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs,
+    galleryImages: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
+    retreat_packages: config.pricing,
+    blog_posts: config.blogPosts || DEFAULT_BLOG_POSTS,
+    footerDescription: config.footerDescription,
+    footerCopyright: config.footerCopyright,
+    instagramReelUrl: config.instagramReelUrl,
+    instagramReelPosition: config.instagramReelPosition || 'below-packages',
+    instagramReelTitle: config.instagramReelTitle,
+    instagramReelCaption: config.instagramReelCaption,
+    ...(config.pages_content || {})
+  };
+
+  // 3. Dynamically capture any arbitrary new custom fields added to config
+  const knownKeys = new Set([
+    'brandName', 'brandSubtitle', 'tagline', 'headerAnnouncement', 'logoUrl', 'showLogoIcon',
+    'adminPin', 'contact', 'heroHeadline', 'heroSubheadline', 'heroBgImage', 'heroTags',
+    'heroBadge', 'heroQuote', 'aboutText', 'philosophyQuote', 'whyWeStarted', 'whatMakesUsDifferent',
+    'footerDescription', 'footerCopyright', 'founder1', 'founder2', 'pricing', 'galleryImages',
+    'seo', 'whyChooseUs', 'blogPosts', 'site_settings', 'pages_content', 'dynamic_sections',
+    'retreat_packages', 'seo_geo_tags', 'instagramReelUrl', 'instagramReelPosition',
+    'instagramReelTitle', 'instagramReelCaption', 'instagramReel'
+  ]);
+
+  for (const [k, v] of Object.entries(config)) {
+    if (!knownKeys.has(k) && v !== undefined) {
+      bundledSiteSettings[k] = v;
+    }
+  }
+
+  // 4. Construct Pure Headless JSONB Payload:
+  // ZERO new flat relational columns are sent as root keys.
+  // Everything lives inside flexible JSONB containers.
+  const jsonbPayload: Record<string, unknown> = {
+    id: 'current_config',
+    site_settings: bundledSiteSettings,
+    pages_content: bundledPagesContent,
+    dynamic_sections: [
+      { id: 'why-us', data: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs },
+      { id: 'gallery', data: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages },
+      { id: 'founders', data: { founder1: config.founder1, founder2: config.founder2 } }
+    ],
+    retreat_packages: config.pricing,
+    seo_geo_tags: config.seo || DEFAULT_SEO_CONFIG,
     blog_posts: config.blogPosts || DEFAULT_BLOG_POSTS,
     updated_at: new Date().toISOString()
   };
 
-  // Extended payload including dynamic JSONB headless CMS columns
-  const fullPayload: Record<string, unknown> = {
-    ...basePayload,
-    pages_content: {
-      aboutText: config.aboutText,
-      philosophyQuote: config.philosophyQuote,
-      tagline: config.tagline,
-      heroHeadline: config.heroHeadline,
-      heroSubheadline: config.heroSubheadline,
-      contact: config.contact,
-      footerDescription: config.footerDescription,
-      footerCopyright: config.footerCopyright
-    },
-    dynamic_sections: [
-      { id: 'why-us', data: config.whyChooseUs },
-      { id: 'gallery', data: config.galleryImages },
-      { id: 'founders', data: { founder1: config.founder1, founder2: config.founder2 } }
-    ],
-    site_settings: {
-      brandName: config.brandName,
-      brandSubtitle: config.brandSubtitle,
-      logoUrl: config.logoUrl,
-      showLogoIcon: config.showLogoIcon,
-      headerAnnouncement: config.headerAnnouncement,
-      adminPin: config.adminPin
-    },
-    retreat_packages: config.pricing,
-    seo_geo_tags: config.seo || DEFAULT_SEO_CONFIG
-  };
-
   try {
-    // 1. Try upserting full dynamic JSONB payload first
-    const { error: fullError } = await client.from(tableName).upsert(fullPayload);
-    if (!fullError) {
-      return { success: true, message: '✓ All settings & dynamic JSONB content synced to Supabase!' };
+    // 5. Self-healing adaptive upsert loop
+    // If Supabase table does not yet have an optional extended JSONB column,
+    // it automatically nests that data into pages_content/site_settings, drops the root key, and retries.
+    let currentPayload = { ...jsonbPayload };
+    let attempts = 0;
+    const maxRetries = 6;
+
+    while (attempts < maxRetries) {
+      attempts++;
+      const { error } = await client.from(tableName).upsert(currentPayload);
+
+      if (!error) {
+        return {
+          success: true,
+          message: '✓ All settings, texts, and images saved to Supabase (Dynamic JSONB CMS active)!'
+        };
+      }
+
+      // Check for missing column error in PostgREST schema cache
+      const missingMatch =
+        error.message.match(/Could not find the ['"]([^'"]+)['"] column/i) ||
+        error.message.match(/column ['"]([^'"]+)['"] of relation/i) ||
+        error.message.match(/column ['"]([^'"]+)['"] does not exist/i);
+
+      if (missingMatch && missingMatch[1]) {
+        const missingCol = missingMatch[1];
+        console.warn(`Supabase schema missing optional column '${missingCol}'. Bundling into JSONB and retrying...`);
+
+        if (missingCol === 'retreat_packages' && currentPayload.retreat_packages) {
+          bundledPagesContent.retreat_packages = currentPayload.retreat_packages;
+        } else if (missingCol === 'blog_posts' && currentPayload.blog_posts) {
+          bundledPagesContent.blog_posts = currentPayload.blog_posts;
+        } else if (missingCol === 'dynamic_sections' && currentPayload.dynamic_sections) {
+          bundledPagesContent.dynamic_sections = currentPayload.dynamic_sections;
+        } else if (missingCol === 'seo_geo_tags' && currentPayload.seo_geo_tags) {
+          bundledSiteSettings.seo_geo_tags = currentPayload.seo_geo_tags;
+        }
+
+        delete currentPayload[missingCol];
+        continue;
+      }
+
+      // If site_settings or pages_content column itself is missing:
+      if (error.message.includes('site_settings') || error.message.includes('pages_content')) {
+        console.warn('Table lacks site_settings/pages_content JSONB. Attempting safe legacy flat sync...');
+        const legacySafePayload: Record<string, unknown> = {
+          id: 'current_config',
+          brand_name: config.brandName,
+          tagline: config.tagline,
+          header_announcement: config.headerAnnouncement,
+          hero_headline: config.heroHeadline,
+          hero_subheadline: config.heroSubheadline,
+          hero_bg_image: config.heroBgImage,
+          hero_tags: config.heroTags,
+          about_text: config.aboutText,
+          philosophy_quote: config.philosophyQuote,
+          founder1: config.founder1,
+          founder2: config.founder2,
+          pricing: config.pricing,
+          contact: config.contact,
+          gallery_images: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
+          seo: config.seo || DEFAULT_SEO_CONFIG,
+          updated_at: new Date().toISOString()
+        };
+        const { error: legErr } = await client.from(tableName).upsert(legacySafePayload);
+        if (!legErr) {
+          return {
+            success: true,
+            message: '✓ Saved standard fields to Supabase! (Tip: Run 1-Click JSONB Migration in Supabase tab to enable unlimited dynamic custom fields).'
+          };
+        }
+        return {
+          success: false,
+          message: `Supabase Table Error: Please click '1-Click Copy Migration SQL' in the Supabase tab and run it in your Supabase SQL Editor.`
+        };
+      }
+
+      // Other database error (RLS, permissions, network)
+      return { success: false, message: `Supabase Error: ${error.message}` };
     }
 
-    // 2. If table doesn't have the new JSONB columns yet, fall back gracefully to base payload
-    console.warn('Full JSONB payload failed, retrying with base schema:', fullError.message);
-    const { error: baseError } = await client.from(tableName).upsert(basePayload);
-    if (baseError) {
-      console.error('Supabase base upsert error:', baseError);
-      return { success: false, message: `Supabase Error: ${baseError.message}` };
-    }
-
-    return {
-      success: true,
-      message: '✓ Synced to Supabase! (Tip: Run the JSONB migration in Supabase tab for extended schema).'
-    };
+    return { success: false, message: 'Sync could not complete after multiple schema adaptation retries.' };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('Failed to sync to Supabase', msg);
@@ -850,12 +1017,12 @@ CREATE TABLE IF NOT EXISTS public.shunya_site_config (
   header_announcement TEXT DEFAULT '🌿 Next Sacred Immersive Retreat • Limited to 12 Seekers • Direct WhatsApp: +91 9259698064',
   hero_headline TEXT NOT NULL DEFAULT 'Shunya Sync Retreat',
   hero_subheadline TEXT NOT NULL DEFAULT 'FIND STILLNESS • ALIGN WITHIN • AWAKEN — Disconnect the noise, find your true self and sync with the universe.',
-  hero_bg_image TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2000&q=85',
+  hero_bg_image TEXT NOT NULL DEFAULT 'https://www.shunyasync.com/images/DSC05470.JPG',
   hero_tags JSONB NOT NULL DEFAULT '["Somatic Yoga","Vedic Sound Bath","Forest Bathing","Digital Fasting","Ayurvedic Feasts"]'::jsonb,
   about_text TEXT NOT NULL DEFAULT 'At Shunya Sync Retreat, we curate soulful retreats that bring together yoga, mindfulness, nature, adventure, and meaningful human connections.',
   philosophy_quote TEXT DEFAULT 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
-  founder1 JSONB NOT NULL DEFAULT '{"name":"Anmol Khatri","title":"Founder & Movement Guide","note":"Mindful living & somatic alignment","bio":"Anmol has spent over a decade studying traditional Hatha yoga and contemporary somatic movement.","image":"/assets/aistudio/founder_anmol_khatri.jpg"}'::jsonb,
-  founder2 JSONB NOT NULL DEFAULT '{"name":"Komal Malhotra","title":"Founder & Sound Alchemist","note":"Vibrational therapy & intuitive healing","bio":"Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance.","image":"/assets/aistudio/founder_komal_malhotra.jpg"}'::jsonb,
+  founder1 JSONB NOT NULL DEFAULT '{"name":"Anmol Khatri","title":"Founder & Movement Guide","note":"Mindful living & somatic alignment","bio":"Anmol has spent over a decade studying traditional Hatha yoga and contemporary somatic movement.","image":"https://www.shunyasync.com/images/founder-1.jpg"}'::jsonb,
+  founder2 JSONB NOT NULL DEFAULT '{"name":"Komal Malhotra","title":"Founder & Sound Alchemist","note":"Vibrational therapy & intuitive healing","bio":"Komal is a certified sound therapist and master of Himalayan singing bowls, planetary gongs, and vocal frequency resonance.","image":"https://www.shunyasync.com/images/cofounder.JPG"}'::jsonb,
   pricing JSONB NOT NULL DEFAULT '{"pkg2n3d":{"title":"2 Nights / 3 Days Retreat","twinPrice":22000,"soloPrice":26000,"badge":"Weekend Reset","description":"Choose your duration — each package includes a full day-by-day schedule and transparent pricing."},"pkg3n4d":{"title":"3 Nights / 4 Days Retreat","twinPrice":26000,"soloPrice":32000,"badge":"Most Popular","description":"Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure."},"pkg4n5d":{"title":"4 Nights / 5 Days Retreat (Premium Experience)","twinPrice":44000,"soloPrice":52000,"badge":"Premium Experience","description":"Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration."},"pkg4d3n":{"title":"3 Nights / 4 Days Retreat","twinPrice":26000,"soloPrice":32000,"badge":"Most Popular","description":"Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure."},"pkg5d4n":{"title":"4 Nights / 5 Days Retreat (Premium Experience)","twinPrice":44000,"soloPrice":52000,"badge":"Premium Experience","description":"Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration."}}'::jsonb,
   contact JSONB NOT NULL DEFAULT '{"phone":"+91 9259698064","whatsappNumber":"919259698064","email":"hello@shunyasync.com","location":"India – Nature Retreat Destination"}'::jsonb,
   gallery_images JSONB DEFAULT '[]'::jsonb,

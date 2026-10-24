@@ -12,34 +12,34 @@ export const SanctuaryPage: React.FC<SanctuaryPageProps> = ({ config, onOpenBook
 
   const fallbackImages = [
     {
-      url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1200&q=80',
-      title: 'Sunrise Open-Air Yoga Shala',
-      desc: 'Wooden timber deck with 360-degree views of morning mountain fog and birdsong.'
+      url: 'https://www.shunyasync.com/images/DSC05470.JPG',
+      title: 'Sunrise River & Mountain Shala',
+      desc: 'Wooden timber deck overlooking the pristine river valley and morning mountain mist.'
     },
     {
-      url: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=1200&q=80',
-      title: 'Sound Alchemy Healing Dome',
-      desc: 'Acoustically tuned circular meditation dome housing authentic 7-metal Tibetan bowls.'
+      url: 'https://www.shunyasync.com/images/C9738T01.JPG',
+      title: 'Sound Alchemy Healing Space',
+      desc: 'Sacred space tuned for authentic 7-metal Tibetan bowls and deep meditative frequencies.'
     },
     {
-      url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
-      title: 'Sattvic Communal Dining Pavillion',
-      desc: 'Farm-to-table vegetarian feast tables surrounded by aromatic herb gardens.'
+      url: 'https://www.shunyasync.com/images/satvik.JPG',
+      title: 'Sattvic Nourishment Dining',
+      desc: 'Fresh farm-to-table vegetarian feast prepared mindfully with pure mountain water.'
     },
     {
-      url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-      title: 'Eco-Luxury Nature Quarters',
-      desc: 'Spacious stone and timber rooms equipped with organic cotton linens and peaceful balconies.'
+      url: 'https://www.shunyasync.com/images/DSC05503.JPG',
+      title: 'Morning Asana & Breathwork Sanctuary',
+      desc: 'Open-air wooden hall for dynamic movement, pranayama, and holistic realignment.'
     },
     {
-      url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
-      title: 'Sacred Forest & River Trails',
-      desc: 'Gentle canopy trails leading to cold mountain streams for barefoot grounding and silent reflection.'
+      url: 'https://www.shunyasync.com/images/DSC05962.JPG',
+      title: 'Sacred River Ganga Sunset',
+      desc: 'Peaceful riverside meditation and grounding along the serene riverbanks of Rishikesh.'
     },
     {
-      url: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1200&q=80',
-      title: 'Starlight Bonfire Hearth',
-      desc: 'Evening gathering space under celestial constellations for music, laughter, and intention releases.'
+      url: 'https://www.shunyasync.com/images/DSC05738.JPG',
+      title: 'Evening Community Sharing Circle',
+      desc: 'Safe and compassionate circle under the evening sky for connection, reflection, and release.'
     }
   ];
 

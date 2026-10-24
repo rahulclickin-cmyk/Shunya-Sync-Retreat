@@ -35,9 +35,11 @@ import {
   FileText,
   Award,
   Heart,
-  Compass
+  Compass,
+  Instagram,
+  Film
 } from 'lucide-react';
-import { SiteConfig, SupabaseConfig, SeoConfig, FaqItem, BlogPost, BookingLead } from '../types/retreat';
+import { SiteConfig, SupabaseConfig, SeoConfig, FaqItem, BlogPost, BookingLead, ReelDisplayPosition } from '../types/retreat';
 import {
   DEFAULT_SITE_CONFIG,
   DEFAULT_SEO_CONFIG,
@@ -60,6 +62,7 @@ import {
 } from '../services/storage';
 import { TurnstileWidget } from '../components/TurnstileWidget';
 import { AdminAgencyMarquee } from '../components/AdminAgencyMarquee';
+import { InstagramReel, formatInstagramEmbedUrl } from '../components/InstagramReel';
 
 interface AdminPageProps {
   config: SiteConfig;
@@ -73,6 +76,7 @@ interface AdminPageProps {
 type AdminSection =
   | 'overview'
   | 'media'
+  | 'reel'
   | 'pages'
   | 'branding'
   | 'why-us'
@@ -646,6 +650,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           {[
             { id: 'overview', label: 'Overview & Status', icon: Layers },
             { id: 'media', label: 'Media & Photo Uploads', icon: Upload },
+            { id: 'reel', label: 'Instagram Reel Embed', icon: Instagram },
             { id: 'pages', label: 'All Pages Content (A-Z)', icon: FileText },
             { id: 'branding', label: 'Logo & Brand Identity', icon: Sparkles },
             { id: 'hero', label: 'Hero & Headlines', icon: ImageIcon },
@@ -2524,6 +2529,53 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
               </div>
 
+              {/* Auto-Fetch Fallback Images from Old Website Banner */}
+              <div className="p-5 rounded-2xl bg-[#141F16] border border-emerald-600/40 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-emerald-400" />
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                        Auto-Fetched Live Assets (from https://www.shunyasync.com/)
+                      </h4>
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      All original high-resolution photos (Hero background, Founders Anmol &amp; Komal, Sanctuary Gallery, and Retreat Packages) are live and mapped as defaults in your JSONB schema.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormConfig({
+                        ...formConfig,
+                        heroBgImage: 'https://www.shunyasync.com/images/DSC05470.JPG',
+                        founder1: {
+                          ...formConfig.founder1,
+                          name: 'Anmol Khatri',
+                          image: 'https://www.shunyasync.com/images/founder-1.jpg'
+                        },
+                        founder2: {
+                          ...formConfig.founder2,
+                          name: 'Komal Malhotra',
+                          image: 'https://www.shunyasync.com/images/cofounder.JPG'
+                        },
+                        whyChooseUs: {
+                          ...formConfig.whyChooseUs,
+                          bgImage: 'https://www.shunyasync.com/images/DSC05962.JPG'
+                        },
+                        galleryImages: DEFAULT_SITE_CONFIG.galleryImages
+                      });
+                      setUploadNotice('✓ Restored all authentic live image URLs from https://www.shunyasync.com/ into your editor! Click "Save & Sync" to commit.');
+                      setTimeout(() => setUploadNotice(null), 5000);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider transition shrink-0 cursor-pointer shadow-sm flex items-center gap-1.5"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Re-Populate All Live URLs</span>
+                  </button>
+                </div>
+              </div>
+
               {/* 1. HERO BACKGROUND IMAGE */}
               <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
                 <div className="flex items-center justify-between">
@@ -2708,6 +2760,206 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       className="sr-only"
                     />
                   </label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SECTION: INSTAGRAM REEL EMBED */}
+          {activeSection === 'reel' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2E2319] pb-4">
+                <div>
+                  <h2 className="font-serif-display text-2xl font-bold text-white flex items-center gap-2">
+                    <Instagram className="w-5 h-5 text-[#D4AF37]" />
+                    <span>Instagram Reel Embed Feature</span>
+                  </h2>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Showcase Instagram Reels on your Home Page without dealing with Meta developer apps or complex APIs.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveAndSync}
+                  disabled={isSaving}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 shadow shrink-0"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{isSaving ? 'Saving...' : 'Save Reel Settings'}</span>
+                </button>
+              </div>
+
+              {/* Main Configuration Card */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+                  {/* 1. Reel URL Input */}
+                  <div className="md:col-span-8 space-y-1.5">
+                    <label className="block text-xs uppercase font-bold text-[#D4AF37] flex items-center gap-2">
+                      <Film className="w-4 h-4" />
+                      <span>Instagram Reel URL</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={formConfig.instagramReelUrl || ''}
+                      onChange={(e) => setFormConfig({ ...formConfig, instagramReelUrl: e.target.value })}
+                      placeholder="https://www.instagram.com/reel/DXtQI5Fko0_/"
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                    <div className="flex items-center justify-between text-[11px] text-stone-400 pt-1">
+                      <span>Paste any link: <code className="text-[#E5C158]">instagram.com/reel/XYZ</code>, Post, or IGTV link.</span>
+                      {formatInstagramEmbedUrl(formConfig.instagramReelUrl || '') && (
+                        <span className="text-emerald-400 font-mono">✓ Auto-converted to iframe embed</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 2. Placement Control Dropdown */}
+                  <div className="md:col-span-4 space-y-1.5">
+                    <label className="block text-xs uppercase font-bold text-[#D4AF37]">
+                      Display Position
+                    </label>
+                    <select
+                      value={formConfig.instagramReelPosition || 'below-packages'}
+                      onChange={(e) =>
+                        setFormConfig({
+                          ...formConfig,
+                          instagramReelPosition: e.target.value as ReelDisplayPosition
+                        })
+                      }
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none cursor-pointer"
+                    >
+                      <option value="below-hero">Below Hero</option>
+                      <option value="below-packages">Below Packages (Recommended)</option>
+                      <option value="above-footer">Above Footer</option>
+                      <option value="hide">Hide</option>
+                    </select>
+                    <p className="text-[11px] text-stone-400">
+                      Select where on the Home Page the Reel iframe appears.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Section Title & Subtitle */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-[#261D15]">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase font-bold text-stone-400">
+                      Section Heading Title
+                    </label>
+                    <input
+                      type="text"
+                      value={formConfig.instagramReelTitle || ''}
+                      onChange={(e) => setFormConfig({ ...formConfig, instagramReelTitle: e.target.value })}
+                      placeholder="Living Atmosphere & Sacred Flow"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase font-bold text-stone-400">
+                      Section Subtitle / Description
+                    </label>
+                    <input
+                      type="text"
+                      value={formConfig.instagramReelCaption || ''}
+                      onChange={(e) => setFormConfig({ ...formConfig, instagramReelCaption: e.target.value })}
+                      placeholder="Experience the living frequency of breathwork and sound alchemy."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* 1-Click Quick Presets from Shunya Sync's Instagram */}
+                <div className="pt-3 border-t border-[#261D15] space-y-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400">
+                    Quick Presets (From Shunya Sync's Official Instagram):
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormConfig({
+                          ...formConfig,
+                          instagramReelUrl: 'https://www.instagram.com/reel/DXtQI5Fko0_/',
+                          instagramReelTitle: 'Yoga & Mindful Movement Flow',
+                          instagramReelCaption: 'Morning asana, pranayama, and grounded somatic presence in pristine nature.'
+                        })
+                      }
+                      className="px-3 py-1.5 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs text-stone-300 hover:text-white transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>🧘 Yoga &amp; Breathwork Reel</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormConfig({
+                          ...formConfig,
+                          instagramReelUrl: 'https://www.instagram.com/reel/DXycIlIS6jH/',
+                          instagramReelTitle: 'Sacred 432Hz Sound Healing Bath',
+                          instagramReelCaption: 'Vibrational Tibetan singing bowls dissolving neural tension into theta stillness.'
+                        })
+                      }
+                      className="px-3 py-1.5 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs text-stone-300 hover:text-white transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>🥣 Sound Healing Reel</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormConfig({
+                          ...formConfig,
+                          instagramReelUrl: 'https://www.instagram.com/reel/DX6CBA9BPPH/',
+                          instagramReelTitle: 'Ecstatic Dance & Bonfire Connection',
+                          instagramReelCaption: 'Joyful movement, emotional liberation, and starlight community celebration.'
+                        })
+                      }
+                      className="px-3 py-1.5 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs text-stone-300 hover:text-white transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>🔥 Dance &amp; Bonfire Reel</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Architecture Note */}
+                <div className="p-3.5 rounded-xl bg-[#120E0A] border border-[#261D15] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-stone-400">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>
+                      100% Schema-Safe: Bundled automatically into <code className="text-[#D4AF37]">site_settings</code> JSONB. Zero Supabase table migrations needed.
+                    </span>
+                  </div>
+                  <span className="font-mono text-[#D4AF37]">
+                    Position: {formConfig.instagramReelPosition || 'below-packages'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Live Interactive Preview Box */}
+              <div className="p-6 rounded-2xl bg-[#16110B] border border-[#2E2319] space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-serif-display text-lg font-bold text-white">Live In-Admin Embed Preview</h3>
+                    <p className="text-xs text-stone-400">
+                      Real-time interactive preview of how the Reel renders on the live website.
+                    </p>
+                  </div>
+                  <span className="text-[11px] font-mono text-[#E5C158] bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/30">
+                    {formatInstagramEmbedUrl(formConfig.instagramReelUrl || '') ? '✓ Valid Embed URL' : '✕ Enter URL'}
+                  </span>
+                </div>
+
+                <div className="rounded-2xl overflow-hidden border border-[#3E2F23] bg-[#FAF8F5]">
+                  <InstagramReel
+                    isPreview={true}
+                    overrideUrl={formConfig.instagramReelUrl}
+                    overridePosition={formConfig.instagramReelPosition}
+                    config={{
+                      ...formConfig,
+                      instagramReelTitle: formConfig.instagramReelTitle,
+                      instagramReelCaption: formConfig.instagramReelCaption
+                    }}
+                  />
                 </div>
               </div>
             </div>
