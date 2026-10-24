@@ -347,6 +347,37 @@ const SUPABASE_STORAGE_KEY = 'shunya_sync_supabase_config_v3';
  * ensuring that nested structures like pricing, founders, contact, and SEO
  * never cause undefined property crashes even if legacy, partial, or headless JSONB data is retrieved.
  */
+/**
+ * Helper to pick the first valid, non-empty, non-null value from candidates.
+ * Prioritizes user input / direct mutated properties over nested stale JSONB,
+ * and only falls back to hardcoded defaults if no valid value exists anywhere.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function firstValid<T = any>(...values: (T | undefined | null)[]): T | undefined {
+  for (const v of values) {
+    if (v !== undefined && v !== null) {
+      if (typeof v === 'string') {
+        if (v.trim() !== '') return v;
+      } else if (typeof v === 'number') {
+        if (!isNaN(v)) return v;
+      } else if (typeof v === 'boolean') {
+        return v;
+      } else if (Array.isArray(v)) {
+        if (v.length > 0) return v;
+      } else if (typeof v === 'object') {
+        if (Object.keys(v).length > 0) return v;
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Normalizes and deep-validates any incoming configuration object.
+ * Strictly guarantees that user mutations and fresh uploads are never overwritten
+ * by stale nested JSONB objects or hardcoded defaults.
+ * Synchronizes top-level properties into site_settings and pages_content for 100% two-way data binding.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeSiteConfig(input: any): SiteConfig {
   if (!input || typeof input !== 'object') {
@@ -357,37 +388,45 @@ export function normalizeSiteConfig(input: any): SiteConfig {
   const settings = (input.site_settings && typeof input.site_settings === 'object') ? input.site_settings : {};
   const pages = (input.pages_content && typeof input.pages_content === 'object') ? input.pages_content : {};
 
-  // Safely construct pricing
-  const rawPricing = settings.pricing || settings.retreat_packages || pages.retreat_packages || input.retreat_packages || pages.pricing || input.pricing || {};
-  const rawPkg2 = rawPricing.pkg2n3d || {};
-  const rawPkg3 = rawPricing.pkg3n4d || rawPricing.pkg4d3n || {};
-  const rawPkg4 = rawPricing.pkg4n5d || rawPricing.pkg5d4n || {};
+  // Pricing: check input.pricing first, then JSONB packages
+  const pr = input.pricing || input.retreat_packages || {};
+  const sPr = settings.pricing || settings.retreat_packages || {};
+  const pPr = pages.pricing || pages.retreat_packages || {};
 
+  const p2 = pr.pkg2n3d || {};
+  const sp2 = sPr.pkg2n3d || {};
+  const pp2 = pPr.pkg2n3d || {};
   const pkg2Item = {
-    title: typeof rawPkg2.title === 'string' && rawPkg2.title ? rawPkg2.title : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.title,
-    twinPrice: typeof rawPkg2.twinPrice === 'number' && !isNaN(rawPkg2.twinPrice) ? rawPkg2.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.twinPrice,
-    soloPrice: typeof rawPkg2.soloPrice === 'number' && !isNaN(rawPkg2.soloPrice) ? rawPkg2.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.soloPrice,
-    badge: typeof rawPkg2.badge === 'string' && rawPkg2.badge ? rawPkg2.badge : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.badge,
-    description: typeof rawPkg2.description === 'string' && rawPkg2.description ? rawPkg2.description : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.description,
-    image: typeof rawPkg2.image === 'string' && rawPkg2.image.trim() ? rawPkg2.image : (DEFAULT_SITE_CONFIG.pricing.pkg2n3d.image || 'https://www.shunyasync.com/images/DSC05576.JPG')
+    title: firstValid(p2.title, sp2.title, pp2.title, DEFAULT_SITE_CONFIG.pricing.pkg2n3d.title)!,
+    twinPrice: firstValid(p2.twinPrice, sp2.twinPrice, pp2.twinPrice, DEFAULT_SITE_CONFIG.pricing.pkg2n3d.twinPrice)!,
+    soloPrice: firstValid(p2.soloPrice, sp2.soloPrice, pp2.soloPrice, DEFAULT_SITE_CONFIG.pricing.pkg2n3d.soloPrice)!,
+    badge: firstValid(p2.badge, sp2.badge, pp2.badge, DEFAULT_SITE_CONFIG.pricing.pkg2n3d.badge)!,
+    description: firstValid(p2.description, sp2.description, pp2.description, DEFAULT_SITE_CONFIG.pricing.pkg2n3d.description)!,
+    image: firstValid(p2.image, sp2.image, pp2.image, DEFAULT_SITE_CONFIG.pricing.pkg2n3d.image || 'https://www.shunyasync.com/images/DSC05576.JPG')!
   };
 
+  const p3 = pr.pkg3n4d || pr.pkg4d3n || {};
+  const sp3 = sPr.pkg3n4d || sPr.pkg4d3n || {};
+  const pp3 = pPr.pkg3n4d || pPr.pkg4d3n || {};
   const pkg3Item = {
-    title: typeof rawPkg3.title === 'string' && rawPkg3.title ? rawPkg3.title : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.title,
-    twinPrice: typeof rawPkg3.twinPrice === 'number' && !isNaN(rawPkg3.twinPrice) ? rawPkg3.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.twinPrice,
-    soloPrice: typeof rawPkg3.soloPrice === 'number' && !isNaN(rawPkg3.soloPrice) ? rawPkg3.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.soloPrice,
-    badge: typeof rawPkg3.badge === 'string' && rawPkg3.badge ? rawPkg3.badge : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.badge,
-    description: typeof rawPkg3.description === 'string' && rawPkg3.description ? rawPkg3.description : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.description,
-    image: typeof rawPkg3.image === 'string' && rawPkg3.image.trim() ? rawPkg3.image : (DEFAULT_SITE_CONFIG.pricing.pkg3n4d.image || 'https://www.shunyasync.com/images/DSC05503.JPG')
+    title: firstValid(p3.title, sp3.title, pp3.title, DEFAULT_SITE_CONFIG.pricing.pkg3n4d.title)!,
+    twinPrice: firstValid(p3.twinPrice, sp3.twinPrice, pp3.twinPrice, DEFAULT_SITE_CONFIG.pricing.pkg3n4d.twinPrice)!,
+    soloPrice: firstValid(p3.soloPrice, sp3.soloPrice, pp3.soloPrice, DEFAULT_SITE_CONFIG.pricing.pkg3n4d.soloPrice)!,
+    badge: firstValid(p3.badge, sp3.badge, pp3.badge, DEFAULT_SITE_CONFIG.pricing.pkg3n4d.badge)!,
+    description: firstValid(p3.description, sp3.description, pp3.description, DEFAULT_SITE_CONFIG.pricing.pkg3n4d.description)!,
+    image: firstValid(p3.image, sp3.image, pp3.image, DEFAULT_SITE_CONFIG.pricing.pkg3n4d.image || 'https://www.shunyasync.com/images/DSC05503.JPG')!
   };
 
+  const p4 = pr.pkg4n5d || pr.pkg5d4n || {};
+  const sp4 = sPr.pkg4n5d || sPr.pkg5d4n || {};
+  const pp4 = pPr.pkg4n5d || pPr.pkg5d4n || {};
   const pkg4Item = {
-    title: typeof rawPkg4.title === 'string' && rawPkg4.title ? rawPkg4.title : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.title,
-    twinPrice: typeof rawPkg4.twinPrice === 'number' && !isNaN(rawPkg4.twinPrice) ? rawPkg4.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.twinPrice,
-    soloPrice: typeof rawPkg4.soloPrice === 'number' && !isNaN(rawPkg4.soloPrice) ? rawPkg4.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.soloPrice,
-    badge: typeof rawPkg4.badge === 'string' && rawPkg4.badge ? rawPkg4.badge : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.badge,
-    description: typeof rawPkg4.description === 'string' && rawPkg4.description ? rawPkg4.description : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.description,
-    image: typeof rawPkg4.image === 'string' && rawPkg4.image.trim() ? rawPkg4.image : (DEFAULT_SITE_CONFIG.pricing.pkg4n5d.image || 'https://www.shunyasync.com/images/DSC05860.JPG')
+    title: firstValid(p4.title, sp4.title, pp4.title, DEFAULT_SITE_CONFIG.pricing.pkg4n5d.title)!,
+    twinPrice: firstValid(p4.twinPrice, sp4.twinPrice, pp4.twinPrice, DEFAULT_SITE_CONFIG.pricing.pkg4n5d.twinPrice)!,
+    soloPrice: firstValid(p4.soloPrice, sp4.soloPrice, pp4.soloPrice, DEFAULT_SITE_CONFIG.pricing.pkg4n5d.soloPrice)!,
+    badge: firstValid(p4.badge, sp4.badge, pp4.badge, DEFAULT_SITE_CONFIG.pricing.pkg4n5d.badge)!,
+    description: firstValid(p4.description, sp4.description, pp4.description, DEFAULT_SITE_CONFIG.pricing.pkg4n5d.description)!,
+    image: firstValid(p4.image, sp4.image, pp4.image, DEFAULT_SITE_CONFIG.pricing.pkg4n5d.image || 'https://www.shunyasync.com/images/DSC05860.JPG')!
   };
 
   const safePricing = {
@@ -398,179 +437,212 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     pkg5d4n: pkg4Item
   };
 
-  // 100% Dynamic Founders: Read from settings (JSONB), pages (JSONB), or raw input
-  // Never discard or override user-entered names or uploaded images
-  const rawFounder1 =
-    settings.founders?.founder1 ||
-    settings.founder1 ||
-    pages.founders?.founder1 ||
-    pages.founder1 ||
-    input.founders?.founder1 ||
-    input.founder1 ||
-    {};
-
+  // Founders: prioritize direct input mutations before nested objects
+  const f1 = input.founder1 || input.founders?.founder1 || {};
+  const sF1 = settings.founder1 || settings.founders?.founder1 || {};
+  const pF1 = pages.founder1 || pages.founders?.founder1 || {};
   const founder1 = {
-    name: typeof rawFounder1.name === 'string' && rawFounder1.name.trim() ? rawFounder1.name : DEFAULT_SITE_CONFIG.founder1.name,
-    title: typeof rawFounder1.title === 'string' ? rawFounder1.title : DEFAULT_SITE_CONFIG.founder1.title,
-    note: typeof rawFounder1.note === 'string' ? rawFounder1.note : DEFAULT_SITE_CONFIG.founder1.note,
-    bio: typeof rawFounder1.bio === 'string' ? rawFounder1.bio : DEFAULT_SITE_CONFIG.founder1.bio,
-    image: typeof rawFounder1.image === 'string' && rawFounder1.image.trim() ? rawFounder1.image : DEFAULT_SITE_CONFIG.founder1.image
+    name: firstValid(f1.name, sF1.name, pF1.name, DEFAULT_SITE_CONFIG.founder1.name)!,
+    title: firstValid(f1.title, sF1.title, pF1.title, DEFAULT_SITE_CONFIG.founder1.title)!,
+    note: firstValid(f1.note, sF1.note, pF1.note, DEFAULT_SITE_CONFIG.founder1.note)!,
+    bio: firstValid(f1.bio, sF1.bio, pF1.bio, DEFAULT_SITE_CONFIG.founder1.bio)!,
+    image: firstValid(f1.image, sF1.image, pF1.image, DEFAULT_SITE_CONFIG.founder1.image)!
   };
 
-  const rawFounder2 =
-    settings.founders?.founder2 ||
-    settings.founder2 ||
-    pages.founders?.founder2 ||
-    pages.founder2 ||
-    input.founders?.founder2 ||
-    input.founder2 ||
-    {};
-
+  const f2 = input.founder2 || input.founders?.founder2 || {};
+  const sF2 = settings.founder2 || settings.founders?.founder2 || {};
+  const pF2 = pages.founder2 || pages.founders?.founder2 || {};
   const founder2 = {
-    name: typeof rawFounder2.name === 'string' && rawFounder2.name.trim() ? rawFounder2.name : DEFAULT_SITE_CONFIG.founder2.name,
-    title: typeof rawFounder2.title === 'string' ? rawFounder2.title : DEFAULT_SITE_CONFIG.founder2.title,
-    note: typeof rawFounder2.note === 'string' ? rawFounder2.note : DEFAULT_SITE_CONFIG.founder2.note,
-    bio: typeof rawFounder2.bio === 'string' ? rawFounder2.bio : DEFAULT_SITE_CONFIG.founder2.bio,
-    image: typeof rawFounder2.image === 'string' && rawFounder2.image.trim() ? rawFounder2.image : DEFAULT_SITE_CONFIG.founder2.image
+    name: firstValid(f2.name, sF2.name, pF2.name, DEFAULT_SITE_CONFIG.founder2.name)!,
+    title: firstValid(f2.title, sF2.title, pF2.title, DEFAULT_SITE_CONFIG.founder2.title)!,
+    note: firstValid(f2.note, sF2.note, pF2.note, DEFAULT_SITE_CONFIG.founder2.note)!,
+    bio: firstValid(f2.bio, sF2.bio, pF2.bio, DEFAULT_SITE_CONFIG.founder2.bio)!,
+    image: firstValid(f2.image, sF2.image, pF2.image, DEFAULT_SITE_CONFIG.founder2.image)!
   };
 
-  // 100% Dynamic Contact: Never overwrite user-entered phone, email, or WhatsApp numbers
-  const rawContact = settings.contact || pages.contact || input.contact || {};
+  // Contact: prioritize direct input mutations
+  const c = input.contact || {};
+  const sC = settings.contact || {};
+  const pC = pages.contact || {};
   const contact = {
-    phone: typeof rawContact.phone === 'string' && rawContact.phone.trim() ? rawContact.phone : DEFAULT_SITE_CONFIG.contact.phone,
-    whatsappNumber: typeof rawContact.whatsappNumber === 'string' && rawContact.whatsappNumber.trim() ? rawContact.whatsappNumber : DEFAULT_SITE_CONFIG.contact.whatsappNumber,
-    email: typeof rawContact.email === 'string' && rawContact.email.trim() ? rawContact.email : DEFAULT_SITE_CONFIG.contact.email,
-    location: typeof rawContact.location === 'string' && rawContact.location.trim() ? rawContact.location : DEFAULT_SITE_CONFIG.contact.location,
-    address: typeof rawContact.address === 'string' ? rawContact.address : (DEFAULT_SITE_CONFIG.contact.address || '')
+    phone: firstValid(c.phone, sC.phone, pC.phone, DEFAULT_SITE_CONFIG.contact.phone)!,
+    whatsappNumber: firstValid(c.whatsappNumber, sC.whatsappNumber, pC.whatsappNumber, DEFAULT_SITE_CONFIG.contact.whatsappNumber)!,
+    email: firstValid(c.email, sC.email, pC.email, DEFAULT_SITE_CONFIG.contact.email)!,
+    location: firstValid(c.location, sC.location, pC.location, DEFAULT_SITE_CONFIG.contact.location)!,
+    address: firstValid(c.address, sC.address, pC.address, DEFAULT_SITE_CONFIG.contact.address || '')!
   };
 
-  // 100% Dynamic Gallery Images
-  const rawGallery = settings.galleryImages || pages.galleryImages || input.galleryImages || input.gallery_images;
-  const galleryImages = Array.isArray(rawGallery) && rawGallery.length > 0
-    ? rawGallery
-    : DEFAULT_SITE_CONFIG.galleryImages;
+  // Gallery: prioritize direct input
+  const galleryImages = firstValid(input.galleryImages, input.gallery_images, pages.galleryImages, settings.galleryImages, DEFAULT_SITE_CONFIG.galleryImages)!;
 
-  // 100% Dynamic SEO & Geo Tags
-  const rawSeo = settings.seo_geo_tags || pages.seo_geo_tags || input.seo_geo_tags || settings.seo || input.seo;
+  // SEO & Geo Tags
+  const rawSeo = input.seo || input.seo_geo_tags || settings.seo_geo_tags || pages.seo_geo_tags || settings.seo;
   const seo = {
     ...DEFAULT_SEO_CONFIG,
     ...(rawSeo || {})
   };
 
-  // 100% Dynamic Why Choose Us
-  const rawWhy = settings.whyChooseUs || pages.whyChooseUs || input.whyChooseUs || input.why_choose_us || {};
+  // Why Choose Us
+  const w = input.whyChooseUs || input.why_choose_us || {};
+  const sW = settings.whyChooseUs || {};
+  const pW = pages.whyChooseUs || {};
   const whyChooseUs = {
-    eyebrow: typeof rawWhy.eyebrow === 'string' && rawWhy.eyebrow.trim() ? rawWhy.eyebrow : (DEFAULT_SITE_CONFIG.whyChooseUs?.eyebrow || 'WHY SHUNYA SYNC'),
-    headingPrefix: typeof rawWhy.headingPrefix === 'string' ? rawWhy.headingPrefix : (DEFAULT_SITE_CONFIG.whyChooseUs?.headingPrefix || 'Why'),
-    headingHighlight: typeof rawWhy.headingHighlight === 'string' ? rawWhy.headingHighlight : (DEFAULT_SITE_CONFIG.whyChooseUs?.headingHighlight || 'Choose Us'),
-    bgImage: typeof rawWhy.bgImage === 'string' && rawWhy.bgImage.trim() ? rawWhy.bgImage : (DEFAULT_SITE_CONFIG.whyChooseUs?.bgImage || 'https://www.shunyasync.com/images/DSC05962.JPG'),
-    cards: Array.isArray(rawWhy.cards) && rawWhy.cards.length > 0 ? rawWhy.cards : (DEFAULT_SITE_CONFIG.whyChooseUs?.cards || [])
+    eyebrow: firstValid(w.eyebrow, sW.eyebrow, pW.eyebrow, DEFAULT_SITE_CONFIG.whyChooseUs?.eyebrow || 'WHY SHUNYA SYNC')!,
+    headingPrefix: firstValid(w.headingPrefix, sW.headingPrefix, pW.headingPrefix, DEFAULT_SITE_CONFIG.whyChooseUs?.headingPrefix || 'Why')!,
+    headingHighlight: firstValid(w.headingHighlight, sW.headingHighlight, pW.headingHighlight, DEFAULT_SITE_CONFIG.whyChooseUs?.headingHighlight || 'Choose Us')!,
+    bgImage: firstValid(w.bgImage, sW.bgImage, pW.bgImage, DEFAULT_SITE_CONFIG.whyChooseUs?.bgImage || 'https://www.shunyasync.com/images/DSC05962.JPG')!,
+    cards: firstValid(w.cards, sW.cards, pW.cards, DEFAULT_SITE_CONFIG.whyChooseUs?.cards || [])!
   };
 
-  // 100% Dynamic Hero Settings
-  const rawHeroBg = settings.heroBgImage || pages.heroBgImage || input.heroBgImage || input.hero_bg_image;
-  const heroBgImage = typeof rawHeroBg === 'string' && rawHeroBg.trim() ? rawHeroBg : DEFAULT_SITE_CONFIG.heroBgImage;
+  // Hero Section: direct input MUST take precedence over stale JSONB/defaults
+  const heroBgImage = firstValid(input.heroBgImage, input.hero_bg_image, pages.heroBgImage, settings.heroBgImage, DEFAULT_SITE_CONFIG.heroBgImage)!;
+  const heroHeadline = firstValid(input.heroHeadline, input.hero_headline, pages.heroHeadline, settings.heroHeadline, DEFAULT_SITE_CONFIG.heroHeadline)!;
+  const heroSubheadline = firstValid(input.heroSubheadline, input.hero_subheadline, pages.heroSubheadline, settings.heroSubheadline, DEFAULT_SITE_CONFIG.heroSubheadline)!;
+  const heroTags = firstValid(input.heroTags, input.hero_tags, pages.heroTags, settings.heroTags, DEFAULT_SITE_CONFIG.heroTags)!;
+  const heroBadge = firstValid(input.heroBadge, input.hero_badge, pages.heroBadge, settings.heroBadge, DEFAULT_SITE_CONFIG.heroBadge || 'COHORT 2026')!;
+  const heroQuote = firstValid(input.heroQuote, input.hero_quote, pages.heroQuote, settings.heroQuote, DEFAULT_SITE_CONFIG.heroQuote)!;
 
-  const rawHeroHeadline = settings.heroHeadline || pages.heroHeadline || input.heroHeadline || input.hero_headline;
-  const heroHeadline = typeof rawHeroHeadline === 'string' && rawHeroHeadline.trim() ? rawHeroHeadline : DEFAULT_SITE_CONFIG.heroHeadline;
+  // Brand & Header
+  const brandName = firstValid(input.brandName, input.brand_name, settings.brandName, pages.brandName, DEFAULT_SITE_CONFIG.brandName)!;
+  const brandSubtitle = firstValid(input.brandSubtitle, input.brand_subtitle, settings.brandSubtitle, pages.brandSubtitle, DEFAULT_SITE_CONFIG.brandSubtitle)!;
+  const tagline = firstValid(input.tagline, settings.tagline, pages.tagline, DEFAULT_SITE_CONFIG.tagline)!;
+  const headerAnnouncement = firstValid(input.headerAnnouncement, input.header_announcement, settings.headerAnnouncement, pages.headerAnnouncement, DEFAULT_SITE_CONFIG.headerAnnouncement)!;
+  const logoUrl = firstValid(input.logoUrl, input.logo_url, settings.logoUrl, pages.logoUrl, DEFAULT_SITE_CONFIG.logoUrl)!;
+  const showLogoIcon = input.showLogoIcon !== undefined
+    ? Boolean(input.showLogoIcon)
+    : (settings.showLogoIcon !== undefined
+      ? Boolean(settings.showLogoIcon)
+      : (pages.showLogoIcon !== undefined
+        ? Boolean(pages.showLogoIcon)
+        : (input.show_logo_icon !== undefined ? Boolean(input.show_logo_icon) : true)));
 
-  const rawHeroSubheadline = settings.heroSubheadline || pages.heroSubheadline || input.heroSubheadline || input.hero_subheadline;
-  const heroSubheadline = typeof rawHeroSubheadline === 'string' && rawHeroSubheadline.trim() ? rawHeroSubheadline : DEFAULT_SITE_CONFIG.heroSubheadline;
+  const adminPin = firstValid(input.adminPin, input.admin_pin, settings.adminPin, pages.adminPin, DEFAULT_SITE_CONFIG.adminPin || '7788')!;
 
-  const rawHeroTags = settings.heroTags || pages.heroTags || input.heroTags || input.hero_tags;
-  const heroTags = Array.isArray(rawHeroTags) && rawHeroTags.length > 0 ? rawHeroTags : DEFAULT_SITE_CONFIG.heroTags;
-
-  const rawHeroBadge = settings.heroBadge || pages.heroBadge || input.heroBadge || input.hero_badge;
-  const heroBadge = typeof rawHeroBadge === 'string' ? rawHeroBadge : (DEFAULT_SITE_CONFIG.heroBadge || 'COHORT 2026');
-
-  const rawHeroQuote = settings.heroQuote || pages.heroQuote || input.heroQuote || input.hero_quote;
-  const heroQuote = typeof rawHeroQuote === 'string' ? rawHeroQuote : DEFAULT_SITE_CONFIG.heroQuote;
-
-  // 100% Dynamic Brand & Header
-  const rawBrand = settings.brandName || pages.brandName || input.brandName || input.brand_name;
-  const brandName = typeof rawBrand === 'string' && rawBrand.trim() ? rawBrand : DEFAULT_SITE_CONFIG.brandName;
-
-  const rawBrandSub = settings.brandSubtitle || pages.brandSubtitle || input.brandSubtitle || input.brand_subtitle;
-  const brandSubtitle = typeof rawBrandSub === 'string' ? rawBrandSub : DEFAULT_SITE_CONFIG.brandSubtitle;
-
-  const rawTagline = settings.tagline || pages.tagline || input.tagline;
-  const tagline = typeof rawTagline === 'string' && rawTagline.trim() ? rawTagline : DEFAULT_SITE_CONFIG.tagline;
-
-  const rawAnnounce = settings.headerAnnouncement ?? pages.headerAnnouncement ?? input.headerAnnouncement ?? input.header_announcement;
-  const headerAnnouncement = typeof rawAnnounce === 'string' ? rawAnnounce : DEFAULT_SITE_CONFIG.headerAnnouncement;
-
-  const rawLogo = settings.logoUrl || pages.logoUrl || input.logoUrl || input.logo_url;
-  const logoUrl = typeof rawLogo === 'string' && rawLogo.trim() ? rawLogo : DEFAULT_SITE_CONFIG.logoUrl;
-
-  const showLogoIcon = settings.showLogoIcon !== undefined
-    ? Boolean(settings.showLogoIcon)
-    : (pages.showLogoIcon !== undefined
-      ? Boolean(pages.showLogoIcon)
-      : (input.showLogoIcon !== undefined
-        ? Boolean(input.showLogoIcon)
-        : true));
-
-  // 100% Dynamic Narratives
-  const aboutText = settings.aboutText || pages.aboutText || input.aboutText || input.about_text || DEFAULT_SITE_CONFIG.aboutText;
-  const philosophyQuote = settings.philosophyQuote ?? pages.philosophyQuote ?? input.philosophyQuote ?? input.philosophy_quote ?? DEFAULT_SITE_CONFIG.philosophyQuote;
-  const whyWeStarted = settings.whyWeStarted || pages.whyWeStarted || input.whyWeStarted || input.why_we_started || DEFAULT_SITE_CONFIG.whyWeStarted;
-  const whatMakesUsDifferent = settings.whatMakesUsDifferent || pages.whatMakesUsDifferent || input.whatMakesUsDifferent || input.what_makes_us_different || DEFAULT_SITE_CONFIG.whatMakesUsDifferent;
-  const footerDescription = settings.footerDescription || pages.footerDescription || input.footerDescription || input.footer_description || DEFAULT_SITE_CONFIG.footerDescription;
-  const footerCopyright = settings.footerCopyright || pages.footerCopyright || input.footerCopyright || input.footer_copyright || DEFAULT_SITE_CONFIG.footerCopyright;
+  // Narratives & Descriptions
+  const aboutText = firstValid(input.aboutText, input.about_text, pages.aboutText, settings.aboutText, DEFAULT_SITE_CONFIG.aboutText)!;
+  const philosophyQuote = firstValid(input.philosophyQuote, input.philosophy_quote, pages.philosophyQuote, settings.philosophyQuote, DEFAULT_SITE_CONFIG.philosophyQuote)!;
+  const whyWeStarted = firstValid(input.whyWeStarted, input.why_we_started, pages.whyWeStarted, settings.whyWeStarted, DEFAULT_SITE_CONFIG.whyWeStarted)!;
+  const whatMakesUsDifferent = firstValid(input.whatMakesUsDifferent, input.what_makes_us_different, pages.whatMakesUsDifferent, settings.whatMakesUsDifferent, DEFAULT_SITE_CONFIG.whatMakesUsDifferent)!;
+  const footerDescription = firstValid(input.footerDescription, input.footer_description, pages.footerDescription, settings.footerDescription, DEFAULT_SITE_CONFIG.footerDescription)!;
+  const footerCopyright = firstValid(input.footerCopyright, input.footer_copyright, pages.footerCopyright, settings.footerCopyright, DEFAULT_SITE_CONFIG.footerCopyright)!;
 
   // Blog Posts
-  const rawBlogs = settings.blog_posts || settings.blogPosts || pages.blog_posts || input.blog_posts || input.blogPosts;
-  const blogPosts = Array.isArray(rawBlogs) && rawBlogs.length > 0
-    ? rawBlogs
-    : DEFAULT_SITE_CONFIG.blogPosts || DEFAULT_BLOG_POSTS;
+  const rawBlogs = firstValid(input.blogPosts, input.blog_posts, pages.blog_posts, settings.blog_posts, settings.blogPosts);
+  const blogPosts = Array.isArray(rawBlogs) && rawBlogs.length > 0 ? rawBlogs : (DEFAULT_SITE_CONFIG.blogPosts || DEFAULT_BLOG_POSTS);
 
-  // Dynamic Instagram Reel Embed
-  const instagramReelUrl = settings.instagramReelUrl || pages.instagramReelUrl || input.instagramReelUrl || (input.instagramReel as any)?.url || DEFAULT_SITE_CONFIG.instagramReelUrl;
-  const instagramReelPosition = (settings.instagramReelPosition || pages.instagramReelPosition || input.instagramReelPosition || (input.instagramReel as any)?.position || DEFAULT_SITE_CONFIG.instagramReelPosition) as any;
-  const instagramReelTitle = settings.instagramReelTitle || pages.instagramReelTitle || input.instagramReelTitle || (input.instagramReel as any)?.title || DEFAULT_SITE_CONFIG.instagramReelTitle;
-  const instagramReelCaption = settings.instagramReelCaption || pages.instagramReelCaption || input.instagramReelCaption || (input.instagramReel as any)?.caption || DEFAULT_SITE_CONFIG.instagramReelCaption;
+  // Instagram Reel
+  const reelObj = input.instagramReel || {};
+  const sReelObj = settings.instagramReel || {};
+  const pReelObj = pages.instagramReel || {};
+  const instagramReelUrl = firstValid(input.instagramReelUrl, reelObj.url, settings.instagramReelUrl, sReelObj.url, pages.instagramReelUrl, pReelObj.url, DEFAULT_SITE_CONFIG.instagramReelUrl)!;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const instagramReelPosition = firstValid(input.instagramReelPosition, reelObj.position, settings.instagramReelPosition, sReelObj.position, pages.instagramReelPosition, pReelObj.position, DEFAULT_SITE_CONFIG.instagramReelPosition) as any;
+  const instagramReelTitle = firstValid(input.instagramReelTitle, reelObj.title, settings.instagramReelTitle, sReelObj.title, pages.instagramReelTitle, pReelObj.title, DEFAULT_SITE_CONFIG.instagramReelTitle)!;
+  const instagramReelCaption = firstValid(input.instagramReelCaption, reelObj.caption, settings.instagramReelCaption, sReelObj.caption, pages.instagramReelCaption, pReelObj.caption, DEFAULT_SITE_CONFIG.instagramReelCaption)!;
 
-  // 100% Dynamic Refund Policy
-  const rawRefund = settings.refundPolicy || pages.refundPolicy || input.refundPolicy || {};
+  // Refund Policy
+  const ref = input.refundPolicy || {};
+  const sRef = settings.refundPolicy || {};
+  const pRef = pages.refundPolicy || {};
   const refundPolicy = {
-    under30Days: typeof rawRefund.under30Days === 'string' && rawRefund.under30Days.trim() ? rawRefund.under30Days : DEFAULT_SITE_CONFIG.refundPolicy?.under30Days || 'Under 30 days: Non refundable',
-    under45Days: typeof rawRefund.under45Days === 'string' && rawRefund.under45Days.trim() ? rawRefund.under45Days : DEFAULT_SITE_CONFIG.refundPolicy?.under45Days || 'Under 45 days: 25% refund',
-    advancePaymentPolicy: typeof rawRefund.advancePaymentPolicy === 'string' && rawRefund.advancePaymentPolicy.trim() ? rawRefund.advancePaymentPolicy : DEFAULT_SITE_CONFIG.refundPolicy?.advancePaymentPolicy || 'Retreat Payment should be 30 days in advance.',
-    customNotes: typeof rawRefund.customNotes === 'string' ? rawRefund.customNotes : DEFAULT_SITE_CONFIG.refundPolicy?.customNotes || ''
+    under30Days: firstValid(ref.under30Days, sRef.under30Days, pRef.under30Days, DEFAULT_SITE_CONFIG.refundPolicy?.under30Days || 'Under 30 days: Non refundable')!,
+    under45Days: firstValid(ref.under45Days, sRef.under45Days, pRef.under45Days, DEFAULT_SITE_CONFIG.refundPolicy?.under45Days || 'Under 45 days: 25% refund')!,
+    advancePaymentPolicy: firstValid(ref.advancePaymentPolicy, sRef.advancePaymentPolicy, pRef.advancePaymentPolicy, DEFAULT_SITE_CONFIG.refundPolicy?.advancePaymentPolicy || 'Retreat Payment should be 30 days in advance.')!,
+    customNotes: firstValid(ref.customNotes, sRef.customNotes, pRef.customNotes, DEFAULT_SITE_CONFIG.refundPolicy?.customNotes || '')!
   };
 
-  return {
-    ...input,
-    ...pages,
+  // Synchronized Headless JSONB Bundles:
+  // Strictly mirrors all latest values so site_settings and pages_content never drift
+  const synchronizedSiteSettings = {
     ...settings,
-
     brandName,
     brandSubtitle,
     tagline,
     headerAnnouncement,
     logoUrl,
     showLogoIcon,
-    adminPin: settings.adminPin || pages.adminPin || input.adminPin || input.admin_pin || DEFAULT_SITE_CONFIG.adminPin || '7788',
-
-    heroHeadline,
-    heroSubheadline,
-    heroBgImage,
-    heroTags,
-    heroBadge,
-    heroQuote,
-
-    aboutText,
-    philosophyQuote,
-    whyWeStarted,
-    whatMakesUsDifferent,
-
+    adminPin,
+    contact,
     founder1,
     founder2,
     founders: {
       founder1,
       founder2
     },
+    heroBgImage,
+    pricing: safePricing,
+    retreat_packages: safePricing,
+    refundPolicy,
+    seo_geo_tags: seo,
+    instagramReelUrl,
+    instagramReelPosition,
+    instagramReelTitle,
+    instagramReelCaption,
+    instagramReel: {
+      url: instagramReelUrl,
+      position: instagramReelPosition,
+      title: instagramReelTitle,
+      caption: instagramReelCaption
+    }
+  };
 
+  const synchronizedPagesContent = {
+    ...pages,
+    heroHeadline,
+    heroSubheadline,
+    heroBgImage,
+    heroTags,
+    heroBadge,
+    heroQuote,
+    aboutText,
+    philosophyQuote,
+    whyWeStarted,
+    whatMakesUsDifferent,
+    whyChooseUs,
+    founder1,
+    founder2,
+    founders: {
+      founder1,
+      founder2
+    },
+    pricing: safePricing,
+    retreat_packages: safePricing,
+    galleryImages,
+    blog_posts: blogPosts,
+    footerDescription,
+    footerCopyright,
+    refundPolicy,
+    instagramReelUrl,
+    instagramReelPosition,
+    instagramReelTitle,
+    instagramReelCaption
+  };
+
+  return {
+    ...input,
+    brandName,
+    brandSubtitle,
+    tagline,
+    headerAnnouncement,
+    logoUrl,
+    showLogoIcon,
+    adminPin,
+    heroHeadline,
+    heroSubheadline,
+    heroBgImage,
+    heroTags,
+    heroBadge,
+    heroQuote,
+    aboutText,
+    philosophyQuote,
+    whyWeStarted,
+    whatMakesUsDifferent,
+    founder1,
+    founder2,
+    founders: {
+      founder1,
+      founder2
+    },
     pricing: safePricing,
     retreat_packages: safePricing,
     contact,
@@ -579,18 +651,20 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     whyChooseUs,
     blogPosts,
     refundPolicy,
-
     footerDescription,
     footerCopyright,
-
     instagramReelUrl,
     instagramReelPosition,
     instagramReelTitle,
     instagramReelCaption,
-
-    // Reference to original JSONB bundles
-    site_settings: settings,
-    pages_content: pages
+    instagramReel: {
+      url: instagramReelUrl,
+      position: instagramReelPosition,
+      title: instagramReelTitle,
+      caption: instagramReelCaption
+    },
+    site_settings: synchronizedSiteSettings,
+    pages_content: synchronizedPagesContent
   };
 }
 
@@ -872,10 +946,21 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
     refundPolicy: config.refundPolicy || DEFAULT_SITE_CONFIG.refundPolicy,
     retreat_packages: config.pricing,
     pricing: config.pricing,
+    heroBgImage: config.heroBgImage,
+    heroHeadline: config.heroHeadline,
+    heroSubheadline: config.heroSubheadline,
+    whyChooseUs: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs,
+    galleryImages: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
     instagramReelUrl: config.instagramReelUrl,
     instagramReelPosition: config.instagramReelPosition || 'below-packages',
     instagramReelTitle: config.instagramReelTitle,
-    instagramReelCaption: config.instagramReelCaption
+    instagramReelCaption: config.instagramReelCaption,
+    instagramReel: config.instagramReel || {
+      url: config.instagramReelUrl,
+      position: config.instagramReelPosition || 'below-packages',
+      title: config.instagramReelTitle,
+      caption: config.instagramReelCaption
+    }
   };
 
   // 2. Bundle all page narratives, hero typography, quotes, and sections into pages_content (JSONB)

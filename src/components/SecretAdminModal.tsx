@@ -118,10 +118,12 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
   const [isCheckingBucket, setIsCheckingBucket] = useState(false);
   const [bucketStatus, setBucketStatus] = useState<{ checked: boolean; exists: boolean; message: string } | null>(null);
 
-  // Sync state if config props change
+  // Sync state if config props change from outside
   React.useEffect(() => {
-    setFormConfig(normalizeSiteConfig(config));
-  }, [config]);
+    if (!uploadingField && !isSaving) {
+      setFormConfig(normalizeSiteConfig(config));
+    }
+  }, [config, uploadingField, isSaving]);
 
   if (!isOpen) return null;
 
@@ -210,28 +212,68 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
 
   // Helper to apply image URL to target config field
   const applyImageToField = (field: string, imageUrl: string) => {
-    if (field === 'heroBgImage') {
-      setFormConfig((prev) => ({ ...prev, heroBgImage: imageUrl }));
-    } else if (field === 'founder1') {
-      setFormConfig((prev) => ({
-        ...prev,
-        founder1: { ...prev.founder1, image: imageUrl }
-      }));
-    } else if (field === 'founder2') {
-      setFormConfig((prev) => ({
-        ...prev,
-        founder2: { ...prev.founder2, image: imageUrl }
-      }));
-    } else if (field.startsWith('gallery_')) {
-      const idx = parseInt(field.replace('gallery_', ''), 10);
-      setFormConfig((prev) => {
+    setFormConfig((prev) => {
+      let nextConfig = { ...prev };
+      if (field === 'heroBgImage') {
+        nextConfig = {
+          ...prev,
+          heroBgImage: imageUrl,
+          site_settings: { ...(prev.site_settings || {}), heroBgImage: imageUrl },
+          pages_content: { ...(prev.pages_content || {}), heroBgImage: imageUrl }
+        };
+      } else if (field === 'founder1') {
+        const updated = { ...prev.founder1, image: imageUrl };
+        nextConfig = {
+          ...prev,
+          founder1: updated,
+          founders: { ...(prev.founders || {}), founder1: updated },
+          site_settings: {
+            ...(prev.site_settings || {}),
+            founder1: updated,
+            founders: { ...((prev.site_settings as any)?.founders || {}), founder1: updated }
+          },
+          pages_content: {
+            ...(prev.pages_content || {}),
+            founder1: updated,
+            founders: { ...((prev.pages_content as any)?.founders || {}), founder1: updated }
+          }
+        };
+      } else if (field === 'founder2') {
+        const updated = { ...prev.founder2, image: imageUrl };
+        nextConfig = {
+          ...prev,
+          founder2: updated,
+          founders: { ...(prev.founders || {}), founder2: updated },
+          site_settings: {
+            ...(prev.site_settings || {}),
+            founder2: updated,
+            founders: { ...((prev.site_settings as any)?.founders || {}), founder2: updated }
+          },
+          pages_content: {
+            ...(prev.pages_content || {}),
+            founder2: updated,
+            founders: { ...((prev.pages_content as any)?.founders || {}), founder2: updated }
+          }
+        };
+      } else if (field.startsWith('gallery_')) {
+        const idx = parseInt(field.replace('gallery_', ''), 10);
         const currentGallery = [...(prev.galleryImages || DEFAULT_SITE_CONFIG.galleryImages || [])];
         if (currentGallery[idx]) {
           currentGallery[idx] = { ...currentGallery[idx], url: imageUrl };
         }
-        return { ...prev, galleryImages: currentGallery };
-      });
-    }
+        nextConfig = {
+          ...prev,
+          galleryImages: currentGallery,
+          site_settings: { ...(prev.site_settings || {}), galleryImages: currentGallery },
+          pages_content: { ...(prev.pages_content || {}), galleryImages: currentGallery }
+        };
+      }
+      const normalized = normalizeSiteConfig(nextConfig);
+      saveStoredSiteConfig(normalized);
+      onUpdateConfig(normalized);
+      syncConfigToSupabase(normalized).catch(console.warn);
+      return normalized;
+    });
   };
 
   // Direct File Upload from Computer / Mobile device to Supabase Storage
@@ -355,14 +397,17 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
     setIsSaving(true);
     setSaveStatus(null);
 
+    const normalized = normalizeSiteConfig(formConfig);
+    setFormConfig(normalized);
+
     // 1. Save to LocalStorage immediately
-    saveStoredSiteConfig(formConfig);
-    onUpdateConfig(formConfig);
+    saveStoredSiteConfig(normalized);
+    onUpdateConfig(normalized);
     saveStoredSupabaseConfig(supabaseCfg);
 
     // 2. Persist to Supabase Database
     try {
-      const result = await syncConfigToSupabase(formConfig);
+      const result = await syncConfigToSupabase(normalized);
       if (result.success) {
         setSaveStatus({ type: 'success', message: 'Saved to LocalStorage and synced to Supabase Cloud!' });
       } else {

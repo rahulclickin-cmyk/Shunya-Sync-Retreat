@@ -149,10 +149,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     published: true
   });
 
-  // Keep state in sync if prop changes
+  // Keep state in sync if prop changes from outside (e.g. initial Supabase remote load)
   React.useEffect(() => {
-    setFormConfig(normalizeSiteConfig(config));
-  }, [config]);
+    if (!uploadingField && !isSaving) {
+      setFormConfig(normalizeSiteConfig(config));
+    }
+  }, [config, uploadingField, isSaving]);
 
   // Handle Unlock / Login (Requires Cloudflare Turnstile token + Valid PIN)
   const handleUnlock = (e: React.FormEvent) => {
@@ -229,69 +231,120 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     let nextConfig = { ...formConfig };
 
     if (field === 'logoUrl') {
-      nextConfig = { ...formConfig, logoUrl: url };
-    } else if (field === 'heroBgImage') {
-      nextConfig = { ...formConfig, heroBgImage: url };
-    } else if (field === 'founder1') {
       nextConfig = {
         ...formConfig,
-        founder1: { ...formConfig.founder1, image: url }
+        logoUrl: url,
+        site_settings: { ...(formConfig.site_settings || {}), logoUrl: url },
+        pages_content: { ...(formConfig.pages_content || {}), logoUrl: url }
+      };
+    } else if (field === 'heroBgImage') {
+      nextConfig = {
+        ...formConfig,
+        heroBgImage: url,
+        site_settings: { ...(formConfig.site_settings || {}), heroBgImage: url },
+        pages_content: { ...(formConfig.pages_content || {}), heroBgImage: url }
+      };
+    } else if (field === 'founder1') {
+      const updatedFounder = { ...formConfig.founder1, image: url };
+      nextConfig = {
+        ...formConfig,
+        founder1: updatedFounder,
+        founders: { ...(formConfig.founders || {}), founder1: updatedFounder },
+        site_settings: {
+          ...(formConfig.site_settings || {}),
+          founder1: updatedFounder,
+          founders: { ...((formConfig.site_settings as any)?.founders || {}), founder1: updatedFounder }
+        },
+        pages_content: {
+          ...(formConfig.pages_content || {}),
+          founder1: updatedFounder,
+          founders: { ...((formConfig.pages_content as any)?.founders || {}), founder1: updatedFounder }
+        }
       };
     } else if (field === 'founder2') {
+      const updatedFounder = { ...formConfig.founder2, image: url };
       nextConfig = {
         ...formConfig,
-        founder2: { ...formConfig.founder2, image: url }
+        founder2: updatedFounder,
+        founders: { ...(formConfig.founders || {}), founder2: updatedFounder },
+        site_settings: {
+          ...(formConfig.site_settings || {}),
+          founder2: updatedFounder,
+          founders: { ...((formConfig.site_settings as any)?.founders || {}), founder2: updatedFounder }
+        },
+        pages_content: {
+          ...(formConfig.pages_content || {}),
+          founder2: updatedFounder,
+          founders: { ...((formConfig.pages_content as any)?.founders || {}), founder2: updatedFounder }
+        }
       };
     } else if (field === 'blogImage') {
       setBlogFormData((prev) => ({ ...prev, image: url }));
       return;
     } else if (field === 'whyBgImage') {
+      const updatedWhy = {
+        ...(formConfig.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs!),
+        bgImage: url
+      };
       nextConfig = {
         ...formConfig,
-        whyChooseUs: {
-          ...formConfig.whyChooseUs,
-          bgImage: url
-        }
+        whyChooseUs: updatedWhy,
+        site_settings: { ...(formConfig.site_settings || {}), whyChooseUs: updatedWhy },
+        pages_content: { ...(formConfig.pages_content || {}), whyChooseUs: updatedWhy }
       };
     } else if (field === 'pkg2n3d_image') {
+      const updatedPkg = { ...formConfig.pricing.pkg2n3d, image: url };
+      const updatedPricing = { ...formConfig.pricing, pkg2n3d: updatedPkg };
       nextConfig = {
         ...formConfig,
-        pricing: {
-          ...formConfig.pricing,
-          pkg2n3d: { ...formConfig.pricing.pkg2n3d, image: url }
-        }
+        pricing: updatedPricing,
+        retreat_packages: updatedPricing,
+        site_settings: { ...(formConfig.site_settings || {}), pricing: updatedPricing, retreat_packages: updatedPricing },
+        pages_content: { ...(formConfig.pages_content || {}), pricing: updatedPricing, retreat_packages: updatedPricing }
       };
     } else if (field === 'pkg3n4d_image') {
+      const updatedPkg = { ...formConfig.pricing.pkg3n4d, image: url };
+      const updatedPricing = { ...formConfig.pricing, pkg3n4d: updatedPkg, pkg4d3n: updatedPkg };
       nextConfig = {
         ...formConfig,
-        pricing: {
-          ...formConfig.pricing,
-          pkg3n4d: { ...formConfig.pricing.pkg3n4d, image: url },
-          pkg4d3n: { ...formConfig.pricing.pkg4d3n, image: url }
-        }
+        pricing: updatedPricing,
+        retreat_packages: updatedPricing,
+        site_settings: { ...(formConfig.site_settings || {}), pricing: updatedPricing, retreat_packages: updatedPricing },
+        pages_content: { ...(formConfig.pages_content || {}), pricing: updatedPricing, retreat_packages: updatedPricing }
       };
     } else if (field === 'pkg4n5d_image') {
+      const updatedPkg = { ...formConfig.pricing.pkg4n5d, image: url };
+      const updatedPricing = { ...formConfig.pricing, pkg4n5d: updatedPkg, pkg5d4n: updatedPkg };
       nextConfig = {
         ...formConfig,
-        pricing: {
-          ...formConfig.pricing,
-          pkg4n5d: { ...formConfig.pricing.pkg4n5d, image: url },
-          pkg5d4n: { ...formConfig.pricing.pkg5d4n, image: url }
-        }
+        pricing: updatedPricing,
+        retreat_packages: updatedPricing,
+        site_settings: { ...(formConfig.site_settings || {}), pricing: updatedPricing, retreat_packages: updatedPricing },
+        pages_content: { ...(formConfig.pages_content || {}), pricing: updatedPricing, retreat_packages: updatedPricing }
       };
     } else if (field.startsWith('gallery_')) {
       const idx = parseInt(field.replace('gallery_', ''), 10);
       const updated = [...(formConfig.galleryImages || [])];
       if (updated[idx]) {
         updated[idx] = { ...updated[idx], url };
-        nextConfig = { ...formConfig, galleryImages: updated };
+        nextConfig = {
+          ...formConfig,
+          galleryImages: updated,
+          site_settings: { ...(formConfig.site_settings || {}), galleryImages: updated },
+          pages_content: { ...(formConfig.pages_content || {}), galleryImages: updated }
+        };
       }
     }
 
-    setFormConfig(nextConfig);
+    const normalized = normalizeSiteConfig(nextConfig);
+    setFormConfig(normalized);
     if (autoSave) {
-      saveStoredSiteConfig(nextConfig);
-      onUpdateConfig(nextConfig);
+      saveStoredSiteConfig(normalized);
+      onUpdateConfig(normalized);
+      // Asynchronously push to Supabase to keep cloud database 100% in sync with image upload
+      syncConfigToSupabase(normalized).catch((err) => {
+        console.warn('Background Supabase sync notice:', err);
+      });
     }
   };
 
@@ -674,7 +727,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
           {[
             { id: 'overview', label: 'Overview & Status', icon: Layers },
-            { id: 'branding', label: 'Logo & Brand Identity', icon: Sparkles },
+            { id: 'branding', label: 'Header & Footer Logo', icon: Sparkles },
             { id: 'hero', label: 'Hero & Headlines', icon: ImageIcon },
             { id: 'founders', label: 'Founders & Bios', icon: User },
             { id: 'pricing', label: 'Pricing & Packages', icon: DollarSign },
@@ -768,11 +821,98 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
               </div>
 
+              {/* Prominent Header & Footer Website Logo Controller on Overview */}
+              <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1C150F] to-[#2B1F16] border-2 border-[#D4AF37]/50 space-y-4 shadow-lg">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#3E2F23] pb-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+                    <div>
+                      <h3 className="font-serif-display text-xl font-bold text-white">
+                        Header &amp; Footer Website Logo
+                      </h3>
+                      <p className="text-xs text-stone-400">Controls the official brand emblem shown on both the top header and bottom footer.</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#E5C158] border border-[#D4AF37]/30 self-start sm:self-auto shrink-0">
+                    {formConfig.showLogoIcon !== false ? '✓ Visible in Header & Footer' : '✕ Hidden on Site'}
+                  </span>
+                </div>
+
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  {/* Clean transparent logo preview without circle or border */}
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center shrink-0 p-2 rounded-2xl bg-[#120E0A] border border-[#3E2F23]">
+                    {formConfig.showLogoIcon !== false ? (
+                      <img
+                        src={formConfig.logoUrl || '/logo_original.png'}
+                        alt="Current Website Logo"
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-xs text-stone-500">Logo Hidden</span>
+                    )}
+                  </div>
+
+                  <div className="space-y-3 flex-1 w-full">
+                    <div>
+                      <label className="block text-xs uppercase font-bold text-stone-300 mb-1">
+                        Logo Image URL / Path (Updates Header &amp; Footer immediately)
+                      </label>
+                      <input
+                        type="text"
+                        value={formConfig.logoUrl || '/logo_original.png'}
+                        onChange={(e) => applyImageToField('logoUrl', e.target.value)}
+                        placeholder="https://... or /logo_original.png"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none font-mono"
+                      />
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <label className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] text-xs font-bold uppercase tracking-wider cursor-pointer hover:brightness-110 transition flex items-center gap-1.5 shadow">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Upload New Logo File</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, 'logoUrl')}
+                          className="sr-only"
+                        />
+                      </label>
+
+                      <button
+                        type="button"
+                        onClick={() => applyImageToField('logoUrl', '/logo_original.png')}
+                        className="px-3.5 py-2 rounded-xl bg-[#2E2319] hover:bg-[#3D2E20] border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-semibold transition cursor-pointer"
+                        title="Use authentic meditating yogi under the tree"
+                      >
+                        🌿 Original Yogi Logo
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => applyImageToField('logoUrl', '/logo.png')}
+                        className="px-3.5 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-stone-300 text-xs font-medium transition cursor-pointer"
+                        title="Use monochrome golden light emblem"
+                      >
+                        ✨ Golden Light Logo
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection('branding')}
+                        className="px-3.5 py-2 rounded-xl bg-[#1E1711] hover:bg-[#2A2017] border border-[#3E2F23] text-[#E5C158] text-xs font-semibold transition cursor-pointer ml-auto"
+                      >
+                        Open Full Logo Settings →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Action Jump Card */}
               <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1C150F] to-[#2B1F16] border border-[#D4AF37]/30 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-[#120E0A] border border-[#D4AF37] p-1.5 flex items-center justify-center">
-                    <img src={formConfig.logoUrl || '/logo.png'} alt="Logo" className="w-full h-full object-contain" />
+                  <div className="w-12 h-12 rounded-2xl bg-[#120E0A] border border-[#D4AF37] p-1.5 flex items-center justify-center shrink-0">
+                    <img src={formConfig.logoUrl || '/logo_original.png'} alt="Logo" className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <h3 className="font-serif-display text-xl font-bold text-white">
@@ -785,6 +925,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
 
                 <div className="pt-2 flex flex-wrap gap-2.5">
+                  <button
+                    onClick={() => setActiveSection('branding')}
+                    className="px-4 py-2 rounded-xl bg-[#D4AF37] hover:brightness-110 text-[#120E0A] text-xs font-bold uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer shadow"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Change Header &amp; Footer Logo</span>
+                  </button>
+
                   <button
                     onClick={() => setActiveSection('blog')}
                     className="px-4 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs font-semibold text-white transition flex items-center gap-1.5 cursor-pointer"
@@ -817,9 +965,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           {activeSection === 'branding' && (
             <div className="space-y-6 animate-fade-in">
               <div>
-                <h2 className="font-serif-display text-2xl font-bold text-white">Brand Logo &amp; Identity</h2>
+                <h2 className="font-serif-display text-2xl font-bold text-white">Header &amp; Footer Website Logo &amp; Identity</h2>
                 <p className="text-xs text-stone-400 mt-1">
-                  Manage the official logo emblem, remove/hide the logo icon, edit brand name, subtitle, and header announcement.
+                  Manage the official logo emblem for both the Header navigation bar and Footer. Upload custom logos, switch presets, or adjust branding text.
                 </p>
               </div>
 
@@ -827,24 +975,24 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-5">
                 <div className="flex items-center justify-between">
                   <label className="block text-xs uppercase font-bold text-[#D4AF37]">
-                    Brand Logo Emblem &amp; Icon
+                    Header &amp; Footer Logo Emblem &amp; Icon
                   </label>
                   <span className="text-[11px] text-stone-400">
                     Status:{' '}
                     <span className={formConfig.showLogoIcon !== false ? 'text-emerald-400 font-semibold' : 'text-amber-400 font-semibold'}>
-                      {formConfig.showLogoIcon !== false ? '✓ Visible on Site' : '✕ Hidden / Removed from Site'}
+                      {formConfig.showLogoIcon !== false ? '✓ Visible on Header & Footer' : '✕ Hidden / Removed from Site'}
                     </span>
                   </span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-6">
-                  {/* Emblem preview box */}
-                  <div className="w-32 h-32 rounded-3xl bg-[#FAF7F2] border-2 border-[#D4AF37] p-3 flex flex-col items-center justify-center shadow-xl shrink-0 relative">
+                  {/* Emblem preview box (borderless, transparent, enlarged) */}
+                  <div className="w-32 h-32 rounded-2xl bg-stone-900/90 border border-[#3E2F23] p-3 flex flex-col items-center justify-center shadow-xl shrink-0 relative overflow-hidden">
                     {formConfig.showLogoIcon !== false ? (
                       <img
-                        src={formConfig.logoUrl || '/logo.png'}
+                        src={formConfig.logoUrl || '/logo_original.png'}
                         alt="Brand Logo"
-                        className="w-full h-full object-contain"
+                        className="w-24 h-24 object-contain filter drop-shadow-md"
                       />
                     ) : (
                       <div className="text-center p-2 text-stone-400 text-xs">
@@ -856,11 +1004,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
                   <div className="space-y-3 flex-1 w-full">
                     <div>
-                      <label className="block text-xs text-stone-400 mb-1">Direct Logo Image URL / Path</label>
+                      <label className="block text-xs text-stone-400 mb-1">Direct Logo Image URL / Path (Applies to Header &amp; Footer)</label>
                       <input
                         type="text"
-                        value={formConfig.logoUrl || '/logo.png'}
-                        onChange={(e) => setFormConfig({ ...formConfig, logoUrl: e.target.value })}
+                        value={formConfig.logoUrl || '/logo_original.png'}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormConfig({ ...formConfig, logoUrl: val });
+                          onUpdateConfig({ ...formConfig, logoUrl: val });
+                        }}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
                       />
                     </div>
@@ -881,12 +1033,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       {/* Remove / Hide Logo toggle button */}
                       <button
                         type="button"
-                        onClick={() =>
-                          setFormConfig({
-                            ...formConfig,
-                            showLogoIcon: formConfig.showLogoIcon === false ? true : false
-                          })
-                        }
+                        onClick={() => {
+                          const nextVal = formConfig.showLogoIcon === false ? true : false;
+                          const updated = { ...formConfig, showLogoIcon: nextVal };
+                          setFormConfig(updated);
+                          onUpdateConfig(updated);
+                        }}
                         className={`px-3.5 py-2 rounded-xl border text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
                           formConfig.showLogoIcon !== false
                             ? 'bg-rose-950/40 border-rose-800 text-rose-300 hover:bg-rose-900/60'
@@ -900,13 +1052,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       {/* Set to Original Logo */}
                       <button
                         type="button"
-                        onClick={() =>
-                          setFormConfig({
+                        onClick={() => {
+                          const updated = {
                             ...formConfig,
                             logoUrl: '/logo_original.png',
                             showLogoIcon: true
-                          })
-                        }
+                          };
+                          setFormConfig(updated);
+                          onUpdateConfig(updated);
+                        }}
                         className="px-3.5 py-2 rounded-xl bg-[#2E2319] hover:bg-[#3D2E20] border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
                         title="Use original Shunya Sync meditating tree logo"
                       >
@@ -916,13 +1070,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       {/* Set to Light Golden Logo */}
                       <button
                         type="button"
-                        onClick={() =>
-                          setFormConfig({
+                        onClick={() => {
+                          const updated = {
                             ...formConfig,
                             logoUrl: '/logo.png',
                             showLogoIcon: true
-                          })
-                        }
+                          };
+                          setFormConfig(updated);
+                          onUpdateConfig(updated);
+                        }}
                         className="px-3.5 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-stone-300 text-xs font-medium transition cursor-pointer"
                         title="Switch to monochrome light golden logo emblem"
                       >
@@ -932,28 +1088,66 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   </div>
                 </div>
 
-                {/* Real-time Navbar Header Badge Preview */}
-                <div className="pt-3 border-t border-[#2A2017]">
-                  <p className="text-[11px] text-stone-400 mb-2 font-medium">
-                    Live Navbar Preview (How your brand appears on the live website):
+                {/* Real-time Navbar Header & Footer Badge Previews */}
+                <div className="pt-4 border-t border-[#2A2017]">
+                  <p className="text-xs text-stone-300 font-semibold mb-3">
+                    Live Real-Time Previews (How the enlarged, borderless logo appears across your site):
                   </p>
-                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#EBE5DA] inline-flex items-center gap-3 shadow-sm">
-                    {formConfig.showLogoIcon !== false && (
-                      <div className="w-10 h-10 rounded-full bg-white border border-[#E5DFD5] p-1 flex items-center justify-center shadow-xs shrink-0">
-                        <img
-                          src={formConfig.logoUrl || '/logo.png'}
-                          alt="Logo Preview"
-                          className="w-full h-full object-contain"
-                        />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Header Preview */}
+                    <div className="p-4 rounded-xl bg-stone-900/80 border border-stone-800 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-wider mb-2">
+                        Header Navigation Bar
+                      </span>
+                      <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#EBE5DA] flex items-center gap-3">
+                        {formConfig.showLogoIcon !== false && (
+                          <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                            <img
+                              src={formConfig.logoUrl || '/logo_original.png'}
+                              alt="Logo Preview"
+                              className="w-full h-full object-contain filter drop-shadow-sm"
+                            />
+                          </div>
+                        )}
+                        <div className="flex flex-col text-left">
+                          <span className="font-brand-logo text-xl text-stone-800 font-medium leading-none">
+                            {formConfig.brandName || 'Shunya Sync'}
+                          </span>
+                          <div className="flex items-center gap-1.5 mt-1 text-[9px] tracking-[0.28em] uppercase font-light text-[#8A9687]">
+                            <span className="w-3 h-[1px] bg-[#8A9687]/40" />
+                            <span>{formConfig.brandSubtitle || 'RETREAT'}</span>
+                            <span className="w-3 h-[1px] bg-[#8A9687]/40" />
+                          </div>
+                        </div>
                       </div>
-                    )}
-                    <div className="flex flex-col text-left">
-                      <span className="font-serif-display text-2xl tracking-tight text-[#1F2E23] font-semibold leading-none">
-                        {formConfig.brandName || 'Shunya Sync'}
+                    </div>
+
+                    {/* Footer Preview */}
+                    <div className="p-4 rounded-xl bg-stone-900/80 border border-stone-800 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-wider mb-2">
+                        Footer Section (Dark Theme)
                       </span>
-                      <span className="text-[9.5px] tracking-[0.28em] uppercase font-light text-[#8A9687] mt-1">
-                        {formConfig.brandSubtitle || 'Retreat Sanctuary'}
-                      </span>
+                      <div className="p-3 rounded-lg bg-[#140E0A] border border-[#2E2319] flex items-center gap-3">
+                        {formConfig.showLogoIcon !== false && (
+                          <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                            <img
+                              src={formConfig.logoUrl || '/logo_original.png'}
+                              alt="Logo Preview"
+                              className="w-full h-full object-contain filter drop-shadow-sm"
+                            />
+                          </div>
+                        )}
+                        <div className="flex flex-col text-left">
+                          <span className="font-brand-logo text-xl text-[#E8D8B8] font-medium leading-none">
+                            {formConfig.brandName || 'Shunya Sync'}
+                          </span>
+                          <div className="flex items-center gap-1.5 mt-1 text-[9px] tracking-[0.28em] uppercase font-light text-[#D4AF37]/90">
+                            <span className="w-3 h-[1px] bg-[#D4AF37]/50" />
+                            <span>{formConfig.brandSubtitle || 'RETREAT'}</span>
+                            <span className="w-3 h-[1px] bg-[#D4AF37]/50" />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2706,6 +2900,89 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     <RefreshCw className="w-3.5 h-3.5" />
                     <span>Re-Populate All Live URLs</span>
                   </button>
+                </div>
+              </div>
+
+              {/* 0. HEADER & FOOTER WEBSITE LOGO */}
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-[#1F1710] to-[#17110C] border-2 border-[#D4AF37]/60 space-y-4 shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Header &amp; Footer Website Logo</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-emerald-400 font-medium">Controls Live Navbar &amp; Footer</span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection('branding')}
+                      className="text-[11px] text-[#D4AF37] hover:underline"
+                    >
+                      Open in Logo Tab &rarr;
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-5">
+                  {/* Clean borderless logo preview */}
+                  <div className="w-24 h-24 rounded-2xl bg-stone-900/90 border border-[#3E2F23] p-2 flex items-center justify-center shrink-0 shadow-inner">
+                    <img
+                      src={formConfig.logoUrl || '/logo_original.png'}
+                      alt="Logo Icon"
+                      className="w-20 h-20 object-contain filter drop-shadow-md"
+                    />
+                  </div>
+
+                  <div className="flex-1 w-full space-y-3">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={formConfig.logoUrl || '/logo_original.png'}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormConfig({ ...formConfig, logoUrl: val });
+                          onUpdateConfig({ ...formConfig, logoUrl: val });
+                        }}
+                        placeholder="/logo_original.png or https://..."
+                        className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none"
+                      />
+                      <label className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] text-xs font-bold uppercase tracking-wider cursor-pointer hover:brightness-110 transition flex items-center gap-1.5 shrink-0 shadow">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>{uploadingField === 'logoUrl' ? 'Uploading...' : 'Upload Logo'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, 'logoUrl')}
+                          className="sr-only"
+                        />
+                      </label>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] text-stone-400 uppercase tracking-wider">Presets:</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = { ...formConfig, logoUrl: '/logo_original.png', showLogoIcon: true };
+                          setFormConfig(updated);
+                          onUpdateConfig(updated);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] border border-[#D4AF37]/50 text-[11px] text-[#D4AF37] font-medium transition cursor-pointer"
+                      >
+                        ✓ Original Logo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = { ...formConfig, logoUrl: '/logo.png', showLogoIcon: true };
+                          setFormConfig(updated);
+                          onUpdateConfig(updated);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[11px] text-stone-300 hover:text-white transition cursor-pointer"
+                      >
+                        Golden Light Logo
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 

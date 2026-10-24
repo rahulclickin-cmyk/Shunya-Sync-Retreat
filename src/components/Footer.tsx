@@ -126,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="space-y-3">
               <div className="flex items-center gap-3.5 sm:gap-4">
                 {config.showLogoIcon !== false && (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-[#D4AF37]/50 p-1.5 flex items-center justify-center shadow-md shrink-0">
+                  <div className="w-18 h-18 sm:w-22 sm:h-22 md:w-26 md:h-26 flex items-center justify-center shrink-0">
                     <img
                       src={config.logoUrl || '/logo_original.png'}
                       alt={config.brandName}

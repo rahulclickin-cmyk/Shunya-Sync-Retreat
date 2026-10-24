@@ -416,6 +416,15 @@ export default function App() {
           config={siteConfig}
           onUpdateConfig={handleConfigUpdate}
           onNavigateHome={() => navigateTo('home')}
+          leadsList={leadsList}
+          onUpdateLeadStatus={(id, status) => {
+            updateLeadStatus(id, status);
+            setLeadsList(getStoredLeads());
+          }}
+          onDeleteLead={(id) => {
+            deleteLead(id);
+            setLeadsList(getStoredLeads());
+          }}
         />
       </div>
     );
@@ -469,7 +478,7 @@ export default function App() {
           {/* Brand Logo with Light Emblem */}
           <button onClick={() => navigateTo('home')} className="flex items-center gap-3.5 sm:gap-4 group text-left cursor-pointer">
             {siteConfig.showLogoIcon !== false && (
-              <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full bg-white border-2 border-[#D4AF37]/40 p-1.5 flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-18 h-18 sm:w-22 sm:h-22 md:w-26 md:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <img
                   src={siteConfig.logoUrl || '/logo_original.png'}
                   alt={siteConfig.brandName}
