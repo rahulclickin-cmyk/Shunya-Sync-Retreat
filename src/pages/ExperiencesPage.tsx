@@ -1,11 +1,18 @@
 import React from 'react';
 import { CheckCircle2, Sun, Volume2, Heart, ArrowRight } from 'lucide-react';
+import { SiteConfig } from '../types/retreat';
 
 interface ExperiencesPageProps {
   onOpenBooking: () => void;
+  config?: SiteConfig;
 }
 
-export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking }) => {
+export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking, config }) => {
+  const founder2Name = config?.founder2?.name || (config?.site_settings as any)?.founders?.founder2?.name || 'Komal Malhotra';
+  const yogaImg = config?.galleryImages?.[0]?.url || 'https://www.shunyasync.com/images/DSC05503.JPG';
+  const soundImg = config?.galleryImages?.[1]?.url || 'https://www.shunyasync.com/images/C9738T01.JPG';
+  const danceImg = config?.galleryImages?.[2]?.url || 'https://www.shunyasync.com/images/DSC05719.JPG';
+
   return (
     <div className="py-12 sm:py-20 px-5 sm:px-8 max-w-7xl mx-auto space-y-20 animate-fade-in">
       {/* Header */}
@@ -26,7 +33,7 @@ export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking 
         <div className="lg:col-span-6 relative">
           <div className="rounded-3xl overflow-hidden shadow-xl aspect-[4/3] card-3d-tilt">
             <img
-              src="https://www.shunyasync.com/images/DSC05503.JPG"
+              src={yogaImg}
               alt="Yoga Guided Sessions beside the Ganges"
               className="w-full h-full object-cover"
             />
@@ -79,7 +86,7 @@ export const ExperiencesPage: React.FC<ExperiencesPageProps> = ({ onOpenBooking 
             2. Sound Healing — Vibrational therapy for deep relaxation and inner peace
           </h2>
           <p className="text-base text-[#5B665D] leading-relaxed font-light">
-            Everything in existence vibrates at specific frequencies. During our immersive sound baths, master alchemist Komal Malhotra utilizes handcrafted 7-metal Tibetan bowls, resonant symphonic gongs, Koshi chimes, and 432Hz tuning instruments to facilitate spontaneous delta-wave trance states.
+            Everything in existence vibrates at specific frequencies. During our immersive sound baths, master alchemist {founder2Name} utilizes handcrafted 7-metal Tibetan bowls, resonant symphonic gongs, Koshi chimes, and 432Hz tuning instruments to facilitate spontaneous delta-wave trance states.
           </p>
           <ul className="space-y-3 text-sm text-[#3E4A40]">
             <li className="flex items-center gap-3">

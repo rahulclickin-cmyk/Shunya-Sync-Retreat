@@ -347,7 +347,7 @@ export function normalizeSiteConfig(input: any): SiteConfig {
   const pages = (input.pages_content && typeof input.pages_content === 'object') ? input.pages_content : {};
 
   // Safely construct pricing
-  const rawPricing = input.retreat_packages || pages.retreat_packages || input.pricing || {};
+  const rawPricing = settings.pricing || settings.retreat_packages || pages.retreat_packages || input.retreat_packages || pages.pricing || input.pricing || {};
   const rawPkg2 = rawPricing.pkg2n3d || {};
   const rawPkg3 = rawPricing.pkg3n4d || rawPricing.pkg4d3n || {};
   const rawPkg4 = rawPricing.pkg4n5d || rawPricing.pkg5d4n || {};
@@ -380,118 +380,189 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     pkg2n3d: pkg2Item,
     pkg3n4d: pkg3Item,
     pkg4n5d: pkg4Item,
-    // Backward compatibility aliases
     pkg4d3n: pkg3Item,
     pkg5d4n: pkg4Item
   };
 
-  // Safely construct founders with smooth migration
-  const rawFounder1 = pages.founder1 || input.founder1 || {};
+  // 100% Dynamic Founders: Read from settings (JSONB), pages (JSONB), or raw input
+  // Never discard or override user-entered names or uploaded images
+  const rawFounder1 =
+    settings.founders?.founder1 ||
+    settings.founder1 ||
+    pages.founders?.founder1 ||
+    pages.founder1 ||
+    input.founders?.founder1 ||
+    input.founder1 ||
+    {};
+
   const founder1 = {
-    ...DEFAULT_SITE_CONFIG.founder1,
-    ...rawFounder1,
-    name: rawFounder1.name && rawFounder1.name !== 'Anmol Khatti' && rawFounder1.name !== 'Aarav Sharma' ? rawFounder1.name : 'Anmol Khatri',
-    image: rawFounder1.image && !rawFounder1.image.includes('unsplash.com') ? rawFounder1.image : 'https://www.shunyasync.com/images/founder-1.jpg'
+    name: typeof rawFounder1.name === 'string' && rawFounder1.name.trim() ? rawFounder1.name : DEFAULT_SITE_CONFIG.founder1.name,
+    title: typeof rawFounder1.title === 'string' ? rawFounder1.title : DEFAULT_SITE_CONFIG.founder1.title,
+    note: typeof rawFounder1.note === 'string' ? rawFounder1.note : DEFAULT_SITE_CONFIG.founder1.note,
+    bio: typeof rawFounder1.bio === 'string' ? rawFounder1.bio : DEFAULT_SITE_CONFIG.founder1.bio,
+    image: typeof rawFounder1.image === 'string' && rawFounder1.image.trim() ? rawFounder1.image : DEFAULT_SITE_CONFIG.founder1.image
   };
 
-  const rawFounder2 = pages.founder2 || input.founder2 || {};
+  const rawFounder2 =
+    settings.founders?.founder2 ||
+    settings.founder2 ||
+    pages.founders?.founder2 ||
+    pages.founder2 ||
+    input.founders?.founder2 ||
+    input.founder2 ||
+    {};
+
   const founder2 = {
-    ...DEFAULT_SITE_CONFIG.founder2,
-    ...rawFounder2,
-    name: rawFounder2.name && rawFounder2.name !== 'Komal Makhetra' && rawFounder2.name !== 'Devanshi Mehta' ? rawFounder2.name : 'Komal Malhotra',
-    image: rawFounder2.image && !rawFounder2.image.includes('unsplash.com') ? rawFounder2.image : 'https://www.shunyasync.com/images/cofounder.JPG'
+    name: typeof rawFounder2.name === 'string' && rawFounder2.name.trim() ? rawFounder2.name : DEFAULT_SITE_CONFIG.founder2.name,
+    title: typeof rawFounder2.title === 'string' ? rawFounder2.title : DEFAULT_SITE_CONFIG.founder2.title,
+    note: typeof rawFounder2.note === 'string' ? rawFounder2.note : DEFAULT_SITE_CONFIG.founder2.note,
+    bio: typeof rawFounder2.bio === 'string' ? rawFounder2.bio : DEFAULT_SITE_CONFIG.founder2.bio,
+    image: typeof rawFounder2.image === 'string' && rawFounder2.image.trim() ? rawFounder2.image : DEFAULT_SITE_CONFIG.founder2.image
   };
 
-  // Safely construct contact
-  const rawContact = settings.contact || input.contact || {};
+  // 100% Dynamic Contact: Never overwrite user-entered phone, email, or WhatsApp numbers
+  const rawContact = settings.contact || pages.contact || input.contact || {};
   const contact = {
-    ...DEFAULT_SITE_CONFIG.contact,
-    ...rawContact,
-    phone: rawContact.phone && rawContact.phone.includes('9259698064') ? rawContact.phone : DEFAULT_SITE_CONFIG.contact.phone,
-    whatsappNumber: rawContact.whatsappNumber && rawContact.whatsappNumber.includes('9259698064') ? rawContact.whatsappNumber : DEFAULT_SITE_CONFIG.contact.whatsappNumber
+    phone: typeof rawContact.phone === 'string' && rawContact.phone.trim() ? rawContact.phone : DEFAULT_SITE_CONFIG.contact.phone,
+    whatsappNumber: typeof rawContact.whatsappNumber === 'string' && rawContact.whatsappNumber.trim() ? rawContact.whatsappNumber : DEFAULT_SITE_CONFIG.contact.whatsappNumber,
+    email: typeof rawContact.email === 'string' && rawContact.email.trim() ? rawContact.email : DEFAULT_SITE_CONFIG.contact.email,
+    location: typeof rawContact.location === 'string' && rawContact.location.trim() ? rawContact.location : DEFAULT_SITE_CONFIG.contact.location,
+    address: typeof rawContact.address === 'string' ? rawContact.address : (DEFAULT_SITE_CONFIG.contact.address || '')
   };
 
-  // Safely construct gallery images with automatic migration from stock placeholders
-  const rawGallery = pages.galleryImages || input.galleryImages || input.gallery_images;
-  const isGenericUnsplashGallery = Array.isArray(rawGallery) && rawGallery.some((item: any) => item?.url && item.url.includes('images.unsplash.com/photo-1545205597'));
-  const galleryImages = Array.isArray(rawGallery) && rawGallery.length > 0 && !isGenericUnsplashGallery
+  // 100% Dynamic Gallery Images
+  const rawGallery = settings.galleryImages || pages.galleryImages || input.galleryImages || input.gallery_images;
+  const galleryImages = Array.isArray(rawGallery) && rawGallery.length > 0
     ? rawGallery
     : DEFAULT_SITE_CONFIG.galleryImages;
 
-  // Safely construct SEO
-  const rawSeo = input.seo_geo_tags || settings.seo_geo_tags || input.seo;
+  // 100% Dynamic SEO & Geo Tags
+  const rawSeo = settings.seo_geo_tags || pages.seo_geo_tags || input.seo_geo_tags || settings.seo || input.seo;
   const seo = {
     ...DEFAULT_SEO_CONFIG,
     ...(rawSeo || {})
   };
 
-  const currentTagline = settings.tagline || pages.tagline || input.tagline || DEFAULT_SITE_CONFIG.tagline;
+  // 100% Dynamic Why Choose Us
+  const rawWhy = settings.whyChooseUs || pages.whyChooseUs || input.whyChooseUs || input.why_choose_us || {};
+  const whyChooseUs = {
+    eyebrow: typeof rawWhy.eyebrow === 'string' && rawWhy.eyebrow.trim() ? rawWhy.eyebrow : (DEFAULT_SITE_CONFIG.whyChooseUs?.eyebrow || 'WHY SHUNYA SYNC'),
+    headingPrefix: typeof rawWhy.headingPrefix === 'string' ? rawWhy.headingPrefix : (DEFAULT_SITE_CONFIG.whyChooseUs?.headingPrefix || 'Why'),
+    headingHighlight: typeof rawWhy.headingHighlight === 'string' ? rawWhy.headingHighlight : (DEFAULT_SITE_CONFIG.whyChooseUs?.headingHighlight || 'Choose Us'),
+    bgImage: typeof rawWhy.bgImage === 'string' && rawWhy.bgImage.trim() ? rawWhy.bgImage : (DEFAULT_SITE_CONFIG.whyChooseUs?.bgImage || 'https://www.shunyasync.com/images/DSC05962.JPG'),
+    cards: Array.isArray(rawWhy.cards) && rawWhy.cards.length > 0 ? rawWhy.cards : (DEFAULT_SITE_CONFIG.whyChooseUs?.cards || [])
+  };
 
-  // Why Choose Us
-  const rawWhy = pages.whyChooseUs || input.whyChooseUs || input.why_choose_us;
-  const whyBgImage = rawWhy?.bgImage && !rawWhy.bgImage.includes('images.unsplash.com/photo-1508672019048')
-    ? rawWhy.bgImage
-    : (DEFAULT_SITE_CONFIG.whyChooseUs?.bgImage || 'https://www.shunyasync.com/images/DSC05962.JPG');
+  // 100% Dynamic Hero Settings
+  const rawHeroBg = settings.heroBgImage || pages.heroBgImage || input.heroBgImage || input.hero_bg_image;
+  const heroBgImage = typeof rawHeroBg === 'string' && rawHeroBg.trim() ? rawHeroBg : DEFAULT_SITE_CONFIG.heroBgImage;
 
-  // Hero Background Image migration
-  const rawHeroBg = pages.heroBgImage || input.heroBgImage || input.hero_bg_image;
-  const heroBgImage = rawHeroBg && !rawHeroBg.includes('images.unsplash.com/photo-1506126613408-eca07ce68773')
-    ? rawHeroBg
-    : DEFAULT_SITE_CONFIG.heroBgImage;
+  const rawHeroHeadline = settings.heroHeadline || pages.heroHeadline || input.heroHeadline || input.hero_headline;
+  const heroHeadline = typeof rawHeroHeadline === 'string' && rawHeroHeadline.trim() ? rawHeroHeadline : DEFAULT_SITE_CONFIG.heroHeadline;
+
+  const rawHeroSubheadline = settings.heroSubheadline || pages.heroSubheadline || input.heroSubheadline || input.hero_subheadline;
+  const heroSubheadline = typeof rawHeroSubheadline === 'string' && rawHeroSubheadline.trim() ? rawHeroSubheadline : DEFAULT_SITE_CONFIG.heroSubheadline;
+
+  const rawHeroTags = settings.heroTags || pages.heroTags || input.heroTags || input.hero_tags;
+  const heroTags = Array.isArray(rawHeroTags) && rawHeroTags.length > 0 ? rawHeroTags : DEFAULT_SITE_CONFIG.heroTags;
+
+  const rawHeroBadge = settings.heroBadge || pages.heroBadge || input.heroBadge || input.hero_badge;
+  const heroBadge = typeof rawHeroBadge === 'string' ? rawHeroBadge : (DEFAULT_SITE_CONFIG.heroBadge || 'COHORT 2026');
+
+  const rawHeroQuote = settings.heroQuote || pages.heroQuote || input.heroQuote || input.hero_quote;
+  const heroQuote = typeof rawHeroQuote === 'string' ? rawHeroQuote : DEFAULT_SITE_CONFIG.heroQuote;
+
+  // 100% Dynamic Brand & Header
+  const rawBrand = settings.brandName || pages.brandName || input.brandName || input.brand_name;
+  const brandName = typeof rawBrand === 'string' && rawBrand.trim() ? rawBrand : DEFAULT_SITE_CONFIG.brandName;
+
+  const rawBrandSub = settings.brandSubtitle || pages.brandSubtitle || input.brandSubtitle || input.brand_subtitle;
+  const brandSubtitle = typeof rawBrandSub === 'string' ? rawBrandSub : DEFAULT_SITE_CONFIG.brandSubtitle;
+
+  const rawTagline = settings.tagline || pages.tagline || input.tagline;
+  const tagline = typeof rawTagline === 'string' && rawTagline.trim() ? rawTagline : DEFAULT_SITE_CONFIG.tagline;
+
+  const rawAnnounce = settings.headerAnnouncement ?? pages.headerAnnouncement ?? input.headerAnnouncement ?? input.header_announcement;
+  const headerAnnouncement = typeof rawAnnounce === 'string' ? rawAnnounce : DEFAULT_SITE_CONFIG.headerAnnouncement;
+
+  const rawLogo = settings.logoUrl || pages.logoUrl || input.logoUrl || input.logo_url;
+  const logoUrl = typeof rawLogo === 'string' && rawLogo.trim() ? rawLogo : DEFAULT_SITE_CONFIG.logoUrl;
+
+  const showLogoIcon = settings.showLogoIcon !== undefined
+    ? Boolean(settings.showLogoIcon)
+    : (pages.showLogoIcon !== undefined
+      ? Boolean(pages.showLogoIcon)
+      : (input.showLogoIcon !== undefined
+        ? Boolean(input.showLogoIcon)
+        : true));
+
+  // 100% Dynamic Narratives
+  const aboutText = settings.aboutText || pages.aboutText || input.aboutText || input.about_text || DEFAULT_SITE_CONFIG.aboutText;
+  const philosophyQuote = settings.philosophyQuote ?? pages.philosophyQuote ?? input.philosophyQuote ?? input.philosophy_quote ?? DEFAULT_SITE_CONFIG.philosophyQuote;
+  const whyWeStarted = settings.whyWeStarted || pages.whyWeStarted || input.whyWeStarted || input.why_we_started || DEFAULT_SITE_CONFIG.whyWeStarted;
+  const whatMakesUsDifferent = settings.whatMakesUsDifferent || pages.whatMakesUsDifferent || input.whatMakesUsDifferent || input.what_makes_us_different || DEFAULT_SITE_CONFIG.whatMakesUsDifferent;
+  const footerDescription = settings.footerDescription || pages.footerDescription || input.footerDescription || input.footer_description || DEFAULT_SITE_CONFIG.footerDescription;
+  const footerCopyright = settings.footerCopyright || pages.footerCopyright || input.footerCopyright || input.footer_copyright || DEFAULT_SITE_CONFIG.footerCopyright;
 
   // Blog Posts
-  const rawBlogs = input.blog_posts || pages.blog_posts || input.blogPosts;
+  const rawBlogs = settings.blog_posts || settings.blogPosts || pages.blog_posts || input.blog_posts || input.blogPosts;
   const blogPosts = Array.isArray(rawBlogs) && rawBlogs.length > 0
     ? rawBlogs
     : DEFAULT_SITE_CONFIG.blogPosts || DEFAULT_BLOG_POSTS;
 
+  // Dynamic Instagram Reel Embed
+  const instagramReelUrl = settings.instagramReelUrl || pages.instagramReelUrl || input.instagramReelUrl || (input.instagramReel as any)?.url || DEFAULT_SITE_CONFIG.instagramReelUrl;
+  const instagramReelPosition = (settings.instagramReelPosition || pages.instagramReelPosition || input.instagramReelPosition || (input.instagramReel as any)?.position || DEFAULT_SITE_CONFIG.instagramReelPosition) as any;
+  const instagramReelTitle = settings.instagramReelTitle || pages.instagramReelTitle || input.instagramReelTitle || (input.instagramReel as any)?.title || DEFAULT_SITE_CONFIG.instagramReelTitle;
+  const instagramReelCaption = settings.instagramReelCaption || pages.instagramReelCaption || input.instagramReelCaption || (input.instagramReel as any)?.caption || DEFAULT_SITE_CONFIG.instagramReelCaption;
+
   return {
-    // Preserve any arbitrary dynamic keys added in the future
     ...input,
     ...pages,
     ...settings,
 
-    brandName: settings.brandName || input.brandName || input.brand_name || DEFAULT_SITE_CONFIG.brandName,
-    tagline: currentTagline,
-    headerAnnouncement: settings.headerAnnouncement ?? input.headerAnnouncement ?? input.header_announcement ?? DEFAULT_SITE_CONFIG.headerAnnouncement,
-    heroHeadline: pages.heroHeadline || input.heroHeadline || input.hero_headline || DEFAULT_SITE_CONFIG.heroHeadline,
-    heroSubheadline: pages.heroSubheadline || input.heroSubheadline || input.hero_subheadline || DEFAULT_SITE_CONFIG.heroSubheadline,
-    heroBgImage: pages.heroBgImage || input.heroBgImage || input.hero_bg_image || DEFAULT_SITE_CONFIG.heroBgImage,
-    heroTags: Array.isArray(pages.heroTags) ? pages.heroTags : (Array.isArray(input.heroTags) ? input.heroTags : (Array.isArray(input.hero_tags) ? input.hero_tags : DEFAULT_SITE_CONFIG.heroTags)),
-    heroBadge: pages.heroBadge || input.heroBadge || input.hero_badge || DEFAULT_SITE_CONFIG.heroBadge || 'COHORT 2026',
-    heroQuote: pages.heroQuote || input.heroQuote || input.hero_quote || DEFAULT_SITE_CONFIG.heroQuote,
-    aboutText: pages.aboutText || input.aboutText || input.about_text || DEFAULT_SITE_CONFIG.aboutText,
-    philosophyQuote: pages.philosophyQuote ?? input.philosophyQuote ?? input.philosophy_quote ?? DEFAULT_SITE_CONFIG.philosophyQuote,
-    whyWeStarted: pages.whyWeStarted || input.whyWeStarted || input.why_we_started || DEFAULT_SITE_CONFIG.whyWeStarted || 'To offer intimate, soulful journeys away from daily noise.',
-    whatMakesUsDifferent: pages.whatMakesUsDifferent || input.whatMakesUsDifferent || input.what_makes_us_different || DEFAULT_SITE_CONFIG.whatMakesUsDifferent || 'Intimate groups, nature-based settings, soulful evenings, and expert guides.',
+    brandName,
+    brandSubtitle,
+    tagline,
+    headerAnnouncement,
+    logoUrl,
+    showLogoIcon,
+    adminPin: settings.adminPin || pages.adminPin || input.adminPin || input.admin_pin || DEFAULT_SITE_CONFIG.adminPin || '7788',
+
+    heroHeadline,
+    heroSubheadline,
+    heroBgImage,
+    heroTags,
+    heroBadge,
+    heroQuote,
+
+    aboutText,
+    philosophyQuote,
+    whyWeStarted,
+    whatMakesUsDifferent,
+
     founder1,
     founder2,
+    founders: {
+      founder1,
+      founder2
+    },
+
     pricing: safePricing,
+    retreat_packages: safePricing,
     contact,
     galleryImages,
     seo,
-    adminPin: settings.adminPin || input.adminPin || input.admin_pin || DEFAULT_SITE_CONFIG.adminPin || '7788',
-    logoUrl: settings.logoUrl || input.logoUrl || input.logo_url || DEFAULT_SITE_CONFIG.logoUrl || '/logo.png',
-    brandSubtitle: typeof settings.brandSubtitle === 'string' ? settings.brandSubtitle : (typeof input.brandSubtitle === 'string' ? input.brandSubtitle : (typeof input.brand_subtitle === 'string' ? input.brand_subtitle : DEFAULT_SITE_CONFIG.brandSubtitle || 'Retreat Sanctuary')),
-    showLogoIcon: settings.showLogoIcon !== undefined ? Boolean(settings.showLogoIcon) : (input.showLogoIcon !== undefined ? Boolean(input.showLogoIcon) : (input.show_logo_icon !== undefined ? Boolean(input.show_logo_icon) : true)),
-    footerDescription: pages.footerDescription || input.footerDescription || input.footer_description || DEFAULT_SITE_CONFIG.footerDescription,
-    footerCopyright: pages.footerCopyright || input.footerCopyright || input.footer_copyright || DEFAULT_SITE_CONFIG.footerCopyright,
-    whyChooseUs: {
-      eyebrow: rawWhy?.eyebrow || DEFAULT_SITE_CONFIG.whyChooseUs?.eyebrow || 'WHY SHUNYA SYNC',
-      headingPrefix: rawWhy?.headingPrefix || DEFAULT_SITE_CONFIG.whyChooseUs?.headingPrefix || 'Why',
-      headingHighlight: rawWhy?.headingHighlight || DEFAULT_SITE_CONFIG.whyChooseUs?.headingHighlight || 'Choose Us',
-      bgImage: whyBgImage,
-      cards: Array.isArray(rawWhy?.cards) && rawWhy.cards.length > 0
-        ? rawWhy.cards
-        : (DEFAULT_SITE_CONFIG.whyChooseUs?.cards || [])
-    },
+    whyChooseUs,
     blogPosts,
 
-    // Dynamic Instagram Reel Embed
-    instagramReelUrl: settings.instagramReelUrl || pages.instagramReelUrl || input.instagramReelUrl || (input.instagramReel as any)?.url || DEFAULT_SITE_CONFIG.instagramReelUrl,
-    instagramReelPosition: (settings.instagramReelPosition || pages.instagramReelPosition || input.instagramReelPosition || (input.instagramReel as any)?.position || DEFAULT_SITE_CONFIG.instagramReelPosition) as any,
-    instagramReelTitle: settings.instagramReelTitle || pages.instagramReelTitle || input.instagramReelTitle || (input.instagramReel as any)?.title || DEFAULT_SITE_CONFIG.instagramReelTitle,
-    instagramReelCaption: settings.instagramReelCaption || pages.instagramReelCaption || input.instagramReelCaption || (input.instagramReel as any)?.caption || DEFAULT_SITE_CONFIG.instagramReelCaption,
+    footerDescription,
+    footerCopyright,
+
+    instagramReelUrl,
+    instagramReelPosition,
+    instagramReelTitle,
+    instagramReelCaption,
 
     // Reference to original JSONB bundles
     site_settings: settings,
@@ -516,6 +587,9 @@ export function saveStoredSiteConfig(config: SiteConfig): void {
   try {
     const normalized = normalizeSiteConfig(config);
     localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(normalized));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('shunya_config_updated', { detail: normalized }));
+    }
   } catch (e) {
     console.error('Failed to save site config to localStorage', e);
   }
@@ -708,8 +782,8 @@ export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
       whatMakesUsDifferent: pages.whatMakesUsDifferent || data.what_makes_us_different,
 
       whyChooseUs: pages.whyChooseUs || data.why_choose_us,
-      founder1: pages.founder1 || data.founder1,
-      founder2: pages.founder2 || data.founder2,
+      founder1: settings.founder1 || (settings.founders as any)?.founder1 || pages.founder1 || (pages.founders as any)?.founder1 || data.founder1,
+      founder2: settings.founder2 || (settings.founders as any)?.founder2 || pages.founder2 || (pages.founders as any)?.founder2 || data.founder2,
       galleryImages: pages.galleryImages || data.gallery_images,
       pricing: packages,
       seo: seoTags,
@@ -762,6 +836,12 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
     showLogoIcon: config.showLogoIcon !== false,
     adminPin: config.adminPin || '7788',
     contact: config.contact,
+    founder1: config.founder1,
+    founder2: config.founder2,
+    founders: {
+      founder1: config.founder1,
+      founder2: config.founder2
+    },
     seo_geo_tags: config.seo || DEFAULT_SEO_CONFIG,
     instagramReelUrl: config.instagramReelUrl,
     instagramReelPosition: config.instagramReelPosition || 'below-packages',
@@ -786,6 +866,10 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
     whyChooseUs: config.whyChooseUs || DEFAULT_SITE_CONFIG.whyChooseUs,
     founder1: config.founder1,
     founder2: config.founder2,
+    founders: {
+      founder1: config.founder1,
+      founder2: config.founder2
+    },
     galleryImages: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
     retreat_packages: config.pricing,
     blog_posts: config.blogPosts || DEFAULT_BLOG_POSTS,

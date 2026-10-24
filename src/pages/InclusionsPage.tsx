@@ -1,11 +1,15 @@
 import React from 'react';
 import { Sun, Volume2, Leaf, Compass, MapPin, Sparkles, Users, CheckCircle2 } from 'lucide-react';
+import { SiteConfig } from '../types/retreat';
 
 interface InclusionsPageProps {
   onOpenBooking: () => void;
+  config?: SiteConfig;
 }
 
-export const InclusionsPage: React.FC<InclusionsPageProps> = ({ onOpenBooking }) => {
+export const InclusionsPage: React.FC<InclusionsPageProps> = ({ onOpenBooking, config }) => {
+  const founder1Name = config?.founder1?.name || (config?.site_settings as any)?.founders?.founder1?.name || 'Anmol Khatri';
+  const founder2Name = config?.founder2?.name || (config?.site_settings as any)?.founders?.founder2?.name || 'Komal Malhotra';
   return (
     <div className="py-12 sm:py-20 px-5 sm:px-8 max-w-7xl mx-auto space-y-16 animate-fade-in">
       <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -95,7 +99,7 @@ export const InclusionsPage: React.FC<InclusionsPageProps> = ({ onOpenBooking })
           Experienced Facilitators Present Throughout
         </h3>
         <p className="text-sm text-stone-300 leading-relaxed max-w-2xl mx-auto font-light">
-          Unlike large resorts with shifting staff, founders Anmol Khatri and Komal Malhotra hold space alongside you throughout the entire retreat journey.
+          Unlike large resorts with shifting staff, founders {founder1Name} and {founder2Name} hold space alongside you throughout the entire retreat journey.
         </p>
         <button
           onClick={onOpenBooking}

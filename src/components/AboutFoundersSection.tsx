@@ -13,7 +13,7 @@ export const AboutFoundersSection: React.FC<AboutFoundersSectionProps> = ({
   onOpenBooking,
   showExtendedBios = true
 }) => {
-  const founder1 = config.founder1 || {
+  const founder1 = config.founder1 || (config.site_settings as any)?.founders?.founder1 || (config.pages_content as any)?.founders?.founder1 || {
     name: 'Anmol Khatri',
     title: 'Founder & Movement Guide',
     note: 'Mindful breathwork & grounded presence',
@@ -21,7 +21,7 @@ export const AboutFoundersSection: React.FC<AboutFoundersSectionProps> = ({
     image: 'https://www.shunyasync.com/images/founder-1.jpg'
   };
 
-  const founder2 = config.founder2 || {
+  const founder2 = config.founder2 || (config.site_settings as any)?.founders?.founder2 || (config.pages_content as any)?.founders?.founder2 || {
     name: 'Komal Malhotra',
     title: 'Founder & Sound Alchemist',
     note: 'Vibrational therapy & intuitive healing',
@@ -138,7 +138,7 @@ export const AboutFoundersSection: React.FC<AboutFoundersSectionProps> = ({
               onClick={onOpenBooking}
               className="px-8 py-3 rounded-full text-xs uppercase tracking-widest font-semibold bg-[#223326] hover:bg-[#152218] text-white transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer inline-flex items-center gap-2"
             >
-              <span>Meet Anmol &amp; Komal in Person</span>
+              <span>Meet {founder1.name} &amp; {founder2.name} in Person</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

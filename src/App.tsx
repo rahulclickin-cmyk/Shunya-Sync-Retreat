@@ -196,13 +196,24 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Fetch live site configuration from Supabase on mount (if connected)
+  // Fetch live site configuration from Supabase on mount and listen for real-time local/admin updates
   useEffect(() => {
     fetchConfigFromSupabase().then((remoteCfg) => {
       if (remoteCfg) {
         setSiteConfig(remoteCfg);
       }
     });
+
+    const handleConfigEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<SiteConfig>;
+      if (customEvent.detail) {
+        setSiteConfig(customEvent.detail);
+      }
+    };
+    window.addEventListener('shunya_config_updated', handleConfigEvent);
+    return () => {
+      window.removeEventListener('shunya_config_updated', handleConfigEvent);
+    };
   }, []);
 
   // Primary URL Navigation & /admin Path Listener
@@ -394,7 +405,7 @@ export default function App() {
 
   const activeGalleryImages = siteConfig.galleryImages && siteConfig.galleryImages.length > 0
     ? siteConfig.galleryImages
-    : fallbackGalleryImages;
+    : (DEFAULT_SITE_CONFIG.galleryImages || fallbackGalleryImages);
 
   // Dedicated Full-Screen Standalone Admin Dashboard
   if (currentRoute === 'admin') {
@@ -745,7 +756,7 @@ export default function App() {
         {/* SUBPAGE 2: EXPERIENCES PAGE */}
         {currentRoute === 'experiences' && (
           <div className="animate-3d-flip-right">
-            <ExperiencesPage onOpenBooking={() => handleOpenBooking()} />
+            <ExperiencesPage config={siteConfig} onOpenBooking={() => handleOpenBooking()} />
           </div>
         )}
 
@@ -763,7 +774,7 @@ export default function App() {
         {/* SUBPAGE 4: WHAT'S INCLUDED */}
         {currentRoute === 'inclusions' && (
           <div className="animate-3d-flip-right">
-            <InclusionsPage onOpenBooking={() => handleOpenBooking()} />
+            <InclusionsPage config={siteConfig} onOpenBooking={() => handleOpenBooking()} />
           </div>
         )}
 
@@ -888,7 +899,7 @@ export default function App() {
                       <span>Certified Hosts &amp; Guides</span>
                     </div>
                     <p className="text-[11px] text-stone-300 leading-tight">
-                      Guided personally by founders Anmol &amp; Komal.
+                      Guided personally by founders {siteConfig.founder1?.name || 'Anmol'} &amp; {siteConfig.founder2?.name || 'Komal'}.
                     </p>
                   </div>
 
@@ -1432,7 +1443,7 @@ export default function App() {
                 });
                 setLeadsList((prev) => [saved, ...prev]);
                 setBookingModalOpen(false);
-                alert(`Thank you ${formData.name}! Your reservation request has been submitted. Anmol & Komal will reach out shortly.`);
+                alert(`Thank you ${formData.name}! Your reservation request has been submitted. ${siteConfig.founder1?.name || 'Anmol'} & ${siteConfig.founder2?.name || 'Komal'} will reach out shortly.`);
               }}
               className="mt-6 space-y-4"
             >
