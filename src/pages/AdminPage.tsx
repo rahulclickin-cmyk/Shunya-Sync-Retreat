@@ -1515,6 +1515,26 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       />
                     </label>
                   </div>
+
+                  {/* Preset yoga banner buttons */}
+                  <div className="flex flex-wrap items-center gap-2 pt-2">
+                    <span className="text-[10px] text-stone-400 uppercase tracking-wider">Yoga Banners:</span>
+                    {[
+                      { label: '🧘‍♀️ Sunrise Mountain Yoga', url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2560&q=85' },
+                      { label: '🌿 Nature Asana', url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=2560&q=85' },
+                      { label: '🌅 Sacred River Sunrise', url: 'https://www.shunyasync.com/images/DSC05576.JPG' },
+                      { label: '🌸 Forest Meditation', url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=2560&q=85' }
+                    ].map((preset) => (
+                      <button
+                        key={preset.label}
+                        type="button"
+                        onClick={() => applyImageToField('heroBgImage', preset.url)}
+                        className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[10px] text-stone-300 hover:text-white transition cursor-pointer"
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="relative aspect-[21/9] rounded-2xl overflow-hidden border border-[#3E2F23]">
@@ -3019,12 +3039,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
                   {/* Preset quick buttons */}
                   <div className="flex flex-wrap items-center gap-2 pt-1">
-                    <span className="text-[10px] text-stone-400 uppercase tracking-wider">High-Res Presets:</span>
+                    <span className="text-[10px] text-stone-400 uppercase tracking-wider">Yoga Banners:</span>
                     {[
-                      { label: 'Himalayan Sunrise Shala', url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2000&q=85' },
-                      { label: 'Misty Sacred Ridge', url: 'https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=2000&q=85' },
-                      { label: 'Himalayan River & Forest', url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2000&q=85' },
-                      { label: 'Acoustic Sound Dome', url: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=2000&q=85' }
+                      { label: '🧘‍♀️ Sunrise Mountain Yoga', url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2560&q=85' },
+                      { label: '🌿 Nature Asana', url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=2560&q=85' },
+                      { label: '🌅 Sacred River Sunrise', url: 'https://www.shunyasync.com/images/DSC05576.JPG' },
+                      { label: '🌸 Forest Meditation', url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=2560&q=85' }
                     ].map((preset) => (
                       <button
                         key={preset.label}

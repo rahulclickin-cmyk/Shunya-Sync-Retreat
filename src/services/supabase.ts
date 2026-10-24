@@ -101,7 +101,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
   metaTitle: 'Shunya Sync Retreat — Mindful Yoga, Sound Healing & Forest Stillness in India',
   metaDescription: 'Disconnect from chaos, discover your true self, and sync with the universe. Luxury 4D/3N & 5D/4N sacred wellness retreats in India with 432Hz sound therapy, Hatha yoga, and organic sattvic nourishment.',
   keywords: 'wellness retreat India, sound healing retreat, yoga retreat India, Rishikesh yoga retreat, 432Hz sound bath, mindful meditation, sattvic food retreat, digital detox India, Shunya Sync',
-  ogImage: 'https://www.shunyasync.com/images/DSC05470.JPG',
+  ogImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2560&q=85',
   canonicalUrl: 'https://shunyasync.com',
   geoRegion: 'IN-UT',
   geoPlacename: 'Rishikesh, Uttarakhand, India',
@@ -152,7 +152,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   headerAnnouncement: '🌿 Next Sacred Cohort: Nov 14–17 & Dec 12–16, 2026 • Limited to 12 Seekers • Direct WhatsApp: +91 9259698064',
   heroHeadline: 'Shunya Sync Retreat',
   heroSubheadline: 'FIND STILLNESS • ALIGN WITHIN • AWAKEN — Disconnect the noise, find your true self and sync with the universe.',
-  heroBgImage: 'https://www.shunyasync.com/images/DSC05470.JPG',
+  heroBgImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2560&q=85',
   heroTags: ['Somatic Yoga', 'Vedic Sound Bath', 'Forest Bathing', 'Digital Fasting', 'Inner Alignment'],
   aboutText: 'At Shunya Sync Retreat, At Shunya Sync, we curate soulful retreats that bring together yoga, mindfulness, nature, adventure, and meaningful human connections—helping you reconnect with yourself and live with greater clarity and purpose.',
   philosophyQuote: 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
@@ -495,7 +495,11 @@ export function normalizeSiteConfig(input: any): SiteConfig {
   };
 
   // Hero Section: direct input MUST take precedence over stale JSONB/defaults
-  const heroBgImage = firstValid(input.heroBgImage, input.hero_bg_image, pages.heroBgImage, settings.heroBgImage, DEFAULT_SITE_CONFIG.heroBgImage)!;
+  let heroBgImage = firstValid(input.heroBgImage, input.hero_bg_image, pages.heroBgImage, settings.heroBgImage, DEFAULT_SITE_CONFIG.heroBgImage)!;
+  // Seamlessly migrate stale legacy hero image to the new serene yoga meditation banner
+  if (!heroBgImage || heroBgImage === 'https://www.shunyasync.com/images/DSC05470.JPG' || heroBgImage.includes('DSC05470.JPG')) {
+    heroBgImage = DEFAULT_SITE_CONFIG.heroBgImage;
+  }
   const heroHeadline = firstValid(input.heroHeadline, input.hero_headline, pages.heroHeadline, settings.heroHeadline, DEFAULT_SITE_CONFIG.heroHeadline)!;
   const heroSubheadline = firstValid(input.heroSubheadline, input.hero_subheadline, pages.heroSubheadline, settings.heroSubheadline, DEFAULT_SITE_CONFIG.heroSubheadline)!;
   const heroTags = firstValid(input.heroTags, input.hero_tags, pages.heroTags, settings.heroTags, DEFAULT_SITE_CONFIG.heroTags)!;
