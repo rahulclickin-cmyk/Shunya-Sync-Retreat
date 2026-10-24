@@ -7,7 +7,7 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
     title: 'The Science of 432Hz: How Sacred Sound Downregulates the Nervous System',
     slug: 'science-of-432hz-sound-healing',
     category: 'Sound Healing',
-    author: 'Komal Malhotra',
+    author: 'Anmol Khatri',
     date: 'October 14, 2026',
     readTime: '6 min read',
     summary: 'Explore the biophysical mechanisms through which Tibetan singing bowls and gong harmonics shift brainwaves from high-stress beta states down into theta and delta stillness.',
@@ -33,7 +33,7 @@ During our daily 432Hz sacred sound immersions at Shunya Sync, participants lie 
     title: 'Pranayama in the Pines: Awakening Prana Through Himalayan Mountain Air',
     slug: 'pranayama-in-the-pines-himalayan-breath',
     category: 'Yoga & Breathwork',
-    author: 'Anmol Khatri',
+    author: 'Komal Malhotra',
     date: 'October 08, 2026',
     readTime: '5 min read',
     summary: 'Why practicing conscious breath control at dawn surrounded by pine forest canopy elevates oxygen saturation, purifies subtle energy channels, and restores mental clarity.',
@@ -139,8 +139,8 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
       category: 'Practices'
     },
     {
-      question: 'How do I reserve my spot?',
-      answer: 'You can submit the booking form on this website or chat directly via WhatsApp (+91 9259698064). A deposit secures your sanctuary suite.',
+      question: 'How do I reserve my spot and what is the cancellation policy?',
+      answer: 'Retreat Payment should be 30 days in advance. Under 45 days: 25% refund. Under 30 days: Non refundable. You can submit the booking form on this website or chat directly via WhatsApp (+91 9259698064).',
       category: 'Booking'
     }
   ]
@@ -159,7 +159,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   whyWeStarted: 'To offer intimate, soulful journeys away from daily noise.',
   whatMakesUsDifferent: 'Intimate groups, nature-based settings, soulful evenings, and expert guides.',
   adminPin: '7788',
-  logoUrl: '/logo.png',
+  logoUrl: '/logo_original.png',
   founder1: {
     name: 'Anmol Khatri',
     title: 'Founder & Movement Guide',
@@ -180,21 +180,24 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       twinPrice: 22000,
       soloPrice: 26000,
       badge: 'Weekend Reset',
-      description: 'Choose your duration — each package includes a full day-by-day schedule and transparent pricing.'
+      description: 'Choose your duration — each package includes a full day-by-day schedule and transparent pricing.',
+      image: 'https://www.shunyasync.com/images/DSC05576.JPG'
     },
     pkg3n4d: {
       title: '3 Nights / 4 Days Retreat',
       twinPrice: 26000,
       soloPrice: 32000,
       badge: 'Most Popular',
-      description: 'Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure.'
+      description: 'Body & breath connection, Day 2 sacred Ganga Aarti, chakra & sound healing, and thrilling adventure.',
+      image: 'https://www.shunyasync.com/images/DSC05503.JPG' // Yoga at Beach / Ghat
     },
     pkg4n5d: {
       title: '4 Nights / 5 Days Retreat (Premium Experience)',
       twinPrice: 44000,
       soloPrice: 52000,
       badge: 'Premium Experience',
-      description: 'Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration.'
+      description: 'Deep healing, waterfall excursions, river rafting, ecstatic dance, inner work, and complete spiritual integration.',
+      image: 'https://www.shunyasync.com/images/DSC05860.JPG' // Waterfall image
     },
     // Backward compatibility aliases
     pkg4d3n: {
@@ -202,14 +205,16 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       twinPrice: 26000,
       soloPrice: 32000,
       badge: 'Most Popular',
-      description: 'Body & breath connection, evening Ganga Aarti, chakra & sound healing, and thrilling adventure.'
+      description: 'Body & breath connection, Day 2 sacred Ganga Aarti, chakra & sound healing, and thrilling adventure.',
+      image: 'https://www.shunyasync.com/images/DSC05503.JPG'
     },
     pkg5d4n: {
       title: '4 Nights / 5 Days Retreat (Premium Experience)',
       twinPrice: 44000,
       soloPrice: 52000,
       badge: 'Premium Experience',
-      description: 'Deep healing, river rafting, ecstatic dance, inner work, and complete spiritual integration.'
+      description: 'Deep healing, waterfall excursions, river rafting, ecstatic dance, inner work, and complete spiritual integration.',
+      image: 'https://www.shunyasync.com/images/DSC05860.JPG'
     }
   },
   contact: {
@@ -251,7 +256,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     }
   ],
   seo: DEFAULT_SEO_CONFIG,
-  brandSubtitle: 'Retreat Sanctuary',
+  brandSubtitle: 'RETREAT',
   showLogoIcon: true,
   heroBadge: 'COHORT 2026',
   heroQuote: 'In the quiet zero between each breath, the soul remembers who it was before the world taught it to be hurried.',
@@ -272,6 +277,12 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     ]
   },
   blogPosts: DEFAULT_BLOG_POSTS,
+  refundPolicy: {
+    under30Days: 'Under 30 days: Non refundable',
+    under45Days: 'Under 45 days: 25% refund',
+    advancePaymentPolicy: 'Retreat Payment should be 30 days in advance.',
+    customNotes: 'All retreat payments must be completed 30 days in advance to secure your room and catering arrangements.'
+  },
   instagramReelUrl: 'https://www.instagram.com/reel/DXtQI5Fko0_/',
   instagramReelPosition: 'below-packages',
   instagramReelTitle: 'Living Atmosphere & Sacred Flow',
@@ -357,7 +368,8 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     twinPrice: typeof rawPkg2.twinPrice === 'number' && !isNaN(rawPkg2.twinPrice) ? rawPkg2.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.twinPrice,
     soloPrice: typeof rawPkg2.soloPrice === 'number' && !isNaN(rawPkg2.soloPrice) ? rawPkg2.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.soloPrice,
     badge: typeof rawPkg2.badge === 'string' && rawPkg2.badge ? rawPkg2.badge : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.badge,
-    description: typeof rawPkg2.description === 'string' && rawPkg2.description ? rawPkg2.description : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.description
+    description: typeof rawPkg2.description === 'string' && rawPkg2.description ? rawPkg2.description : DEFAULT_SITE_CONFIG.pricing.pkg2n3d.description,
+    image: typeof rawPkg2.image === 'string' && rawPkg2.image.trim() ? rawPkg2.image : (DEFAULT_SITE_CONFIG.pricing.pkg2n3d.image || 'https://www.shunyasync.com/images/DSC05576.JPG')
   };
 
   const pkg3Item = {
@@ -365,7 +377,8 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     twinPrice: typeof rawPkg3.twinPrice === 'number' && !isNaN(rawPkg3.twinPrice) ? rawPkg3.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.twinPrice,
     soloPrice: typeof rawPkg3.soloPrice === 'number' && !isNaN(rawPkg3.soloPrice) ? rawPkg3.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.soloPrice,
     badge: typeof rawPkg3.badge === 'string' && rawPkg3.badge ? rawPkg3.badge : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.badge,
-    description: typeof rawPkg3.description === 'string' && rawPkg3.description ? rawPkg3.description : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.description
+    description: typeof rawPkg3.description === 'string' && rawPkg3.description ? rawPkg3.description : DEFAULT_SITE_CONFIG.pricing.pkg3n4d.description,
+    image: typeof rawPkg3.image === 'string' && rawPkg3.image.trim() ? rawPkg3.image : (DEFAULT_SITE_CONFIG.pricing.pkg3n4d.image || 'https://www.shunyasync.com/images/DSC05503.JPG')
   };
 
   const pkg4Item = {
@@ -373,7 +386,8 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     twinPrice: typeof rawPkg4.twinPrice === 'number' && !isNaN(rawPkg4.twinPrice) ? rawPkg4.twinPrice : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.twinPrice,
     soloPrice: typeof rawPkg4.soloPrice === 'number' && !isNaN(rawPkg4.soloPrice) ? rawPkg4.soloPrice : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.soloPrice,
     badge: typeof rawPkg4.badge === 'string' && rawPkg4.badge ? rawPkg4.badge : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.badge,
-    description: typeof rawPkg4.description === 'string' && rawPkg4.description ? rawPkg4.description : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.description
+    description: typeof rawPkg4.description === 'string' && rawPkg4.description ? rawPkg4.description : DEFAULT_SITE_CONFIG.pricing.pkg4n5d.description,
+    image: typeof rawPkg4.image === 'string' && rawPkg4.image.trim() ? rawPkg4.image : (DEFAULT_SITE_CONFIG.pricing.pkg4n5d.image || 'https://www.shunyasync.com/images/DSC05860.JPG')
   };
 
   const safePricing = {
@@ -516,6 +530,15 @@ export function normalizeSiteConfig(input: any): SiteConfig {
   const instagramReelTitle = settings.instagramReelTitle || pages.instagramReelTitle || input.instagramReelTitle || (input.instagramReel as any)?.title || DEFAULT_SITE_CONFIG.instagramReelTitle;
   const instagramReelCaption = settings.instagramReelCaption || pages.instagramReelCaption || input.instagramReelCaption || (input.instagramReel as any)?.caption || DEFAULT_SITE_CONFIG.instagramReelCaption;
 
+  // 100% Dynamic Refund Policy
+  const rawRefund = settings.refundPolicy || pages.refundPolicy || input.refundPolicy || {};
+  const refundPolicy = {
+    under30Days: typeof rawRefund.under30Days === 'string' && rawRefund.under30Days.trim() ? rawRefund.under30Days : DEFAULT_SITE_CONFIG.refundPolicy?.under30Days || 'Under 30 days: Non refundable',
+    under45Days: typeof rawRefund.under45Days === 'string' && rawRefund.under45Days.trim() ? rawRefund.under45Days : DEFAULT_SITE_CONFIG.refundPolicy?.under45Days || 'Under 45 days: 25% refund',
+    advancePaymentPolicy: typeof rawRefund.advancePaymentPolicy === 'string' && rawRefund.advancePaymentPolicy.trim() ? rawRefund.advancePaymentPolicy : DEFAULT_SITE_CONFIG.refundPolicy?.advancePaymentPolicy || 'Retreat Payment should be 30 days in advance.',
+    customNotes: typeof rawRefund.customNotes === 'string' ? rawRefund.customNotes : DEFAULT_SITE_CONFIG.refundPolicy?.customNotes || ''
+  };
+
   return {
     ...input,
     ...pages,
@@ -555,6 +578,7 @@ export function normalizeSiteConfig(input: any): SiteConfig {
     seo,
     whyChooseUs,
     blogPosts,
+    refundPolicy,
 
     footerDescription,
     footerCopyright,
@@ -788,6 +812,7 @@ export async function fetchConfigFromSupabase(): Promise<SiteConfig | null> {
       pricing: packages,
       seo: seoTags,
       blogPosts,
+      refundPolicy: settings.refundPolicy || pages.refundPolicy || data.refund_policy,
 
       footerDescription: pages.footerDescription || data.footer_description,
       footerCopyright: pages.footerCopyright || data.footer_copyright,
@@ -828,11 +853,12 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
 
   // 1. Bundle all global settings, branding, logos, and pins into site_settings (JSONB)
   const bundledSiteSettings: Record<string, unknown> = {
+    ...(config.site_settings || {}),
     brandName: config.brandName,
-    brandSubtitle: config.brandSubtitle || 'Retreat Sanctuary',
+    brandSubtitle: config.brandSubtitle || 'RETREAT',
     tagline: config.tagline,
     headerAnnouncement: config.headerAnnouncement,
-    logoUrl: config.logoUrl || '/logo.png',
+    logoUrl: config.logoUrl || '/logo_original.png',
     showLogoIcon: config.showLogoIcon !== false,
     adminPin: config.adminPin || '7788',
     contact: config.contact,
@@ -843,15 +869,18 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
       founder2: config.founder2
     },
     seo_geo_tags: config.seo || DEFAULT_SEO_CONFIG,
+    refundPolicy: config.refundPolicy || DEFAULT_SITE_CONFIG.refundPolicy,
+    retreat_packages: config.pricing,
+    pricing: config.pricing,
     instagramReelUrl: config.instagramReelUrl,
     instagramReelPosition: config.instagramReelPosition || 'below-packages',
     instagramReelTitle: config.instagramReelTitle,
-    instagramReelCaption: config.instagramReelCaption,
-    ...(config.site_settings || {})
+    instagramReelCaption: config.instagramReelCaption
   };
 
   // 2. Bundle all page narratives, hero typography, quotes, and sections into pages_content (JSONB)
   const bundledPagesContent: Record<string, unknown> = {
+    ...(config.pages_content || {}),
     heroHeadline: config.heroHeadline,
     heroSubheadline: config.heroSubheadline,
     heroBgImage: config.heroBgImage,
@@ -872,14 +901,15 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
     },
     galleryImages: config.galleryImages || DEFAULT_SITE_CONFIG.galleryImages,
     retreat_packages: config.pricing,
+    pricing: config.pricing,
+    refundPolicy: config.refundPolicy || DEFAULT_SITE_CONFIG.refundPolicy,
     blog_posts: config.blogPosts || DEFAULT_BLOG_POSTS,
     footerDescription: config.footerDescription,
     footerCopyright: config.footerCopyright,
     instagramReelUrl: config.instagramReelUrl,
     instagramReelPosition: config.instagramReelPosition || 'below-packages',
     instagramReelTitle: config.instagramReelTitle,
-    instagramReelCaption: config.instagramReelCaption,
-    ...(config.pages_content || {})
+    instagramReelCaption: config.instagramReelCaption
   };
 
   // 3. Dynamically capture any arbitrary new custom fields added to config
@@ -888,7 +918,7 @@ export async function syncConfigToSupabase(config: SiteConfig): Promise<{ succes
     'adminPin', 'contact', 'heroHeadline', 'heroSubheadline', 'heroBgImage', 'heroTags',
     'heroBadge', 'heroQuote', 'aboutText', 'philosophyQuote', 'whyWeStarted', 'whatMakesUsDifferent',
     'footerDescription', 'footerCopyright', 'founder1', 'founder2', 'pricing', 'galleryImages',
-    'seo', 'whyChooseUs', 'blogPosts', 'site_settings', 'pages_content', 'dynamic_sections',
+    'seo', 'whyChooseUs', 'blogPosts', 'refundPolicy', 'site_settings', 'pages_content', 'dynamic_sections',
     'retreat_packages', 'seo_geo_tags', 'instagramReelUrl', 'instagramReelPosition',
     'instagramReelTitle', 'instagramReelCaption', 'instagramReel'
   ]);

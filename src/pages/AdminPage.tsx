@@ -75,20 +75,19 @@ interface AdminPageProps {
 
 type AdminSection =
   | 'overview'
-  | 'media'
-  | 'reel'
-  | 'pages'
   | 'branding'
-  | 'why-us'
   | 'hero'
-  | 'pricing'
   | 'founders'
+  | 'pricing'
+  | 'reel'
+  | 'why-us'
+  | 'media'
   | 'gallery'
   | 'blog'
+  | 'pages'
   | 'seo'
   | 'leads'
-  | 'security'
-  | 'supabase';
+  | 'security';
 
 export const AdminPage: React.FC<AdminPageProps> = ({
   config,
@@ -252,6 +251,32 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         whyChooseUs: {
           ...formConfig.whyChooseUs,
           bgImage: url
+        }
+      };
+    } else if (field === 'pkg2n3d_image') {
+      nextConfig = {
+        ...formConfig,
+        pricing: {
+          ...formConfig.pricing,
+          pkg2n3d: { ...formConfig.pricing.pkg2n3d, image: url }
+        }
+      };
+    } else if (field === 'pkg3n4d_image') {
+      nextConfig = {
+        ...formConfig,
+        pricing: {
+          ...formConfig.pricing,
+          pkg3n4d: { ...formConfig.pricing.pkg3n4d, image: url },
+          pkg4d3n: { ...formConfig.pricing.pkg4d3n, image: url }
+        }
+      };
+    } else if (field === 'pkg4n5d_image') {
+      nextConfig = {
+        ...formConfig,
+        pricing: {
+          ...formConfig.pricing,
+          pkg4n5d: { ...formConfig.pricing.pkg4n5d, image: url },
+          pkg5d4n: { ...formConfig.pricing.pkg5d4n, image: url }
         }
       };
     } else if (field.startsWith('gallery_')) {
@@ -649,20 +674,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
           {[
             { id: 'overview', label: 'Overview & Status', icon: Layers },
-            { id: 'media', label: 'Media & Photo Uploads', icon: Upload },
-            { id: 'reel', label: 'Instagram Reel Embed', icon: Instagram },
-            { id: 'pages', label: 'All Pages Content (A-Z)', icon: FileText },
             { id: 'branding', label: 'Logo & Brand Identity', icon: Sparkles },
             { id: 'hero', label: 'Hero & Headlines', icon: ImageIcon },
-            { id: 'founders', label: 'Founders & Bio', icon: User },
+            { id: 'founders', label: 'Founders & Bios', icon: User },
+            { id: 'pricing', label: 'Pricing & Packages', icon: DollarSign },
+            { id: 'reel', label: 'Instagram Reel Embed', icon: Instagram },
             { id: 'why-us', label: 'Why Choose Us (Parallax)', icon: Award },
-            { id: 'pricing', label: 'Retreat Pricing', icon: DollarSign },
+            { id: 'media', label: 'Media & Photo Uploads', icon: Upload },
             { id: 'gallery', label: 'Sanctuary Gallery', icon: ImageIcon },
             { id: 'blog', label: 'Blog & Articles CMS', icon: BookOpen },
+            { id: 'pages', label: 'All Pages Content (A-Z)', icon: FileText },
             { id: 'seo', label: 'SEO, GEO & FAQs', icon: Globe },
             { id: 'leads', label: `Guest Leads (${leadsList.length})`, icon: MessageSquare },
-            { id: 'security', label: 'Admin PIN / Security', icon: ShieldCheck },
-            { id: 'supabase', label: 'Supabase Cloud Config', icon: Cloud }
+            { id: 'security', label: 'Admin PIN / Security', icon: ShieldCheck }
           ].map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -873,7 +897,23 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                         <span>{formConfig.showLogoIcon !== false ? 'Hide / Remove Logo Icon' : 'Restore Logo Icon'}</span>
                       </button>
 
-                      {/* Reset to Light Logo */}
+                      {/* Set to Original Logo */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormConfig({
+                            ...formConfig,
+                            logoUrl: '/logo_original.png',
+                            showLogoIcon: true
+                          })
+                        }
+                        className="px-3.5 py-2 rounded-xl bg-[#2E2319] hover:bg-[#3D2E20] border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
+                        title="Use original Shunya Sync meditating tree logo"
+                      >
+                        <span>Original Logo</span>
+                      </button>
+
+                      {/* Set to Light Golden Logo */}
                       <button
                         type="button"
                         onClick={() =>
@@ -884,9 +924,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                           })
                         }
                         className="px-3.5 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-stone-300 text-xs font-medium transition cursor-pointer"
-                        title="Reset to default light golden logo emblem"
+                        title="Switch to monochrome light golden logo emblem"
                       >
-                        Reset Default Light Logo
+                        Golden Light Logo
                       </button>
                     </div>
                   </div>
@@ -1300,7 +1340,56 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
               {/* 1. 2 Nights / 3 Days */}
               <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
-                <span className="text-xs font-bold uppercase text-[#D4AF37]">✨ 2 Nights / 3 Days Retreat</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase text-[#D4AF37]">✨ 2 Nights / 3 Days Retreat</span>
+                  <span className="text-[10px] text-stone-400">Weekend Reset</span>
+                </div>
+
+                {/* Package Image Controls */}
+                <div className="space-y-2 pt-1 border-t border-[#2E2319]">
+                  <label className="block text-xs text-stone-400">Package Cover Image</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="w-20 h-14 rounded-xl overflow-hidden border border-[#3E2F23] shrink-0 bg-[#241C15]">
+                      <img
+                        src={formConfig?.pricing?.pkg2n3d?.image || 'https://www.shunyasync.com/images/DSC05576.JPG'}
+                        alt="2N3D Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 w-full space-y-2">
+                      <input
+                        type="text"
+                        value={formConfig?.pricing?.pkg2n3d?.image || ''}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            pricing: {
+                              ...formConfig.pricing,
+                              pkg2n3d: { ...formConfig.pricing.pkg2n3d, image: e.target.value }
+                            }
+                          })
+                        }
+                        placeholder="https://... or /assets/..."
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none font-mono"
+                      />
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => applyImageToField('pkg2n3d_image', 'https://www.shunyasync.com/images/DSC05576.JPG')}
+                          className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] text-[11px] text-[#D4AF37] border border-[#3E2F23] transition cursor-pointer"
+                        >
+                          🌅 Sunrise River Yoga
+                        </button>
+                        <label className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[11px] font-semibold text-white transition flex items-center gap-1 cursor-pointer">
+                          <Upload className="w-3 h-3 text-[#D4AF37]" />
+                          <span>Upload File</span>
+                          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'pkg2n3d_image')} className="sr-only" />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-stone-400 mb-1">Double Sharing Price (₹)</label>
@@ -1341,12 +1430,60 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
               </div>
 
-              {/* 2. 3 Nights / 4 Days */}
+              {/* 2. 3 Nights / 4 Days (Yoga at Beach/Ghat) */}
               <div className="p-6 rounded-2xl bg-[#1A140F] border-2 border-[#D4AF37]/50 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase text-[#E5C158]">🌿 3 Nights / 4 Days Retreat</span>
                   <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37]">Most Popular</span>
                 </div>
+
+                {/* Package Image Controls */}
+                <div className="space-y-2 pt-1 border-t border-[#2E2319]">
+                  <label className="block text-xs text-stone-400">Package Cover Image (Yoga at Beach/Ghat)</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="w-20 h-14 rounded-xl overflow-hidden border border-[#D4AF37]/50 shrink-0 bg-[#241C15]">
+                      <img
+                        src={formConfig?.pricing?.pkg3n4d?.image || 'https://www.shunyasync.com/images/DSC05503.JPG'}
+                        alt="3N4D Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 w-full space-y-2">
+                      <input
+                        type="text"
+                        value={formConfig?.pricing?.pkg3n4d?.image || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormConfig({
+                            ...formConfig,
+                            pricing: {
+                              ...formConfig.pricing,
+                              pkg3n4d: { ...formConfig.pricing.pkg3n4d, image: val },
+                              pkg4d3n: { ...formConfig.pricing.pkg4d3n, image: val }
+                            }
+                          });
+                        }}
+                        placeholder="https://... or /assets/..."
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none font-mono"
+                      />
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => applyImageToField('pkg3n4d_image', 'https://www.shunyasync.com/images/DSC05503.JPG')}
+                          className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] text-[11px] text-[#D4AF37] border border-[#3E2F23] transition cursor-pointer"
+                        >
+                          🧘 Yoga at Beach/Ghat
+                        </button>
+                        <label className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[11px] font-semibold text-white transition flex items-center gap-1 cursor-pointer">
+                          <Upload className="w-3 h-3 text-[#D4AF37]" />
+                          <span>Upload File</span>
+                          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'pkg3n4d_image')} className="sr-only" />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-stone-400 mb-1">Double Sharing Price (₹)</label>
@@ -1389,9 +1526,60 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
               </div>
 
-              {/* 3. 4 Nights / 5 Days */}
+              {/* 3. 4 Nights / 5 Days (Waterfall Image) */}
               <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
-                <span className="text-xs font-bold uppercase text-[#D4AF37]">🌸 4 Nights / 5 Days Retreat (Premium)</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase text-[#D4AF37]">🌸 4 Nights / 5 Days Retreat (Premium)</span>
+                  <span className="text-[10px] text-stone-400">Premium Experience</span>
+                </div>
+
+                {/* Package Image Controls */}
+                <div className="space-y-2 pt-1 border-t border-[#2E2319]">
+                  <label className="block text-xs text-stone-400">Package Cover Image (Waterfall)</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="w-20 h-14 rounded-xl overflow-hidden border border-[#3E2F23] shrink-0 bg-[#241C15]">
+                      <img
+                        src={formConfig?.pricing?.pkg4n5d?.image || 'https://www.shunyasync.com/images/DSC05860.JPG'}
+                        alt="4N5D Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 w-full space-y-2">
+                      <input
+                        type="text"
+                        value={formConfig?.pricing?.pkg4n5d?.image || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormConfig({
+                            ...formConfig,
+                            pricing: {
+                              ...formConfig.pricing,
+                              pkg4n5d: { ...formConfig.pricing.pkg4n5d, image: val },
+                              pkg5d4n: { ...formConfig.pricing.pkg5d4n, image: val }
+                            }
+                          });
+                        }}
+                        placeholder="https://... or /assets/..."
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none font-mono"
+                      />
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => applyImageToField('pkg4n5d_image', 'https://www.shunyasync.com/images/DSC05860.JPG')}
+                          className="px-2.5 py-1 rounded-lg bg-[#2E2319] hover:bg-[#3D2E20] text-[11px] text-[#D4AF37] border border-[#3E2F23] transition cursor-pointer"
+                        >
+                          🌊 Waterfall Excursion
+                        </button>
+                        <label className="px-2.5 py-1 rounded-lg bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-[11px] font-semibold text-white transition flex items-center gap-1 cursor-pointer">
+                          <Upload className="w-3 h-3 text-[#D4AF37]" />
+                          <span>Upload File</span>
+                          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'pkg4n5d_image')} className="sr-only" />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-stone-400 mb-1">Double Sharing Price (₹)</label>
@@ -1429,6 +1617,112 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                         });
                       }}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. DEDICATED CANCELLATION & REFUND POLICY EDITOR */}
+              <div className="p-6 rounded-2xl bg-[#1A140F] border-2 border-[#D4AF37]/40 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-serif-display text-lg font-bold text-white flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4 text-[#D4AF37]" />
+                      <span>Cancellation &amp; Refund Policy (Headless CMS)</span>
+                    </h3>
+                    <p className="text-xs text-stone-400 mt-0.5">
+                      Fully customizable guest cancellation terms rendered on the live legal page and booking forms.
+                    </p>
+                  </div>
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-300">
+                    Active on Site
+                  </span>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <label className="block text-xs text-stone-300 mb-1 font-semibold">
+                      Retreat Booking Policy (Advance Payment Requirement)
+                    </label>
+                    <input
+                      type="text"
+                      value={formConfig.refundPolicy?.advancePaymentPolicy || 'Retreat Payment should be 30 days in advance.'}
+                      onChange={(e) =>
+                        setFormConfig({
+                          ...formConfig,
+                          refundPolicy: {
+                            ...(formConfig.refundPolicy || DEFAULT_SITE_CONFIG.refundPolicy!),
+                            advancePaymentPolicy: e.target.value
+                          }
+                        })
+                      }
+                      placeholder="e.g. Retreat Payment should be 30 days in advance."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-stone-300 mb-1 font-semibold">
+                        Under 45 Days Cancellation Policy
+                      </label>
+                      <input
+                        type="text"
+                        value={formConfig.refundPolicy?.under45Days || 'Under 45 days: 25% refund'}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            refundPolicy: {
+                              ...(formConfig.refundPolicy || DEFAULT_SITE_CONFIG.refundPolicy!),
+                              under45Days: e.target.value
+                            }
+                          })
+                        }
+                        placeholder="e.g. Under 45 days: 25% refund"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs text-stone-300 mb-1 font-semibold">
+                        Under 30 Days Cancellation Policy
+                      </label>
+                      <input
+                        type="text"
+                        value={formConfig.refundPolicy?.under30Days || 'Under 30 days: Non refundable'}
+                        onChange={(e) =>
+                          setFormConfig({
+                            ...formConfig,
+                            refundPolicy: {
+                              ...(formConfig.refundPolicy || DEFAULT_SITE_CONFIG.refundPolicy!),
+                              under30Days: e.target.value
+                            }
+                          })
+                        }
+                        placeholder="e.g. Under 30 days: Non refundable"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-stone-400 mb-1">
+                      Additional Policy Notes &amp; Logistics
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formConfig.refundPolicy?.customNotes || ''}
+                      onChange={(e) =>
+                        setFormConfig({
+                          ...formConfig,
+                          refundPolicy: {
+                            ...(formConfig.refundPolicy || DEFAULT_SITE_CONFIG.refundPolicy!),
+                            customNotes: e.target.value
+                          }
+                        })
+                      }
+                      placeholder="e.g. All retreat payments must be completed 30 days in advance to secure your room and catering arrangements."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white focus:border-[#D4AF37] focus:outline-none resize-none"
                     />
                   </div>
                 </div>
@@ -2325,149 +2619,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
           )}
 
-          {/* SECTION 11: SUPABASE CONFIG */}
-          {activeSection === 'supabase' && (
-            <div className="space-y-6 animate-fade-in">
-              <div>
-                <h2 className="font-serif-display text-2xl font-bold text-white">Supabase Cloud Database &amp; Storage</h2>
-                <p className="text-xs text-stone-400 mt-1">Credentials, table name, and storage bucket configuration.</p>
-              </div>
 
-              <div className="p-6 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs text-stone-400 mb-1">Project URL</label>
-                    <input
-                      type="text"
-                      value={supabaseCfg.supabaseUrl}
-                      onChange={(e) => setSupabaseCfg({ ...supabaseCfg, supabaseUrl: e.target.value })}
-                      placeholder="https://xxx.supabase.co"
-                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-stone-400 mb-1">Anon Public Key</label>
-                    <input
-                      type="password"
-                      value={supabaseCfg.supabaseAnonKey}
-                      onChange={(e) => setSupabaseCfg({ ...supabaseCfg, supabaseAnonKey: e.target.value })}
-                      placeholder="eyJhbGci..."
-                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs text-stone-400 mb-1">Database Table Name</label>
-                    <input
-                      type="text"
-                      value={supabaseCfg.tableName}
-                      onChange={(e) => setSupabaseCfg({ ...supabaseCfg, tableName: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-stone-400 mb-1">Storage Bucket Name</label>
-                    <input
-                      type="text"
-                      value={supabaseCfg.storageBucket || DEFAULT_STORAGE_BUCKET}
-                      onChange={(e) => setSupabaseCfg({ ...supabaseCfg, storageBucket: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl bg-[#241C15] border border-[#3E2F23] text-xs text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="pt-2 flex flex-wrap gap-3">
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(SUPABASE_SQL_SCHEMA);
-                      setCopiedSql(true);
-                      setTimeout(() => setCopiedSql(false), 3000);
-                    }}
-                    className="px-4 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs font-semibold text-[#D4AF37] flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                    <span>{copiedSql ? '✓ Database SQL Copied' : 'Copy Database SQL'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(SUPABASE_STORAGE_SQL_SETUP);
-                      setCopiedStorageSql(true);
-                      setTimeout(() => setCopiedStorageSql(false), 3000);
-                    }}
-                    className="px-4 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#3E2F23] text-xs font-semibold text-[#D4AF37] flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                    <span>{copiedStorageSql ? '✓ Storage SQL Copied' : 'Copy Storage SQL'}</span>
-                  </button>
-                </div>
-
-                {/* Dynamic Headless JSONB Schema Migration Card */}
-                <div className="p-4 rounded-2xl bg-[#1F1710] border border-[#D4AF37]/30 space-y-3 mt-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#E5C158]" />
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                        Headless JSONB Schema Migration (No Schema Cache Errors)
-                      </h4>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(SUPABASE_JSONB_MIGRATION_SQL);
-                        setCopiedJsonbSql(true);
-                        setTimeout(() => setCopiedJsonbSql(false), 3000);
-                      }}
-                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#120E0A] text-xs font-bold uppercase tracking-wider hover:brightness-110 flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>{copiedJsonbSql ? '✓ Migration SQL Copied!' : '1-Click Copy Migration SQL'}</span>
-                    </button>
-                  </div>
-                  <p className="text-[11px] text-stone-300 leading-relaxed">
-                    Adds dynamic JSONB columns (<code className="text-[#D4AF37]">pages_content</code>, <code className="text-[#D4AF37]">site_settings</code>, <code className="text-[#D4AF37]">dynamic_sections</code>, <code className="text-[#D4AF37]">retreat_packages</code>, and <code className="text-[#D4AF37]">seo_geo_tags</code>) to your <code className="text-white font-mono">shunya_site_config</code> table.
-                  </p>
-                  <pre className="p-3 rounded-xl bg-[#120E0A] text-[10px] text-stone-300 font-mono overflow-x-auto border border-[#3E2F23]">
-                    {SUPABASE_JSONB_MIGRATION_SQL.trim()}
-                  </pre>
-                </div>
-
-                {/* Strict Enterprise Row Level Security (RLS) Card */}
-                <div className="p-4 rounded-2xl bg-[#1A120B] border border-amber-600/40 space-y-3 mt-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                        Enterprise Row Level Security (RLS) Enforcement
-                      </h4>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(SUPABASE_RLS_ENFORCEMENT_SQL);
-                        setCopiedRlsSql(true);
-                        setTimeout(() => setCopiedRlsSql(false), 3000);
-                      }}
-                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-xs font-bold uppercase tracking-wider hover:brightness-110 flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>{copiedRlsSql ? '✓ RLS SQL Copied!' : '1-Click Copy RLS SQL'}</span>
-                    </button>
-                  </div>
-                  <p className="text-[11px] text-stone-300 leading-relaxed">
-                    Enforces strict zero-trust database security: allows public users only <code className="text-emerald-400">SELECT</code> read access, while restricting <code className="text-rose-400">UPDATE</code>, <code className="text-rose-400">INSERT</code>, and <code className="text-rose-400">DELETE</code> exclusively to authenticated admin sessions.
-                  </p>
-                  <pre className="p-3 rounded-xl bg-[#100C08] text-[10px] text-emerald-200/80 font-mono overflow-x-auto border border-[#3E2F23]">
-                    {SUPABASE_RLS_ENFORCEMENT_SQL.trim()}
-                  </pre>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* SECTION: MEDIA & ORIGINAL PHOTO UPLOADS */}
           {activeSection === 'media' && (
@@ -2493,39 +2645,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </button>
               </div>
 
-              {/* RLS Notice & 1-Click Solution Banner */}
-              <div className="p-5 rounded-2xl bg-[#1C150F] border border-[#D4AF37]/40 space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-[#D4AF37]/20 text-[#D4AF37] shrink-0 mt-0.5">
+              {/* Clean SaaS Media CDN Banner */}
+              <div className="p-5 rounded-2xl bg-gradient-to-r from-[#1E1711] to-[#2B1F16] border border-[#D4AF37]/40 space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-[#D4AF37]/20 text-[#D4AF37] shrink-0">
                     <Sparkles className="w-4 h-4" />
                   </div>
-                  <div className="space-y-1">
+                  <div>
                     <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                      Resilient Instant Photo Upload Engine Active
+                      Live High-Speed Media CDN Active
                     </h3>
-                    <p className="text-xs text-stone-300 leading-relaxed">
-                      Whenever you select an image file below, it is converted immediately into browser memory and displayed on your live website within milliseconds — uploads will never fail or leave your site blank.
-                    </p>
-                    <p className="text-[11px] text-stone-400">
-                      If Supabase Storage showed an RLS error (<code className="text-amber-300">new row violates row-level security policy</code>), copy and paste our 1-click Storage SQL into your Supabase SQL Editor to enable public cloud hosting across all devices.
+                    <p className="text-xs text-stone-300">
+                      All photos uploaded or selected below are dynamically synchronized across your retreat website in real-time.
                     </p>
                   </div>
-                </div>
-
-                <div className="pt-1 flex flex-wrap items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(SUPABASE_STORAGE_SQL_SETUP);
-                      setCopiedStorageSql(true);
-                      setTimeout(() => setCopiedStorageSql(false), 3500);
-                    }}
-                    className="px-4 py-2 rounded-xl bg-[#241C15] hover:bg-[#32271E] border border-[#D4AF37]/50 text-xs font-semibold text-[#E5C158] flex items-center gap-2 cursor-pointer shadow-sm"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                    <span>{copiedStorageSql ? '✓ Storage SQL Copied to Clipboard!' : '1-Click Copy Supabase Storage SQL'}</span>
-                  </button>
-                  <span className="text-[11px] text-stone-500">Run in Supabase Dashboard → SQL Editor → New Query → Run</span>
                 </div>
               </div>
 
@@ -2655,14 +2788,41 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   {/* Founder 1: Anmol Khatri */}
                   <div className="p-4 rounded-xl bg-[#241C15] border border-[#3E2F23] space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">Anmol Khatri (Movement Guide)</span>
+                      <span className="text-xs font-semibold text-white">Founder 1 (Movement Guide)</span>
                       <button
                         type="button"
                         onClick={() => applyImageToField('founder1', '/assets/aistudio/founder_anmol_khatri.jpg')}
                         className="text-[10px] text-[#D4AF37] hover:underline cursor-pointer"
                       >
-                        Reset to Original
+                        Reset Photo
                       </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-0.5">Full Name</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder1.name}
+                          onChange={(e) =>
+                            setFormConfig({ ...formConfig, founder1: { ...formConfig.founder1, name: e.target.value } })
+                          }
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white"
+                          placeholder="e.g. Anmol Khatri"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-0.5">Role / Title</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder1.title}
+                          onChange={(e) =>
+                            setFormConfig({ ...formConfig, founder1: { ...formConfig.founder1, title: e.target.value } })
+                          }
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white"
+                          placeholder="Movement Guide"
+                        />
+                      </div>
                     </div>
 
                     <div className="w-full aspect-[4/5] rounded-xl overflow-hidden border border-[#3E2F23] bg-stone-900">
@@ -2696,14 +2856,41 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   {/* Founder 2: Komal Malhotra */}
                   <div className="p-4 rounded-xl bg-[#241C15] border border-[#3E2F23] space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">Komal Malhotra (Sound Alchemist)</span>
+                      <span className="text-xs font-semibold text-white">Founder 2 (Sound Alchemist)</span>
                       <button
                         type="button"
                         onClick={() => applyImageToField('founder2', '/assets/aistudio/founder_komal_malhotra.jpg')}
                         className="text-[10px] text-[#D4AF37] hover:underline cursor-pointer"
                       >
-                        Reset to Original
+                        Reset Photo
                       </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-0.5">Full Name</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder2.name}
+                          onChange={(e) =>
+                            setFormConfig({ ...formConfig, founder2: { ...formConfig.founder2, name: e.target.value } })
+                          }
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white"
+                          placeholder="e.g. Komal Malhotra"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-0.5">Role / Title</label>
+                        <input
+                          type="text"
+                          value={formConfig.founder2.title}
+                          onChange={(e) =>
+                            setFormConfig({ ...formConfig, founder2: { ...formConfig.founder2, title: e.target.value } })
+                          }
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-[#1A140F] border border-[#3E2F23] text-xs text-white"
+                          placeholder="Sound Alchemist"
+                        />
+                      </div>
                     </div>
 
                     <div className="w-full aspect-[4/5] rounded-xl overflow-hidden border border-[#3E2F23] bg-stone-900">

@@ -124,23 +124,27 @@ export const Footer: React.FC<FooterProps> = ({
           {/* COLUMN 1: Brand & Sacred Genesis */}
           <div className="lg:col-span-4 space-y-5">
             <div className="space-y-3">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3.5 sm:gap-4">
                 {config.showLogoIcon !== false && (
-                  <div className="w-12 h-12 rounded-full bg-white border-2 border-[#E5C158] p-1 flex items-center justify-center shadow-xs shrink-0">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-[#D4AF37]/50 p-1.5 flex items-center justify-center shadow-md shrink-0">
                     <img
-                      src={config.logoUrl || '/logo.png'}
+                      src={config.logoUrl || '/logo_original.png'}
                       alt={config.brandName}
                       className="w-full h-full object-contain"
                     />
                   </div>
                 )}
-                <div>
-                  <span className="font-serif-display text-2xl sm:text-3xl text-[#1F2E23] font-normal tracking-tight block">
-                    {config.brandName}
+                <div className="flex flex-col items-start justify-center">
+                  <span className="font-brand-logo text-2xl sm:text-3xl md:text-4xl text-[#1F2E23] font-normal tracking-tight leading-none">
+                    {config.brandName || 'Shunya Sync'}
                   </span>
-                  <span className="text-[10px] uppercase tracking-[0.24em] text-[#C67856] font-semibold">
-                    {config.brandSubtitle || 'Sacred Himalayan Sanctuary'}
-                  </span>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-1 sm:mt-1.5 w-full">
+                    <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
+                    <span className="text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
+                      {config.brandSubtitle || 'RETREAT'}
+                    </span>
+                    <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
+                  </div>
                 </div>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4EFE6] border border-[#E5DDD0] text-[11px] text-[#8C5D44] tracking-wider uppercase font-medium">

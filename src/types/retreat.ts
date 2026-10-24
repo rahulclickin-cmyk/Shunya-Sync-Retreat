@@ -1,9 +1,24 @@
+export interface PackageItineraryDay {
+  dayNumber: number;
+  title: string;
+  activities: string[];
+}
+
 export interface PackagePricingItem {
   title: string;
   twinPrice: number; // Double sharing per person
   soloPrice: number; // Private accommodation per person
   badge: string;
   description: string;
+  image?: string;
+  itinerary?: PackageItineraryDay[];
+}
+
+export interface RefundPolicyConfig {
+  under30Days: string; // e.g. "Under 30 days: Non refundable"
+  under45Days: string; // e.g. "Under 45 days: 25% refund"
+  advancePaymentPolicy: string; // e.g. "Retreat Payment should be 30 days in advance."
+  customNotes?: string;
 }
 
 /**
@@ -19,6 +34,7 @@ export interface SiteSettings {
   logoUrl?: string;
   showLogoIcon?: boolean;
   adminPin?: string;
+  refundPolicy?: RefundPolicyConfig;
   contact?: {
     phone: string;
     whatsappNumber: string;
@@ -216,6 +232,7 @@ export interface SiteConfig {
     }>;
   };
   blogPosts?: BlogPost[];
+  refundPolicy?: RefundPolicyConfig;
 
   // Dynamic Instagram Reel Embed
   instagramReelUrl?: string;

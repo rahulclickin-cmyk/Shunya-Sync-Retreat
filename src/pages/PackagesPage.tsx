@@ -49,15 +49,15 @@ export const PACKAGE_PHOTOS: Record<PackageId, Array<{ url: string; caption: str
   '2n3d': [
     { url: 'https://www.shunyasync.com/images/DSC05576.JPG', caption: 'Sunrise River Yoga Session' },
     { url: 'https://www.shunyasync.com/images/DSC05974.JPG', caption: 'Nature Excursions & Walks' },
-    { url: 'https://www.shunyasync.com/images/DSC06017.JPG', caption: 'Evening Ganga Aarti Experience' }
+    { url: 'https://www.shunyasync.com/images/DSC06017.JPG', caption: 'Day 2 Evening Ganga Aarti' }
   ],
   '3n4d': [
-    { url: 'https://www.shunyasync.com/images/DSC05503.JPG', caption: 'Ghat Asana & Breathwork' },
-    { url: 'https://www.shunyasync.com/images/DSC05860.JPG', caption: 'Sacred Waterfalls & Rafting' },
+    { url: 'https://www.shunyasync.com/images/DSC05503.JPG', caption: 'Yoga at Beach/Ghat' },
+    { url: 'https://www.shunyasync.com/images/DSC05860.JPG', caption: 'Sacred Waterfalls & Nature' },
     { url: 'https://www.shunyasync.com/images/C9738T01.JPG', caption: 'Vibrational Sound Bath Sanctuary' }
   ],
   '4n5d': [
-    { url: 'https://www.shunyasync.com/images/IMG_3222.JPG', caption: 'River Rafting & Adventure' },
+    { url: 'https://www.shunyasync.com/images/DSC05860.JPG', caption: 'Waterfall & Forest Streams' },
     { url: 'https://www.shunyasync.com/images/IMG_3221.JPG', caption: 'Forest Sanctuary Grounds' },
     { url: 'https://www.shunyasync.com/images/IMG_3218.JPG', caption: 'Ecstatic Dance & Kirtan' }
   ]
@@ -80,22 +80,24 @@ export const RETREAT_PACKAGES: Record<PackageId, PackageDetailData> = {
           'Arrival & Welcome Drink',
           'Check-in to comfort & luxury accommodation',
           'Introduction Circle & Retreat Briefing',
-          'Evening Ganga Aarti Experience',
+          'Sunset Opening Circle & Restorative Tea',
           'Dinner (Satvik Meal)',
           'Lights off'
         ]
       },
       {
         dayNumber: 2,
-        title: 'Inner Alignment & Adventure',
+        title: 'Inner Alignment & Sacred Aarti',
         activities: [
           'Morning Yoga Session (Asanas + Pranayama)',
           'Breakfast',
           'Chakra Healing',
-          'Lunch (excluded)',
+          'Lunch',
           'Afternoon Excursion / Nature Walk',
+          'Evening Ganga Aarti Experience',
           'Fun Activity (Dance / Group Games / Ice-breaking)',
-          'Dinner'
+          'Dinner',
+          'Lights off'
         ]
       },
       {
@@ -126,20 +128,21 @@ export const RETREAT_PACKAGES: Record<PackageId, PackageDetailData> = {
         activities: [
           'Arrival & Welcome Ritual',
           'Check-in & Leisure Time',
-          'Evening Ganga Aarti',
+          'Sunset Opening Circle & Herbal Tea',
           'Dinner',
           'Lights off'
         ]
       },
       {
         dayNumber: 2,
-        title: 'Body & Breath Connection',
+        title: 'Body, Breath & Sacred Aarti',
         activities: [
           'Morning Yoga Session (Strength + Flexibility)',
           'Breakfast',
           'Pranayama & Breathwork Masterclass',
           'Lunch',
           'Afternoon Nature Excursion / Local Exploration',
+          'Evening Ganga Aarti Experience',
           'Fun Activity (Dance Therapy / Group Bonding)',
           'Dinner',
           'Lights off'
@@ -185,21 +188,22 @@ export const RETREAT_PACKAGES: Record<PackageId, PackageDetailData> = {
         title: 'Arrival & Welcome',
         activities: [
           'Arrival, Welcome Drink & Check-in',
-          'Leisure Time',
-          'Evening Ganga Aarti Experience',
+          'Leisure Time & Orientation',
+          'Sunset Opening Circle & Restorative Sound Bath',
           'Dinner',
           'Lights off'
         ]
       },
       {
         dayNumber: 2,
-        title: 'Foundation of Wellness',
+        title: 'Foundation of Wellness & Sacred Aarti',
         activities: [
           'Morning Yoga Session (Asanas + Pranayama)',
           'Breakfast',
           'Breathwork & Mindfulness Workshop',
           'Lunch',
-          'Art & Craft Activity',
+          'Waterfall Nature Trail & Forest Excursion',
+          'Evening Ganga Aarti Experience',
           'Fun Activity (Dance / Ice-breaker Games)',
           'Dinner',
           'Lights off'
@@ -384,23 +388,37 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               <p className="text-xs font-bold uppercase tracking-wider text-[#556057] mb-3">
                 Atmosphere &amp; Experiences Included:
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {PACKAGE_PHOTOS[selectedPkgId].map((photo, i) => (
-                  <div key={i} className="group relative rounded-2xl overflow-hidden aspect-[16/10] bg-stone-900 border border-[#DFD7CA] shadow-sm">
-                    <img
-                      src={photo.url}
-                      alt={photo.caption}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-3">
-                      <span className="text-white text-xs font-medium tracking-wide">
-                        {photo.caption}
-                      </span>
-                    </div>
+              {(() => {
+                const customCoverImage =
+                  selectedPkgId === '2n3d'
+                    ? config?.pricing?.pkg2n3d?.image
+                    : selectedPkgId === '3n4d'
+                    ? config?.pricing?.pkg3n4d?.image || config?.pricing?.pkg4d3n?.image
+                    : config?.pricing?.pkg4n5d?.image || config?.pricing?.pkg5d4n?.image;
+
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {PACKAGE_PHOTOS[selectedPkgId].map((photo, i) => {
+                      const displayUrl = (i === 0 && customCoverImage) ? customCoverImage : photo.url;
+                      return (
+                        <div key={i} className="group relative rounded-2xl overflow-hidden aspect-[16/10] bg-stone-900 border border-[#DFD7CA] shadow-sm">
+                          <img
+                            src={displayUrl}
+                            alt={photo.caption}
+                            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-3">
+                            <span className="text-white text-xs font-medium tracking-wide">
+                              {photo.caption}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
-              </div>
+                );
+              })()}
             </div>
           )}
 

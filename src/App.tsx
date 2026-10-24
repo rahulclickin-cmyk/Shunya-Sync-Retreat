@@ -467,23 +467,27 @@ export default function App() {
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between">
           {/* Brand Logo with Light Emblem */}
-          <button onClick={() => navigateTo('home')} className="flex items-center gap-3 group text-left cursor-pointer">
+          <button onClick={() => navigateTo('home')} className="flex items-center gap-3.5 sm:gap-4 group text-left cursor-pointer">
             {siteConfig.showLogoIcon !== false && (
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-[#E5DFD5] p-1 flex items-center justify-center shadow-sm shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full bg-white border-2 border-[#D4AF37]/40 p-1.5 flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <img
-                  src={siteConfig.logoUrl || '/logo.png'}
+                  src={siteConfig.logoUrl || '/logo_original.png'}
                   alt={siteConfig.brandName}
                   className="w-full h-full object-contain"
                 />
               </div>
             )}
-            <div className="flex flex-col">
-              <span className="font-serif-display text-2xl sm:text-3xl tracking-tight text-[#1F2E23] font-semibold leading-none">
-                {siteConfig.brandName}
+            <div className="flex flex-col items-start justify-center">
+              <span className="font-brand-logo text-2xl sm:text-3xl md:text-4xl tracking-tight text-[#1F2E23] font-normal leading-none">
+                {siteConfig.brandName || 'Shunya Sync'}
               </span>
-              <span className="text-[10px] tracking-[0.28em] uppercase font-light text-[#8A9687] mt-1">
-                {siteConfig.brandSubtitle || 'Retreat Sanctuary'}
-              </span>
+              <div className="flex items-center gap-1.5 sm:gap-2 mt-1 sm:mt-1.5 w-full">
+                <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
+                <span className="text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
+                  {siteConfig.brandSubtitle || 'RETREAT'}
+                </span>
+                <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[12px] sm:min-w-[16px]"></span>
+              </div>
             </div>
           </button>
 
@@ -856,10 +860,19 @@ export default function App() {
                   <span>{siteConfig.tagline}</span>
                 </div>
 
-                {/* Hero Headline: Glides in from Left */}
-                <h1 className="reveal-init from-left delay-200 font-serif-display text-4xl sm:text-6xl md:text-7xl font-normal tracking-tight text-[#FAF7F0] leading-[1.12] drop-shadow-sm">
-                  {siteConfig.heroHeadline}
-                </h1>
+                {/* Hero Headline with Reference Image Font & Subtitle Divider */}
+                <div className="reveal-init from-left delay-200 flex flex-col items-center justify-center space-y-2 sm:space-y-3">
+                  <h1 className="font-brand-logo text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-normal tracking-tight text-[#FAF7F0] leading-[1.04] drop-shadow-lg">
+                    {siteConfig.brandName || 'Shunya Sync'}
+                  </h1>
+                  <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-md mx-auto">
+                    <span className="h-[1px] flex-1 bg-white/40 min-w-[20px] sm:min-w-[32px]"></span>
+                    <span className="text-xs sm:text-base md:text-lg tracking-[0.42em] uppercase font-light text-stone-200 whitespace-nowrap drop-shadow">
+                      {siteConfig.brandSubtitle || 'RETREAT'}
+                    </span>
+                    <span className="h-[1px] flex-1 bg-white/40 min-w-[20px] sm:min-w-[32px]"></span>
+                  </div>
+                </div>
 
                 {/* Hero Subheadline: Glides in from Right */}
                 <p className="reveal-init from-right delay-300 text-lg sm:text-2xl text-stone-200 font-light max-w-2xl mx-auto leading-relaxed font-serif-display italic">
@@ -1072,24 +1085,35 @@ export default function App() {
               {/* 3 Package Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* 1. 2 Nights / 3 Days */}
-                <div className="reveal-init from-left delay-100 bg-white rounded-3xl p-7 border border-[#DFD7CA] shadow-sm hover:shadow-xl transition space-y-6 card-3d-tilt flex flex-col justify-between">
+                <div className="reveal-init from-left delay-100 bg-white rounded-3xl p-6 sm:p-7 border border-[#DFD7CA] shadow-sm hover:shadow-xl transition space-y-5 card-3d-tilt flex flex-col justify-between group">
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-[#EFEAE1] pb-4">
+                    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-stone-100 border border-[#EFEAE1]">
+                      <img
+                        src={siteConfig?.pricing?.pkg2n3d?.image || 'https://www.shunyasync.com/images/DSC05576.JPG'}
+                        alt={siteConfig?.pricing?.pkg2n3d?.title || '2 Nights / 3 Days Retreat'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-3 left-3 bg-[#1F2E23]/80 backdrop-blur-md text-white text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        2N / 3D
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between border-b border-[#EFEAE1] pb-3">
                       <div>
                         <span className="text-xs uppercase font-bold text-[#223326]">
-                          ✨ Weekend Reset
+                          ✨ {siteConfig?.pricing?.pkg2n3d?.badge || 'Weekend Reset'}
                         </span>
-                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
-                          2 Nights / 3 Days Retreat
+                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-0.5">
+                          {siteConfig?.pricing?.pkg2n3d?.title || '2 Nights / 3 Days Retreat'}
                         </h3>
                       </div>
                     </div>
 
                     <p className="text-xs text-[#556057] leading-relaxed">
-                      Arrival &amp; Grounding, Evening Ganga Aarti, Chakra Healing, and Nature Walk.
+                      Arrival &amp; Grounding, Day 2 Sacred Ganga Aarti, Chakra Healing, and Nature Excursion.
                     </p>
 
-                    <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div className="grid grid-cols-2 gap-3 pt-1">
                       <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-stone-200 text-center">
                         <p className="text-[11px] uppercase font-semibold text-stone-500">Double sharing</p>
                         <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
@@ -1124,29 +1148,40 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 2. 3 Nights / 4 Days (Highlighted Most Popular) */}
-                <div className="reveal-init from-bottom delay-200 bg-white rounded-3xl p-7 border-2 border-[#C67856] shadow-xl space-y-6 card-3d-tilt relative flex flex-col justify-between">
-                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#C67856] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow">
+                {/* 2. 3 Nights / 4 Days (Highlighted Most Popular - Yoga at Beach/Ghat) */}
+                <div className="reveal-init from-bottom delay-200 bg-white rounded-3xl p-6 sm:p-7 border-2 border-[#C67856] shadow-xl space-y-5 card-3d-tilt relative flex flex-col justify-between group">
+                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#C67856] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow z-10">
                     Most Popular
                   </span>
 
                   <div className="space-y-4 pt-1">
-                    <div className="flex items-center justify-between border-b border-[#F5E6DC] pb-4">
+                    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-stone-100 border border-[#FAD7C8]">
+                      <img
+                        src={siteConfig?.pricing?.pkg3n4d?.image || 'https://www.shunyasync.com/images/DSC05503.JPG'}
+                        alt={siteConfig?.pricing?.pkg3n4d?.title || '3 Nights / 4 Days Retreat — Yoga at Beach/Ghat'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-3 left-3 bg-[#C67856] text-white text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                        Yoga at Beach/Ghat
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between border-b border-[#F5E6DC] pb-3">
                       <div>
                         <span className="text-xs uppercase font-bold text-[#C67856]">
-                          🌿 Flagship Experience
+                          🌿 {siteConfig?.pricing?.pkg3n4d?.badge || 'Flagship Experience'}
                         </span>
-                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
-                          3 Nights / 4 Days Retreat
+                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-0.5">
+                          {siteConfig?.pricing?.pkg3n4d?.title || '3 Nights / 4 Days Retreat'}
                         </h3>
                       </div>
                     </div>
 
                     <p className="text-xs text-[#556057] leading-relaxed">
-                      Pranayama Masterclass, Sound &amp; Chakra Healing, River Rafting, and Aarti.
+                      Pranayama Masterclass, Day 2 Sacred Ganga Aarti, Chakra &amp; Sound Healing, and Beach Yoga.
                     </p>
 
-                    <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div className="grid grid-cols-2 gap-3 pt-1">
                       <div className="p-3.5 rounded-2xl bg-[#FFF9F6] border border-[#FAD7C8] text-center">
                         <p className="text-[11px] uppercase font-semibold text-[#A4502E]">Double sharing</p>
                         <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">
@@ -1181,25 +1216,36 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 3. 4 Nights / 5 Days (Premium) */}
-                <div className="reveal-init from-right delay-300 bg-white rounded-3xl p-7 border border-[#DFD7CA] shadow-sm hover:shadow-xl transition space-y-6 card-3d-tilt flex flex-col justify-between">
+                {/* 3. 4 Nights / 5 Days (Premium - Waterfall Image) */}
+                <div className="reveal-init from-right delay-300 bg-white rounded-3xl p-6 sm:p-7 border border-[#DFD7CA] shadow-sm hover:shadow-xl transition space-y-5 card-3d-tilt flex flex-col justify-between group">
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-[#EFEAE1] pb-4">
+                    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-stone-100 border border-[#EFEAE1]">
+                      <img
+                        src={siteConfig?.pricing?.pkg4n5d?.image || 'https://www.shunyasync.com/images/DSC05860.JPG'}
+                        alt={siteConfig?.pricing?.pkg4n5d?.title || '4 Nights / 5 Days Retreat — Waterfall'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-3 left-3 bg-[#1F2E23]/80 backdrop-blur-md text-white text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        Waterfall &amp; Rafting
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between border-b border-[#EFEAE1] pb-3">
                       <div>
                         <span className="text-xs uppercase font-bold text-[#223326]">
-                          🌸 Deep Immersion
+                          🌸 {siteConfig?.pricing?.pkg4n5d?.badge || 'Deep Immersion'}
                         </span>
-                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
-                          4 Nights / 5 Days Retreat
+                        <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-0.5">
+                          {siteConfig?.pricing?.pkg4n5d?.title || '4 Nights / 5 Days Retreat'}
                         </h3>
                       </div>
                     </div>
 
                     <p className="text-xs text-[#556057] leading-relaxed">
-                      Silent Meditation, River Rafting, Ecstatic Dance, Inner Work &amp; Integration.
+                      Silent Meditation, Waterfall Trail Excursion, Day 2 Ganga Aarti, Ecstatic Dance &amp; Deep Integration.
                     </p>
 
-                    <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div className="grid grid-cols-2 gap-3 pt-1">
                       <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-stone-200 text-center">
                         <p className="text-[11px] uppercase font-semibold text-stone-500">Double sharing</p>
                         <p className="text-xl font-serif-display font-bold text-[#1F2E23] mt-1">

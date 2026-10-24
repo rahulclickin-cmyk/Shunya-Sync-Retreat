@@ -74,7 +74,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ config, onOpenBooking }) =
             Ready to Step into Your Sacred Pause?
           </h3>
           <p className="text-sm sm:text-base text-stone-300 max-w-xl mx-auto font-light leading-relaxed">
-            Join our upcoming intimate circle in India. Connect directly with Anmol Khatri and Komal Malhotra to reserve your spot.
+            Join our upcoming intimate circle in India. Connect directly with {config.founder1?.name || 'Anmol Khatri'} and {config.founder2?.name || 'Komal Malhotra'} to reserve your spot.
           </p>
           <div>
             <button

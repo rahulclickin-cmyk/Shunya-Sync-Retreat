@@ -34,7 +34,7 @@ const COMPREHENSIVE_DEFAULT_FAQS: FaqItem[] = [
   {
     category: 'General & Philosophy',
     question: 'Can beginners with zero prior yoga or meditation experience attend?',
-    answer: 'Absolutely yes. Over 65% of our seekers have never attended a formal wellness retreat before. Our founders, Anmol Khatti (Movement Guide) and Komal Makhetra (Sound Alchemist), hold a gentle, completely non-judgmental space. Every posture and breath practice is customized to your body’s unique comfort and flexibility.'
+    answer: 'Absolutely yes. Over 65% of our seekers have never attended a formal wellness retreat before. Our founders, Anmol Khatri (Movement Guide) and Komal Malhotra (Sound Alchemist), hold a gentle, completely non-judgmental space. Every posture and breath practice is customized to your body’s unique comfort and flexibility.'
   },
   {
     category: 'Retreat Experience & Schedule',
@@ -44,7 +44,7 @@ const COMPREHENSIVE_DEFAULT_FAQS: FaqItem[] = [
   {
     category: 'Retreat Experience & Schedule',
     question: 'What is 432Hz Sound Healing and why is it special?',
-    answer: 'Standard commercial music is tuned to 440Hz, which can heighten mental agitation. 432Hz is the natural acoustic resonance that aligns with the golden ratio (Phi) and the Earth’s Schumann resonance. Certified sound alchemist Komal Makhetra utilizes authentic hand-hammered Himalayan bronze bowls, tuned wind gongs, and quartz crystals to induce theta and delta brainwave states, releasing stored cellular tension and emotional fatigue.'
+    answer: 'Standard commercial music is tuned to 440Hz, which can heighten mental agitation. 432Hz is the natural acoustic resonance that aligns with the golden ratio (Phi) and the Earth’s Schumann resonance. Certified sound alchemist Komal Malhotra utilizes authentic hand-hammered Himalayan bronze bowls, tuned wind gongs, and quartz crystals to induce theta and delta brainwave states, releasing stored cellular tension and emotional fatigue.'
   },
   {
     category: 'Retreat Experience & Schedule',
@@ -63,8 +63,8 @@ const COMPREHENSIVE_DEFAULT_FAQS: FaqItem[] = [
   },
   {
     category: 'Pricing, Suites & Booking',
-    question: 'What is your cancellation and reservation policy?',
-    answer: 'Bookings are confirmed with an advance deposit. Cancellations made 21+ days prior to the retreat start date are eligible for a 100% credit transfer to any future retreat date within 12 months, or a refund minus processing fees. Within 21 days, deposits may be transferred to a nominated friend or family member with advance notice.'
+    question: 'What is your cancellation and refund policy?',
+    answer: 'Retreat Payment should be 30 days in advance. Under 45 days: 25% refund. Under 30 days: Non refundable.'
   },
   {
     category: 'Nutrition & Dietary Needs',

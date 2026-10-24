@@ -80,7 +80,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'privacy-poli
               <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm">
                 <li>Facilitating seamless retreat bookings and accommodation logistics in India.</li>
                 <li>Direct communication regarding cohort itineraries, packing guides, and travel transfers.</li>
-                <li>Ensuring facilitators Anmol Khatti and Komal Makhetra adapt sessions safely to your bodily requirements.</li>
+                <li>Ensuring facilitators {config.founder1?.name || 'Anmol Khatri'} and {config.founder2?.name || 'Komal Malhotra'} adapt sessions safely to your bodily requirements.</li>
                 <li>Processing transactions and generating official reservation receipts.</li>
               </ul>
 
@@ -126,7 +126,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'privacy-poli
 
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">3. Facilitator Schedule &amp; Changes</h3>
               <p>
-                While our master schedule is carefully crafted, instructors Anmol Khatti and Komal Makhetra reserve the right to gently alter session timings due to mountain weather, seasonal conditions, or energy dynamics of the circle.
+                While our master schedule is carefully crafted, instructors {config.founder1?.name || 'Anmol Khatri'} and {config.founder2?.name || 'Komal Malhotra'} reserve the right to gently alter session timings due to mountain weather, seasonal conditions, or energy dynamics of the circle.
               </p>
 
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">4. Photography &amp; Discretion</h3>
@@ -148,26 +148,38 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'privacy-poli
               <p className="text-xs text-stone-500 mt-1">Clear &amp; Transparent Terms</p>
             </div>
 
+            {/* Advance payment notice */}
+            <div className="p-4 rounded-2xl bg-[#F7EFE9] border border-[#E9D9CF] flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#C67856] text-white flex items-center justify-center shrink-0 font-bold text-xs">
+                30D
+              </div>
+              <div>
+                <p className="text-xs uppercase font-bold text-[#8C5D44]">Retreat Booking Policy</p>
+                <p className="text-sm font-semibold text-[#1F2E23]">
+                  {config.refundPolicy?.advancePaymentPolicy || 'Retreat Payment should be 30 days in advance.'}
+                </p>
+              </div>
+            </div>
+
             <div className="space-y-4 text-sm leading-relaxed">
               <p>
                 Because our retreat cohort sizes are strictly capped at 10–14 participants to guarantee intimate, personalized care, cancellations directly impact the sanctuary logistics and kitchen preparation.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-2">
-                <div className="p-4 rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0]">
-                  <p className="text-xs uppercase font-bold text-emerald-800">30+ Days Prior</p>
-                  <p className="text-2xl font-serif-display font-bold text-emerald-900 mt-1">80% Refund</p>
-                  <p className="text-xs text-emerald-700 mt-1">Or 100% credit transfer to future cohort within 12 months.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">
+                <div className="p-5 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A]">
+                  <p className="text-xs uppercase font-bold text-amber-800">Under 45 Days Prior</p>
+                  <p className="text-2xl font-serif-display font-bold text-amber-900 mt-1">25% Refund</p>
+                  <p className="text-xs text-amber-800 mt-2 font-medium">
+                    {config.refundPolicy?.under45Days || 'Under 45 days: 25% refund'}
+                  </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A]">
-                  <p className="text-xs uppercase font-bold text-amber-800">15–29 Days Prior</p>
-                  <p className="text-2xl font-serif-display font-bold text-amber-900 mt-1">50% Refund</p>
-                  <p className="text-xs text-amber-700 mt-1">Or transfer spot to a nominated friend or family member.</p>
-                </div>
-                <div className="p-4 rounded-2xl bg-[#FEF2F2] border border-[#FECACA]">
-                  <p className="text-xs uppercase font-bold text-rose-800">Under 14 Days</p>
+                <div className="p-5 rounded-2xl bg-[#FEF2F2] border border-[#FECACA]">
+                  <p className="text-xs uppercase font-bold text-rose-800">Under 30 Days Prior</p>
                   <p className="text-2xl font-serif-display font-bold text-rose-900 mt-1">Non-Refundable</p>
-                  <p className="text-xs text-rose-700 mt-1">Due to upfront room, chef, and facilitator lock-ins.</p>
+                  <p className="text-xs text-rose-800 mt-2 font-medium">
+                    {config.refundPolicy?.under30Days || 'Under 30 days: Non refundable'}
+                  </p>
                 </div>
               </div>
 
@@ -208,7 +220,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'privacy-poli
 
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">2. Sound Healing &amp; Vibrational Precautions</h3>
               <p>
-                I understand that acoustic singing bowls and gongs emit intense physical sonic waves. If I have a pacemaker, metal implants, or severe tinnitus, I will inform Anmol Khatti and Komal Makhetra so suitable distances and frequencies can be maintained.
+                I understand that acoustic singing bowls and gongs emit intense physical sonic waves. If I have a pacemaker, metal implants, or severe tinnitus, I will inform {config.founder1?.name || 'Anmol Khatri'} and {config.founder2?.name || 'Komal Malhotra'} so suitable distances and frequencies can be maintained.
               </p>
 
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">3. Release of Liability</h3>
