@@ -20,7 +20,7 @@ export const InclusionsPage: React.FC<InclusionsPageProps> = ({ onOpenBooking, c
           What’s Included in All Retreats
         </h1>
         <p className="text-base sm:text-lg text-[#5D6B60] font-light">
-          From the moment you step foot into our retreat sanctuary, your every need is lovingly taken care of.
+          From the moment you step foot into our retreat, your every need is lovingly taken care of.
         </p>
       </div>
 

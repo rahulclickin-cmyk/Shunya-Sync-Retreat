@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { X, MapPin } from 'lucide-react';
 import { SiteConfig } from '../types/retreat';
 
-interface SanctuaryPageProps {
+interface GalleryPageProps {
   config?: SiteConfig;
   onOpenBooking: () => void;
 }
 
-export const SanctuaryPage: React.FC<SanctuaryPageProps> = ({ config, onOpenBooking }) => {
+export const GalleryPage: React.FC<GalleryPageProps> = ({ config, onOpenBooking }) => {
   const [selectedImg, setSelectedImg] = useState<string | null>(null);
 
   const fallbackImages = [
@@ -28,7 +28,7 @@ export const SanctuaryPage: React.FC<SanctuaryPageProps> = ({ config, onOpenBook
     },
     {
       url: 'https://www.shunyasync.com/images/DSC05503.JPG',
-      title: 'Morning Asana & Breathwork Sanctuary',
+      title: 'Morning Asana & Breathwork Shala',
       desc: 'Open-air wooden hall for dynamic movement, pranayama, and holistic realignment.'
     },
     {
@@ -51,13 +51,13 @@ export const SanctuaryPage: React.FC<SanctuaryPageProps> = ({ config, onOpenBook
     <div className="py-12 sm:py-20 px-5 sm:px-8 max-w-7xl mx-auto space-y-16 animate-fade-in">
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <span className="text-xs font-semibold tracking-[0.24em] uppercase text-[#C67856] bg-[#F7EFE9] px-3.5 py-1.5 rounded-full border border-[#E9D9CF]">
-          Visual Sanctuary Tour
+          Visual Retreat Tour
         </span>
         <h1 className="font-serif-display text-4xl sm:text-5xl md:text-6xl font-normal text-[#1F2E23]">
           A Glimpse into Life at Shunya Sync
         </h1>
         <p className="text-base sm:text-lg text-[#556057] font-light">
-          Surrounded by pristine nature in India, our retreat properties offer silent sanctuary far from urban commotion.
+          Surrounded by pristine nature in India, our retreat properties offer a silent haven far from urban commotion.
         </p>
       </div>
 
@@ -100,7 +100,7 @@ export const SanctuaryPage: React.FC<SanctuaryPageProps> = ({ config, onOpenBook
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={selectedImg} alt="Sanctuary Expanded View" className="w-full h-full object-contain max-h-[80vh] mx-auto rounded-xl" />
+            <img src={selectedImg} alt="Retreat Expanded View" className="w-full h-full object-contain max-h-[80vh] mx-auto rounded-xl" />
           </div>
         </div>
       )}
@@ -110,7 +110,7 @@ export const SanctuaryPage: React.FC<SanctuaryPageProps> = ({ config, onOpenBook
           onClick={onOpenBooking}
           className="px-8 py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-[#223326] hover:bg-[#152218] text-white transition shadow-lg active:scale-95"
         >
-          Book Your Stay in the Sanctuary
+          Book Your Stay at the Retreat
         </button>
       </div>
     </div>

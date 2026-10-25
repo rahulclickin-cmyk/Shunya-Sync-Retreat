@@ -201,7 +201,7 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
       url: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=2400&q=85'
     },
     {
-      label: 'Golden Hour Yoga Sanctuary',
+      label: 'Golden Hour Yoga Shala',
       url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=2400&q=85'
     },
     {
@@ -454,7 +454,7 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-serif-display text-lg font-bold text-white tracking-wide">
-                  Sanctuary Admin Dashboard
+                  Retreat Admin Dashboard
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-800 text-[#E3A387] border border-stone-700 font-mono">
                   /admin
@@ -927,11 +927,11 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
                     </div>
                   </div>
 
-                  {/* 3. SANCTUARY GALLERY PHOTOS UPLOAD */}
+                  {/* 3. RETREAT GALLERY PHOTOS UPLOAD */}
                   <div className="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm space-y-4">
                     <div className="flex items-center justify-between border-b pb-2">
                       <div>
-                        <span className="text-xs uppercase font-bold text-[#C67856]">Sanctuary Gallery</span>
+                        <span className="text-xs uppercase font-bold text-[#C67856]">Retreat Gallery</span>
                         <h5 className="font-bold text-sm text-[#1F2E23]">Real Retreat Experience &amp; Property Photos</h5>
                       </div>
                       <span className="text-[11px] text-stone-500">6 Photos Displayed on Home &amp; Gallery Pages</span>
@@ -1177,7 +1177,7 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
                       <span>2. GEO: Geolocation &amp; Local Business Targeting</span>
                     </h5>
                     <p className="text-xs text-stone-500">
-                      GEO helps Google Maps, Google Gemini, and AI Search Engines recommend your sanctuary when users search for retreats in specific regions or nature spots.
+                      GEO helps Google Maps, Google Gemini, and AI Search Engines recommend your retreat when users search for retreats in specific regions or nature spots.
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1253,7 +1253,7 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
                         rows={2}
                         value={formConfig.seo?.aeoSummary || ''}
                         onChange={(e) => updateSeoField('aeoSummary', e.target.value)}
-                        placeholder="Shunya Sync Retreat is an intimate transformative wellness and sound healing sanctuary in India..."
+                        placeholder="Shunya Sync Retreat is an intimate transformative wellness and sound healing retreat in India..."
                         className="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-xs leading-relaxed"
                       />
                     </div>
@@ -1936,7 +1936,7 @@ export const SecretAdminModal: React.FC<SecretAdminModalProps> = ({
 
                     <div>
                       <label className="block text-xs uppercase font-bold text-stone-600 mb-1">
-                        Sanctuary Location
+                        Retreat Location
                       </label>
                       <input
                         type="text"

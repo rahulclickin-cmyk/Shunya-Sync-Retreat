@@ -734,7 +734,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             { id: 'reel', label: 'Instagram Reel Embed', icon: Instagram },
             { id: 'why-us', label: 'Why Choose Us (Parallax)', icon: Award },
             { id: 'media', label: 'Media & Photo Uploads', icon: Upload },
-            { id: 'gallery', label: 'Sanctuary Gallery', icon: ImageIcon },
+            { id: 'gallery', label: 'Photo Gallery', icon: ImageIcon },
             { id: 'blog', label: 'Blog & Articles CMS', icon: BookOpen },
             { id: 'pages', label: 'All Pages Content (A-Z)', icon: FileText },
             { id: 'seo', label: 'SEO, GEO & FAQs', icon: Globe },
@@ -799,7 +799,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
                 <div className="p-5 rounded-2xl bg-[#1A140F] border border-[#2E2319] space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-stone-400">Sanctuary Photos</span>
+                    <span className="text-xs text-stone-400">Retreat Photos</span>
                     <ImageIcon className="w-4 h-4 text-[#D4AF37]" />
                   </div>
                   <p className="text-2xl font-bold text-white">
@@ -1172,7 +1172,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     type="text"
                     value={formConfig.brandSubtitle || ''}
                     onChange={(e) => setFormConfig({ ...formConfig, brandSubtitle: e.target.value })}
-                    placeholder="Retreat Sanctuary"
+                    placeholder="Retreat &amp; Wellness"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[#241C15] border border-[#3E2F23] text-sm text-white focus:border-[#D4AF37] focus:outline-none"
                   />
                   <p className="text-[11px] text-stone-500">Small uppercase subtitle below brand name</p>
@@ -2324,7 +2324,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             <div className="space-y-6 animate-fade-in">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="font-serif-display text-2xl font-bold text-white">Sanctuary Gallery</h2>
+                  <h2 className="font-serif-display text-2xl font-bold text-white">Retreat Gallery</h2>
                   <p className="text-xs text-stone-400 mt-1">Upload and manage real photos of yoga, sound baths, meals, and cottages.</p>
                 </div>
                 <button
@@ -2845,7 +2845,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     <span>Media &amp; Original Photo Uploads</span>
                   </h2>
                   <p className="text-xs text-stone-400 mt-1">
-                    Upload original high-resolution photos for Hero background, founders, logo, and sanctuary features.
+                    Upload original high-resolution photos for Hero background, founders, logo, and retreat features.
                   </p>
                 </div>
                 <button
@@ -2887,7 +2887,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       </h4>
                     </div>
                     <p className="text-xs text-stone-300 leading-relaxed">
-                      All original high-resolution photos (Hero background, Founders Anmol &amp; Komal, Sanctuary Gallery, and Retreat Packages) are live and mapped as defaults in your JSONB schema.
+                      All original high-resolution photos (Hero background, Founders Anmol &amp; Komal, Retreat Gallery, and Retreat Packages) are live and mapped as defaults in your JSONB schema.
                     </p>
                   </div>
                   <button
@@ -3537,7 +3537,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Sanctuary Physical Address / Location</label>
+                    <label className="block text-xs text-stone-400 mb-1">Retreat Physical Address / Location</label>
                     <input
                       type="text"
                       value={formConfig.contact.location || formConfig.contact.address || ''}

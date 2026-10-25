@@ -66,7 +66,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ config, onOpenBooking }) =
         </div>
       </div>
 
-      {/* 3. Sanctuary Call to Action */}
+      {/* 3. Retreat Call to Action */}
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
         <div className="rounded-[32px] p-8 sm:p-12 bg-[#1F2E23] text-white text-center space-y-6 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#C67856]/15 rounded-full blur-3xl pointer-events-none" />
@@ -81,7 +81,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ config, onOpenBooking }) =
               onClick={onOpenBooking}
               className="px-8 py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-[#C67856] hover:bg-[#B36544] text-white transition shadow-lg active:scale-95 cursor-pointer inline-flex items-center gap-2"
             >
-              <span>Reserve Your Sanctuary Spot</span>
+              <span>Reserve Your Retreat Spot</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

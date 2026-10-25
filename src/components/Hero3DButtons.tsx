@@ -42,7 +42,7 @@ export const Hero3DButtons: React.FC<Hero3DButtonsProps> = ({
         className="group relative w-full sm:w-64 h-13 cursor-pointer select-none [perspective:1000px]"
         role="button"
         tabIndex={0}
-        aria-label="Book Retreat Sanctuary Spot"
+        aria-label="Book Retreat Spot"
       >
         <div className="relative w-full h-full transition-transform duration-600 [transform-style:preserve-3d] group-hover:[transform:rotateX(180deg)] shadow-xl shadow-[#C67856]/25 rounded-full overflow-hidden">
           {/* FRONT FACE */}
@@ -57,7 +57,7 @@ export const Hero3DButtons: React.FC<Hero3DButtonsProps> = ({
           {/* BACK FACE (REVEALED ON 3D FLIP) */}
           <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] -webkit-backface-visibility-hidden [transform:rotateX(180deg)] rounded-full flex items-center justify-center gap-2.5 px-6 bg-[#162218] text-[#E3A387] border-2 border-[#C67856] text-xs font-bold uppercase tracking-[0.18em] shadow-2xl">
             <Calendar className="w-4 h-4 text-[#FAF7F0] shrink-0" />
-            <span>Reserve Sanctuary</span>
+            <span>Reserve Your Spot</span>
             <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
           </div>
         </div>

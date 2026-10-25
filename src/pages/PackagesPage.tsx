@@ -54,11 +54,11 @@ export const PACKAGE_PHOTOS: Record<PackageId, Array<{ url: string; caption: str
   '3n4d': [
     { url: 'https://www.shunyasync.com/images/DSC05503.JPG', caption: 'Yoga at Beach/Ghat' },
     { url: 'https://www.shunyasync.com/images/DSC05860.JPG', caption: 'Sacred Waterfalls & Nature' },
-    { url: 'https://www.shunyasync.com/images/C9738T01.JPG', caption: 'Vibrational Sound Bath Sanctuary' }
+    { url: 'https://www.shunyasync.com/images/C9738T01.JPG', caption: 'Vibrational Sound Bath Space' }
   ],
   '4n5d': [
     { url: 'https://www.shunyasync.com/images/DSC05860.JPG', caption: 'Waterfall & Forest Streams' },
-    { url: 'https://www.shunyasync.com/images/IMG_3221.JPG', caption: 'Forest Sanctuary Grounds' },
+    { url: 'https://www.shunyasync.com/images/IMG_3221.JPG', caption: 'Forest Retreat Grounds' },
     { url: 'https://www.shunyasync.com/images/IMG_3218.JPG', caption: 'Ecstatic Dance & Kirtan' }
   ]
 };
@@ -429,7 +429,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               <div className="flex justify-between items-start">
                 <div>
                   <span className="text-xs font-bold uppercase tracking-wider text-[#C67856]">
-                    Private Sanctuary
+                    Private Suite
                   </span>
                   <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
                     Private accommodation
@@ -564,7 +564,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               onClick={() => onOpenBooking(activePackage.title, 'Twin Sharing')}
               className="px-6 py-3 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#223326] text-white hover:bg-black transition shadow cursor-pointer shrink-0"
             >
-              Reserve Your Sanctuary Spot &rarr;
+              Reserve Your Retreat Spot &rarr;
             </button>
           </div>
         </div>

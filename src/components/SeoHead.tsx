@@ -26,10 +26,10 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ config, currentRoute }) => {
         break;
       case 'packages':
         pageTitle = `Retreat Packages & All-Inclusive Pricing (4D/3N & 5D/4N) | ${config.brandName}`;
-        pageDesc = `Explore all-inclusive sanctuary rates: 4 Days / 3 Nights (₹26k-32k) and 5 Days / 4 Nights (₹38k-44k). Organic sattvic dining, private suites, and daily rituals included.`;
+        pageDesc = `Explore all-inclusive retreat rates: 4 Days / 3 Nights (₹26k-32k) and 5 Days / 4 Nights (₹38k-44k). Organic sattvic dining, private suites, and daily rituals included.`;
         break;
       case 'inclusions':
-        pageTitle = `Sanctuary Inclusions & Sattvic Organic Nutrition | ${config.brandName}`;
+        pageTitle = `Retreat Inclusions & Sattvic Organic Nutrition | ${config.brandName}`;
         pageDesc = `From Ayurvedic farm-to-table cuisine and sound ceremonies to luxury nature quarters and private airport transfers. Zero hidden charges.`;
         break;
       case 'why-us':
@@ -37,11 +37,11 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ config, currentRoute }) => {
         pageDesc = `Why Shunya Sync is different: Strict 10-14 seeker cohort caps, scientific nervous system regulation, genuine authentic facilitators, and zero dogmatic commercialism.`;
         break;
       case 'gallery':
-        pageTitle = `Sanctuary Photo Gallery & Mountain Shala Views | ${config.brandName}`;
-        pageDesc = `Step inside our open-air wooden yoga shala, acoustic sound healing dome, sacred forest trails, and serene eco-luxury guest sanctuaries.`;
+        pageTitle = `Retreat Photo Gallery & Mountain Shala Views | ${config.brandName}`;
+        pageDesc = `Step inside our open-air wooden yoga shala, acoustic sound healing dome, sacred forest trails, and serene eco-luxury guest accommodations.`;
         break;
       case 'journal':
-        pageTitle = `Sanctuary Journal & Vedic Wisdom Reflections | ${config.brandName}`;
+        pageTitle = `Retreat Journal & Vedic Wisdom Reflections | ${config.brandName}`;
         pageDesc = `Articles and reflections on nervous system down-regulation, 432Hz sound frequencies, circadian sleep architecture, and mindful living.`;
         break;
       case 'faq':
@@ -49,7 +49,7 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ config, currentRoute }) => {
         pageDesc = `Answers to common queries: Travel logistics, packing checklists, dietary accommodations, beginner suitability, and cancellation terms.`;
         break;
       case 'contact':
-        pageTitle = `Connect & Reserve Your Sanctuary Suite | ${config.brandName}`;
+        pageTitle = `Connect & Reserve Your Retreat Suite | ${config.brandName}`;
         pageDesc = `Reach out via WhatsApp (+91 9259698064) or direct booking inquiry for upcoming cohorts. Limited sacred spots available.`;
         break;
       case 'admin':
@@ -123,7 +123,7 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ config, currentRoute }) => {
     setMeta('og:url', true, fullCanonical);
     setMeta('og:site_name', true, config.brandName);
     setMeta('og:image', true, seo.ogImage || config.heroBgImage);
-    setMeta('og:image:alt', true, `${config.brandName} Retreat Nature Sanctuary`);
+    setMeta('og:image:alt', true, `${config.brandName} Retreat Nature Haven`);
     setMeta('og:locale', true, 'en_IN');
 
     // 7. Twitter / X Card
@@ -228,7 +228,7 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ config, currentRoute }) => {
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
           location: {
             '@type': 'Place',
-            name: `${config.brandName} Sanctuary`,
+            name: `${config.brandName} Retreat`,
             address: {
               '@type': 'PostalAddress',
               addressLocality: seo.geoPlacename,

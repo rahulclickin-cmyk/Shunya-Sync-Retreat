@@ -63,7 +63,7 @@ import { ExperiencesPage } from './pages/ExperiencesPage';
 import { PackagesPage, PackageId } from './pages/PackagesPage';
 import { InclusionsPage } from './pages/InclusionsPage';
 import { WhyUsPage } from './pages/WhyUsPage';
-import { SanctuaryPage } from './pages/SanctuaryPage';
+import { GalleryPage } from './pages/GalleryPage';
 import { JournalPage } from './pages/JournalPage';
 import { ContactPage } from './pages/ContactPage';
 import { FAQPage } from './pages/FAQPage';
@@ -379,7 +379,7 @@ export default function App() {
     {
       url: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?auto=format&fit=crop&w=1200&q=80',
       title: 'Sound Healing Dome',
-      caption: 'Acoustically tuned circular sanctuary for Tibetan singing bowls and gongs'
+      caption: 'Acoustically tuned circular dome for Tibetan singing bowls and gongs'
     },
     {
       url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
@@ -493,7 +493,7 @@ export default function App() {
               <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 w-full">
                 <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
                 <span className="text-[8px] sm:text-[9px] md:text-[9.5px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
-                  {siteConfig.brandSubtitle || 'RETREAT SANCTUARY'}
+                  {siteConfig.brandSubtitle || 'RETREAT & WELLNESS'}
                 </span>
                 <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
               </div>
@@ -598,7 +598,7 @@ export default function App() {
                 currentRoute === 'gallery' ? 'text-[#C67856] font-bold' : 'text-[#3D473F] hover:text-[#C67856]'
               }`}
             >
-              Sanctuary
+              Gallery
             </button>
 
             <button
@@ -705,7 +705,7 @@ export default function App() {
                 onClick={() => navigateTo('gallery')}
                 className="text-left py-1.5 border-b border-[#EFEAE1]"
               >
-                Sanctuary Life (Gallery)
+                Retreat Life (Gallery)
               </button>
 
               <button
@@ -750,7 +750,7 @@ export default function App() {
                 }}
                 className="w-full text-center py-3 rounded-full text-xs uppercase tracking-widest font-semibold bg-[#223326] text-[#FAF8F5]"
               >
-                Book Your Sanctuary Spot
+                Book Your Retreat Spot
               </button>
             </div>
           </div>
@@ -798,10 +798,10 @@ export default function App() {
           </div>
         )}
 
-        {/* SUBPAGE 6: SANCTUARY GALLERY */}
+        {/* SUBPAGE 6: RETREAT GALLERY */}
         {currentRoute === 'gallery' && (
           <div className="animate-3d-flip-right">
-            <SanctuaryPage config={siteConfig} onOpenBooking={() => handleOpenBooking()} />
+            <GalleryPage config={siteConfig} onOpenBooking={() => handleOpenBooking()} />
           </div>
         )}
 
@@ -1345,7 +1345,7 @@ export default function App() {
 
                   <div className="reveal-init from-left delay-200 bg-white p-7 rounded-3xl border border-[#DFD7CA] shadow-sm space-y-3 card-3d-tilt">
                     <Compass className="w-8 h-8 text-[#C67856]" />
-                    <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">Eco-Sanctuary Accommodation</h3>
+                    <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">Eco-Living Accommodation</h3>
                     <p className="text-xs text-[#5B665D] leading-relaxed">
                       Spacious timber and stone rooms equipped with organic linens in peaceful surroundings.
                     </p>
@@ -1376,18 +1376,18 @@ export default function App() {
               onOpenBooking={() => handleOpenBooking()}
             />
 
-            {/* 7. SANCTUARY GALLERY SECTION: 3D FLIP IN FROM RIGHT */}
+            {/* 7. RETREAT GALLERY SECTION: 3D FLIP IN FROM RIGHT */}
             <section id="gallery" className="scroll-section scroll-flip-right py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-20">
               <div className="space-y-12">
                 <div className="text-center max-w-3xl mx-auto space-y-4 reveal-init from-top">
                   <span className="text-xs font-semibold tracking-[0.24em] uppercase text-[#C67856]">
-                    Sanctuary Life
+                    Retreat Life
                   </span>
                   <h2 className="font-serif-display text-3xl sm:text-5xl font-normal text-[#1F2E23]">
                     A Glimpse into Shunya Sync
                   </h2>
                   <p className="text-base text-[#556057] font-light">
-                    Surrounded by pristine Himalayan nature in India, our retreats provide a peaceful sanctuary far from urban commotion.
+                    Surrounded by pristine Himalayan nature in India, our retreats provide a peaceful haven far from urban commotion.
                   </p>
                 </div>
 
@@ -1419,7 +1419,7 @@ export default function App() {
                     onClick={() => navigateTo('gallery')}
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1F2E23] text-white text-xs uppercase tracking-widest font-semibold hover:bg-black transition cursor-pointer"
                   >
-                    <span>View Complete Sanctuary Photo Tour &rarr;</span>
+                    <span>View Complete Retreat Photo Tour &rarr;</span>
                   </button>
                 </div>
               </div>
@@ -1471,7 +1471,7 @@ export default function App() {
             </button>
 
             <span className="text-xs font-semibold tracking-widest uppercase text-[#C67856]">
-              Direct Sanctuary Reservation
+              Direct Retreat Reservation
             </span>
             <h3 className="font-serif-display text-2xl font-bold text-[#1F2E23] mt-1">
               Book Your Spot
@@ -1653,13 +1653,13 @@ export default function App() {
             </button>
             <img
               src={selectedGalleryImg}
-              alt="Sanctuary Expanded View"
+              alt="Retreat Expanded View"
               className="w-full h-full object-contain max-h-[80vh] mx-auto rounded-xl"
             />
           </div>
         </div>
       )}
-      {/* 8. SANCTUARY ADMIN MODAL (Directly accessible via /admin in URL) */}
+      {/* 8. RETREAT ADMIN MODAL (Directly accessible via /admin in URL) */}
       <SecretAdminModal
         isOpen={secretAdminOpen}
         onClose={() => {

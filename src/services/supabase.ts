@@ -23,7 +23,7 @@ When subjected to acoustic vibrations from handcrafted Himalayan singing bowls, 
 2. **Alpha Waves (8–13 Hz)**: Deep calm, creative contemplation.
 3. **Theta Waves (4–7 Hz)**: Somatic cellular repair, deep meditation, emotional integration.
 
-During our daily 432Hz sacred sound immersions at Shunya Sync, participants lie comfortably in our acoustically tuned sanctuary dome. As the resonance washes over, the vagus nerve signals the adrenal glands to halt adrenaline release, enabling profound rest and cellular restoration.`,
+During our daily 432Hz sacred sound immersions at Shunya Sync, participants lie comfortably in our acoustically tuned sound healing dome. As the resonance washes over, the vagus nerve signals the adrenal glands to halt adrenaline release, enabling profound rest and cellular restoration.`,
     image: 'https://www.shunyasync.com/images/C9738T01.JPG',
     tag: 'Sound Alchemy',
     published: true
@@ -39,7 +39,7 @@ During our daily 432Hz sacred sound immersions at Shunya Sync, participants lie 
     summary: 'Why practicing conscious breath control at dawn surrounded by pine forest canopy elevates oxygen saturation, purifies subtle energy channels, and restores mental clarity.',
     content: `Breath is the bridge between the conscious and unconscious mind. In yogic philosophy, *Prana* is not simply breath—it is the subtle life force that animates all living matter.
 
-When we awaken at dawn in the Himalayan foothills, the mountain atmosphere carries a uniquely high concentration of negative air ions and pine terpenes. Practicing Pranayama in this living sanctuary has an exponential healing impact on the lungs and nervous system.
+When we awaken at dawn in the Himalayan foothills, the mountain atmosphere carries a uniquely high concentration of negative air ions and pine terpenes. Practicing Pranayama in this living mountain haven has an exponential healing impact on the lungs and nervous system.
 
 ### The Sacred Breathwork Sequence
 At Shunya Sync, each sunrise begins with conscious breathwork:
@@ -106,7 +106,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
   geoRegion: 'IN-UT',
   geoPlacename: 'Rishikesh, Uttarakhand, India',
   geoPosition: '30.0869;78.2676',
-  aeoSummary: 'Shunya Sync Retreat is an intimate transformative wellness and sound healing sanctuary in India, hosted by Anmol Khatri & Komal Malhotra, featuring 432Hz acoustic therapy, authentic Hatha yoga, and 100% farm-to-table sattvic cuisine.',
+  aeoSummary: 'Shunya Sync Retreat is an intimate transformative wellness and sound healing haven in India, hosted by Anmol Khatri & Komal Malhotra, featuring 432Hz acoustic therapy, authentic Hatha yoga, and 100% farm-to-table sattvic cuisine.',
   faqs: [
     {
       question: 'What is Shunya Sync Retreat?',
@@ -115,7 +115,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
     },
     {
       question: 'Where is the retreat held and how do I reach?',
-      answer: 'Our sanctuaries are situated in pristine nature corridors in India (foothills of Uttarakhand / Rishikesh nature sanctuaries). We provide private airport and railway transfers from the nearest transit hubs.',
+      answer: 'Our retreats are situated in pristine nature corridors in India (foothills of Uttarakhand / Rishikesh nature retreats). We provide private airport and railway transfers from the nearest transit hubs.',
       category: 'Location'
     },
     {
@@ -148,7 +148,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
 
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
   brandName: 'Shunya Sync',
-  brandSubtitle: 'RETREAT SANCTUARY',
+  brandSubtitle: 'RETREAT & WELLNESS',
   tagline: 'FIND STILLNESS • ALIGN WITHIN • AWAKEN',
   headerAnnouncement: '🌿 Next Sacred Cohort: Nov 14–17 & Dec 12–16, 2026 • Limited to 12 Seekers • Direct WhatsApp: +91 9259698064',
   heroHeadline: 'Shunya Sync Retreat',
@@ -508,7 +508,10 @@ export function normalizeSiteConfig(input: any): SiteConfig {
 
   // Brand & Header
   const brandName = firstValid(input.brandName, input.brand_name, settings.brandName, pages.brandName, DEFAULT_SITE_CONFIG.brandName)!;
-  const brandSubtitle = firstValid(input.brandSubtitle, input.brand_subtitle, settings.brandSubtitle, pages.brandSubtitle, DEFAULT_SITE_CONFIG.brandSubtitle)!;
+  let brandSubtitle = firstValid(input.brandSubtitle, input.brand_subtitle, settings.brandSubtitle, pages.brandSubtitle, DEFAULT_SITE_CONFIG.brandSubtitle)!;
+  if (brandSubtitle && brandSubtitle.toLowerCase().includes('sanctuary')) {
+    brandSubtitle = 'RETREAT & WELLNESS';
+  }
   const tagline = firstValid(input.tagline, settings.tagline, pages.tagline, DEFAULT_SITE_CONFIG.tagline)!;
   const headerAnnouncement = firstValid(input.headerAnnouncement, input.header_announcement, settings.headerAnnouncement, pages.headerAnnouncement, DEFAULT_SITE_CONFIG.headerAnnouncement)!;
   const logoUrl = firstValid(input.logoUrl, input.logo_url, settings.logoUrl, pages.logoUrl, DEFAULT_SITE_CONFIG.logoUrl)!;
@@ -1232,7 +1235,7 @@ CREATE TABLE IF NOT EXISTS public.shunya_site_config (
   seo JSONB DEFAULT '{}'::jsonb,
   admin_pin TEXT DEFAULT '7788',
   logo_url TEXT DEFAULT '/logo.png',
-  brand_subtitle TEXT DEFAULT 'Retreat Sanctuary',
+  brand_subtitle TEXT DEFAULT 'Retreat & Wellness',
   show_logo_icon BOOLEAN DEFAULT true,
   why_choose_us JSONB DEFAULT '{}'::jsonb,
   blog_posts JSONB DEFAULT '[]'::jsonb,
@@ -1249,7 +1252,7 @@ ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS gallery_images JS
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS seo JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS admin_pin TEXT DEFAULT '7788';
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS logo_url TEXT DEFAULT '/logo.png';
-ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS brand_subtitle TEXT DEFAULT 'Retreat Sanctuary';
+ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS brand_subtitle TEXT DEFAULT 'Retreat & Wellness';
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS show_logo_icon BOOLEAN DEFAULT true;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS why_choose_us JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE public.shunya_site_config ADD COLUMN IF NOT EXISTS blog_posts JSONB DEFAULT '[]'::jsonb;

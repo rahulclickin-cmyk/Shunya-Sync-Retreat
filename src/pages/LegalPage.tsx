@@ -116,7 +116,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'privacy-poli
             <div className="space-y-4 text-sm leading-relaxed">
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">1. Sacred Space &amp; Community Conduct</h3>
               <p>
-                {config.brandName} is a sanctuary for inner peace, healing, and mindfulness. We operate an alcohol-free, non-smoking, and non-recreational drug policy throughout our property. All attendees agree to interact with fellow guests and instructors with empathy, dignity, and compassion.
+                {config.brandName} is a dedicated space for inner peace, healing, and mindfulness. We operate an alcohol-free, non-smoking, and non-recreational drug policy throughout our property. All attendees agree to interact with fellow guests and instructors with empathy, dignity, and compassion.
               </p>
 
               <h3 className="font-serif-display text-lg font-bold text-[#1F2E23]">2. Reservation &amp; Room Allocations</h3>
@@ -163,7 +163,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({ initialTab = 'privacy-poli
 
             <div className="space-y-4 text-sm leading-relaxed">
               <p>
-                Because our retreat cohort sizes are strictly capped at 10–14 participants to guarantee intimate, personalized care, cancellations directly impact the sanctuary logistics and kitchen preparation.
+                Because our retreat cohort sizes are strictly capped at 10–14 participants to guarantee intimate, personalized care, cancellations directly impact retreat logistics and kitchen preparation.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">

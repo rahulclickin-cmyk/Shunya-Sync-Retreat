@@ -141,7 +141,7 @@ export const Footer: React.FC<FooterProps> = ({
                   <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 w-full">
                     <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
                     <span className="text-[8.5px] sm:text-[9.5px] tracking-[0.38em] uppercase font-light text-[#556057] whitespace-nowrap">
-                      {config.brandSubtitle || 'RETREAT SANCTUARY'}
+                      {config.brandSubtitle || 'RETREAT & WELLNESS'}
                     </span>
                     <span className="h-[1px] flex-1 bg-[#1F2E23]/30 min-w-[10px] sm:min-w-[14px]"></span>
                   </div>
@@ -149,7 +149,7 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4EFE6] border border-[#E5DDD0] text-[11px] text-[#8C5D44] tracking-wider uppercase font-medium">
                 <Sparkles className="w-3 h-3 text-[#C67856]" />
-                <span>Sacred Wellness Sanctuary • India</span>
+                <span>Sacred Wellness Retreat • India</span>
               </div>
             </div>
 
@@ -212,7 +212,7 @@ export const Footer: React.FC<FooterProps> = ({
               <a
                 href={`tel:${config.contact.phone.replace(/[^0-9+]/g, '')}`}
                 className="w-9 h-9 rounded-full bg-white hover:bg-emerald-600 text-[#4E6152] hover:text-white flex items-center justify-center border border-[#DDD5C7] hover:border-emerald-600 transition-all duration-300 hover:scale-110 shadow-xs"
-                title="Sanctuary Direct Call"
+                title="Direct Phone Call"
               >
                 <Phone className="w-4 h-4" />
               </a>
@@ -250,7 +250,7 @@ export const Footer: React.FC<FooterProps> = ({
                 >
                   <span className="flex items-center gap-2.5">
                     <Home className="w-3.5 h-3.5 text-[#C67856] group-hover:scale-110 transition-transform" />
-                    <span className="group-hover:translate-x-1 transition-transform">Home Sanctuary</span>
+                    <span className="group-hover:translate-x-1 transition-transform">Home</span>
                   </span>
                   <ChevronRight className="w-3 h-3 text-stone-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </button>
@@ -352,7 +352,7 @@ export const Footer: React.FC<FooterProps> = ({
                 >
                   <span className="flex items-center gap-2.5">
                     <Camera className="w-3.5 h-3.5 text-[#C67856] group-hover:scale-110 transition-transform" />
-                    <span className="group-hover:translate-x-1 transition-transform">Sanctuary Photo Tour</span>
+                    <span className="group-hover:translate-x-1 transition-transform">Retreat Photo Tour</span>
                   </span>
                   <ChevronRight className="w-3 h-3 text-stone-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </button>
@@ -403,7 +403,7 @@ export const Footer: React.FC<FooterProps> = ({
                 >
                   <span className="flex items-center gap-2.5">
                     <MapPin className="w-3.5 h-3.5 text-[#C67856] group-hover:scale-110 transition-transform" />
-                    <span className="group-hover:translate-x-1 transition-transform">Sanctuary Contact &amp; Inquiry</span>
+                    <span className="group-hover:translate-x-1 transition-transform">Contact &amp; Inquiry</span>
                   </span>
                   <ChevronRight className="w-3 h-3 text-stone-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </button>
@@ -518,11 +518,11 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* COLUMN 4: Sanctuary Channels & Facilitators */}
+          {/* COLUMN 4: Retreat Channels & Facilitators */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-xs uppercase tracking-[0.22em] font-semibold text-[#1F2E23] border-b border-[#EAE3D6] pb-2.5 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-[#C67856]" />
-              <span>Sanctuary Contact</span>
+              <span>Retreat Contact</span>
             </h4>
 
             {/* Facilitators Quick Card */}
@@ -574,7 +574,7 @@ export const Footer: React.FC<FooterProps> = ({
                 onClick={onOpenBooking}
                 className="w-full py-2.5 rounded-full bg-[#C67856] hover:bg-[#B56745] text-white text-xs uppercase tracking-widest font-semibold transition shadow-sm hover:shadow-md active:scale-95 cursor-pointer flex items-center justify-center gap-2"
               >
-                <span>Book Sanctuary Spot</span>
+                <span>Book Retreat Spot</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
               <a

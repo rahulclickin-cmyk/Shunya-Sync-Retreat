@@ -69,7 +69,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ config, onLeadSubmitte
     },
     {
       q: 'How do I reach the retreat destination in India?',
-      a: 'Our nature retreat destination is located in a serene sanctuary in India. Upon confirmation, our team provides complete travel coordination, including recommended train/flight details and trusted cab transfers directly to the property.'
+      a: 'Our nature retreat destination is located in a serene mountain setting in India. Upon confirmation, our team provides complete travel coordination, including recommended train/flight details and trusted cab transfers directly to the property.'
     },
     {
       q: 'What should I pack for the retreat?',
@@ -103,7 +103,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ config, onLeadSubmitte
         <div className="lg:col-span-5 space-y-8">
           <div className="bg-white rounded-3xl p-8 border border-[#DFD7CA] shadow-sm space-y-6 card-3d-tilt">
             <h2 className="font-serif-display text-2xl font-bold text-[#1F2E23]">
-              Direct Sanctuary Channels
+              Direct Retreat Channels
             </h2>
 
             <div className="space-y-4 text-sm text-[#3E4A40]">
@@ -130,7 +130,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ config, onLeadSubmitte
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#FAF8F5]">
                 <MapPin className="w-5 h-5 text-[#C67856] shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-stone-500">Sanctuary Location</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-stone-500">Retreat Location</p>
                   <p className="font-medium text-base text-[#1F2E23]">{config.contact.location}</p>
                   <p className="text-xs text-stone-500">Peaceful Foothills &amp; Forest Setting</p>
                 </div>
@@ -312,7 +312,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ config, onLeadSubmitte
                     type="submit"
                     className="flex-1 py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-[#1F2E23] hover:bg-[#152218] text-white shadow-md transition flex items-center justify-center gap-2"
                   >
-                    <span>Submit Sanctuary Inquiry</span>
+                    <span>Submit Retreat Inquiry</span>
                     <Send className="w-4 h-4" />
                   </button>
                   <a

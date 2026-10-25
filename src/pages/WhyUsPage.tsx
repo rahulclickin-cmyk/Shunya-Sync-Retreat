@@ -18,10 +18,10 @@ export const WhyUsPage: React.FC<WhyUsPageProps> = ({ onOpenBooking, config = DE
             The Shunya Sync Difference
           </span>
           <h1 className="font-serif-display text-3xl sm:text-4xl md:text-5xl font-normal text-[#1F2E23]">
-            Curated Sanctuary, Zero Overwhelm
+            Curated Retreat, Zero Overwhelm
           </h1>
           <p className="text-sm sm:text-base text-[#556057] font-light max-w-2xl mx-auto">
-            We purposefully avoid massive commercial retreat factories. Every Shunya Sync gathering is an intimate sanctuary built on safety, authentic human warmth, and mindful presence.
+            We purposefully avoid massive commercial retreat factories. Every Shunya Sync gathering is an intimate haven built on safety, authentic human warmth, and mindful presence.
           </p>
         </div>
       </div>

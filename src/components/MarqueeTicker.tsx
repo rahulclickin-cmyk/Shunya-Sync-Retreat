@@ -22,7 +22,7 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({
     { text: 'SOMATIC DANCE & ECSTATIC JOY', icon: <Flame className="w-3.5 h-3.5 text-amber-400" /> },
     { text: 'INTIMATE CIRCLES (10–14 SEEKERS)', icon: <ShieldCheck className="w-3.5 h-3.5 text-[#C67856]" /> },
     { text: 'SACRED FOREST TRAILS & RIVERS', icon: <Compass className="w-3.5 h-3.5 text-emerald-300" /> },
-    { text: 'SHUNYA SYNC RETREAT SANCTUARY • INDIA', icon: <Sparkles className="w-3.5 h-3.5 text-[#E3A387]" /> },
+    { text: 'SHUNYA SYNC RETREAT • INDIA', icon: <Sparkles className="w-3.5 h-3.5 text-[#E3A387]" /> },
     { text: 'VIBRATIONAL FREQUENCY ALIGNMENT', icon: <CircleDot className="w-3.5 h-3.5 text-[#C67856]" /> }
   ];
 
@@ -44,7 +44,7 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({
   return (
     <div
       className={`overflow-hidden py-3 select-none relative z-20 ${bgStyles} shadow-inner group`}
-      title="Continuous Sanctuary Stream (Hover to Pause)"
+      title="Continuous Retreat Stream (Hover to Pause)"
     >
       <div
         className={`${animationClass} items-center gap-10 text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold`}

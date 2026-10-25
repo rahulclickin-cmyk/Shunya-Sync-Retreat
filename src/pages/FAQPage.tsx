@@ -49,7 +49,7 @@ const COMPREHENSIVE_DEFAULT_FAQS: FaqItem[] = [
   {
     category: 'Retreat Experience & Schedule',
     question: 'Is digital detox strictly mandatory?',
-    answer: 'We warmly encourage an intentional digital fast to break dopamine exhaustion and blue-light stress. We recommend keeping phones turned off in your room during rituals. However, we do not confiscate personal devices. If you need to make urgent work or family calls, designated quiet areas are available, and our sanctuary team can provide an emergency contact line for your family.'
+    answer: 'We warmly encourage an intentional digital fast to break dopamine exhaustion and blue-light stress. We recommend keeping phones turned off in your room during rituals. However, we do not confiscate personal devices. If you need to make urgent work or family calls, designated quiet areas are available, and our retreat team can provide an emergency contact line for your family.'
   },
   {
     category: 'Pricing, Suites & Booking',
@@ -59,7 +59,7 @@ const COMPREHENSIVE_DEFAULT_FAQS: FaqItem[] = [
   {
     category: 'Pricing, Suites & Booking',
     question: 'How does Twin Sharing work if I am traveling solo?',
-    answer: 'If you choose the Twin Sharing package as a solo traveler, we thoughtfully pair you with a retreat participant of the same gender. Many guests form lifelong friendships with their retreat roommates! If you prefer absolute privacy and your own sanctuary bathroom, we recommend reserving the Solo Suite.'
+    answer: 'If you choose the Twin Sharing package as a solo traveler, we thoughtfully pair you with a retreat participant of the same gender. Many guests form lifelong friendships with their retreat roommates! If you prefer absolute privacy and your own private bathroom, we recommend reserving the Solo Suite.'
   },
   {
     category: 'Pricing, Suites & Booking',
@@ -73,8 +73,8 @@ const COMPREHENSIVE_DEFAULT_FAQS: FaqItem[] = [
   },
   {
     category: 'Nutrition & Dietary Needs',
-    question: 'Are coffee, tea, and alcohol permitted at the sanctuary?',
-    answer: 'We serve aromatic Himalayan herbal infusions, spiced golden milk, and organic ginger-tulsi teas. Commercial coffee is gently paused during the retreat to allow your adrenal glands and cortisol levels to reset. The property is strictly alcohol-free and smoke-free to honor the sacred frequency of the sanctuary.'
+    question: 'Are coffee, tea, and alcohol permitted at the retreat?',
+    answer: 'We serve aromatic Himalayan herbal infusions, spiced golden milk, and organic ginger-tulsi teas. Commercial coffee is gently paused during the retreat to allow your adrenal glands and cortisol levels to reset. The property is strictly alcohol-free and smoke-free to honor the sacred frequency of the retreat.'
   },
   {
     category: 'Packing & Travel Logistics',
@@ -83,13 +83,13 @@ const COMPREHENSIVE_DEFAULT_FAQS: FaqItem[] = [
   },
   {
     category: 'Packing & Travel Logistics',
-    question: 'How do I reach the retreat sanctuary in India?',
-    answer: 'Our main sanctuary enclaves are nestled in the pristine forest foothills around Rishikesh / Dehradun, Uttarakhand, India. \n• By Air: Dehradun Jolly Grant Airport (DED) is 45 minutes away. Direct flights operate daily from Delhi, Mumbai, and Bengaluru.\n• By Train: Haridwar Railway Station or Yog Nagari Rishikesh Station are well-connected.\n• Complimentary scheduled sanctuary chauffeur pick-ups are provided on retreat arrival and departure dates.'
+    question: 'How do I reach the retreat in India?',
+    answer: 'Our main retreat enclaves are nestled in the pristine forest foothills around Rishikesh / Dehradun, Uttarakhand, India. \n• By Air: Dehradun Jolly Grant Airport (DED) is 45 minutes away. Direct flights operate daily from Delhi, Mumbai, and Bengaluru.\n• By Train: Haridwar Railway Station or Yog Nagari Rishikesh Station are well-connected.\n• Complimentary scheduled retreat chauffeur pick-ups are provided on retreat arrival and departure dates.'
   },
   {
     category: 'Packing & Travel Logistics',
     question: 'Are there medical facilities or first aid available on-site?',
-    answer: 'Yes. Our sanctuary is equipped with a comprehensive first-aid station, pulse oximeters, blood pressure monitors, and natural homeopathic/Ayurvedic relief for travel fatigue. A reputable hospital is located within a 20-minute drive in case of any rare emergency.'
+    answer: 'Yes. Our retreat center is equipped with a comprehensive first-aid station, pulse oximeters, blood pressure monitors, and natural homeopathic/Ayurvedic relief for travel fatigue. A reputable hospital is located within a 20-minute drive in case of any rare emergency.'
   }
 ];
 
@@ -384,7 +384,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ config, onOpenBooking }) => {
               className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 text-stone-200 text-xs uppercase tracking-wider font-semibold border border-white/20 transition"
             >
               <Mail className="w-3.5 h-3.5" />
-              <span>Email Sanctuary</span>
+              <span>Email Us</span>
             </a>
           </div>
         </div>
